@@ -25,4 +25,4 @@ div_llista_propietats.innerHTML=
 
 }
 generaLlistaPropietats();
-window.setInterval(generaLlistaPropietats, 1000);
+let referenciaSetIntervalHora= window.setInterval(generaLlistaPropietats, 1000);
