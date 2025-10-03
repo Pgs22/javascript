@@ -26,3 +26,37 @@ div_llista_propietats.innerHTML=
 }
 generaLlistaPropietats();
 let referenciaSetIntervalHora= window.setInterval(generaLlistaPropietats, 1000);
+
+//Afegir audio part 2 exercici 1
+let audio = new Audio();
+audio.src="DRUMC0.WAV";
+AudioBufferSourceNode.canPlayType("audio/wav; codecs=1");
+//audio.play();
+//audio.loop=true;
+const btn_play = document.getElementById("bton_play");
+const btn_stop = document.getElementById("bton_stop");
+const btn_pause = document.getElementById("bton_pause");
+
+bton_play.style.backgroundColor="orange";
+bton_play.onclick=playMusic;
+let audio_actual="";
+function playMusic(){
+  const select_music=document.getElementById("select_music");
+  if(audio.src!= select_music.value){
+    audio.src=select_music.value;
+    audio_actual=select_music.value;
+  }
+    
+  audio.play();
+}
+
+bton_stop.onclick=stopMusic;
+function stopMusic(){
+  audio.pause();
+  audio.currentTime=0;
+}
+
+btn_pause.onclick=pauseMusic;
+function pauseMusic(){
+  audio.pause();
+}

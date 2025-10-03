@@ -38,7 +38,7 @@ div_taula_propietats.innerHTML=`
         </table>`;
 
 }
-generaTaulaPropietats();
+
 
 /*
 Afegeix al document HTML un compte enrere inicialment a 00minuts i 00segons
@@ -50,13 +50,18 @@ c.Quan el compte enrere arribi a 0, avisa amb una música i permet que es pugui 
 //Crea un comptador
 let comptador=10;
 
-let referenciaSetIntervalHoraInici= window.setInterval(generaContaEnrere, 60);
+let referenciaSetIntervalHora= window.setInterval(generaContaEnrere, 60);
+
 //Crear una funcio que aturi en interval de temps
 function aturaIntervalHora(){
   window.clearInterval(referenciaSetIntervalHora);
 }
 
 
+
+
+
+//Pendent de veure 
 console.log("Minuts?");
 let nomusuari = document.getElementById("inputMinuts").value;
 console.log("Segons?");
