@@ -10,7 +10,18 @@
 
     <div id="taula_propietats" >
 
+        <label for="inputMinuts">Minuts:</label>
+        <input type="number" id="inputMinuts" value="0" min="0">
+
+        <label for="inputSegons">Segons:</label>
+        <input type="number" id="inputSegons" value="0" min="0" max="59">
+
+        <button id="iniciarComptador">Iniciar</button>
+        <button id="pausarComptador" disabled>Pausar</button>
+        <button id="aturarComptador">Aturar</button>
+
     </div>
+    <div id="estatComptador">00 minuts i 00 segons</div>
 
 </body>
 </html>
