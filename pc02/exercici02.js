@@ -175,6 +175,72 @@ btnIniciar.addEventListener('click', iniciarCompteEnrere);
 btnPausar.addEventListener('click', pausarComptador);
 btnAturar.addEventListener('click', () => aturaCompteEnrere(false)); 
 
+
+/* *************** PARTE AUDIO ********************** */
+/*
+
+let audio = document.getElementById("audio");
+audio.addEventListener("canplaythrough", function(){
+    timer.max=audio.duration;
+    timer_span.max=audio.duration;
+    let ref_interval = window.setInterval(function(){
+        timer.value = audio.currentTime;
+        timer_span.innerText=audio.currentTime
+        if(audio.currentTime== audio.duration){
+            window.clearInterval(ref_interval)
+        }
+    } ,1000)
+})
+const timer = document.getElementById("timer");
+const timer_span=document.getElementById("timer_span");
+
+function playAudio(){
+    audio.src="DRUMC0.WAV";
+    audio.play();
+}
+function playAudio2(){
+    audio.src="FANFARE1.WAV";
+    audio.play();
+}
+function clk_btn_stopAudio(){
+    audio.pause()
+    audio.currentTime=0;
+}
+function clk_btn_mute(){
+    audio.muted=!audio.muted;
+}
+function clk_btn_volUp(){
+    try{
+        audio.volume +=0.2
+    }catch(e){
+        audio.volume=1
+    }    
+    document.getElementById("vol").value=audio.volume;
+}
+function clk_btn_volDown(){
+    try{
+        audio.volume-=0.2
+    }catch(e){
+        audio.volume=0
+    }
+    document.getElementById("vol").value=audio.volume;
+}
+
+function change_inp_vol(){
+    audio.volume= document.getElementById("vol").value;
+}
+
+window.setTimeout(
+    function(){
+        document.getElementById("timer_span").innerText = audio.duration;
+    },500
+);
+
+
+*/
+
+
+
 /*
 5. 5p] Afegeix un rellotge que mostri la hora, minuts i segons actuals i s’actualitzi cada segon.
 a. Afegeix la possibilitat d’establir una alarma que avisi en una hora en concret
