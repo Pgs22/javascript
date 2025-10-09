@@ -42,6 +42,7 @@ div_taula_propietats.innerHTML=`
 //generaTaulaPropietats();
 
 
+
 /*
 4.3p] Afegeix al document HTML un compte enrere inicialment a 00minuts i 00segons
 a.Permet que l’usuari pugui establir quants minuts i segons vol que duri.
@@ -49,34 +50,42 @@ b.Permet que l’usuari inicií el compte enrere i el pugui aturar (restablint-l
 c.Quan el compte enrere arribi a 0, avisa amb una música i permet que es pugui aturar.
 */
 
-//Elements del document html dels input
-const inputMinuts = document.getElementById('inputMinuts');
-const inputSegons = document.getElementById('inputSegons');
-const estatComptador = document.getElementById('estatComptador');
-//Elements del document html dels botons
-const btnIniciar = document.getElementById("Iniciar Comptador")
-const btnAturar = document.getElementById("Aturar Comptador")
-const btnPausar =  document.getElementById("Pausar Comptador")
-//Variables
+// Elements del document html dels input
+const inputMinuts = document.getElementById("inputMinuts");
+const inputSegons = document.getElementById("inputSegons");
+const estatComptador = document.getElementById("estatComptador");
+// Elements del document html dels botons
+const btnIniciar = document.getElementById("iniciarComptador")
+const btnAturar = document.getElementById("aturarComptador")
+const btnPausar = document.getElementById("pausarComptador")
+
+// Element Audio (Assumeix que l'HTML té <audio id="alarmaAudio" src="FANFARE1.WAV"></audio>)
+const alarmaAudio = new Audio('FANFARE1.WAV');
+
+// Variables del comptador
 let tempsRestantSegons = 0; 
 let referenciaSetIntervalComptador = null;
 let estaPausat = false;
-/* /****************FUNCIONS *********************** 
-function actualitzaCompteEnrere()
-function iniciarCompteEnrere()
-function pausarComptador()
-function aturaCompteEnrere()
-function mostraTemps()
-btnIniciar.addEventListener('click', iniciarCompteEnrere);
-*/
+
+/* /****************FUNCIONS *********************** */
 
 /* *************** ACTUALITZA ********************** */
 function actualitzaCompteEnrere(){
     if (estaPausat) return; // Sortir
 
     if (tempsRestantSegons <= 0) {
-        aturaCompteEnrere(true); // temps consumit
-        estatComptador.textContent = "00minuts i 00segons"; // Mostrar estat comptador 0
+        aturaCompteEnrere(true); // El temps ha finalitzat, atura l'interval
+        estatComptador.textContent = "FI"; // Missatge de finalització
+        
+        // C. Quan el compte enrere arribi a 0, avisa amb una música
+        alarmaAudio.loop = true; // Per a que la música es repeteixi
+        alarmaAudio.play().catch(e => console.error("Error al reproduir l'àudio:", e));
+
+        // Un cop ha acabat, només pot aturar-se (el botó d'Aturar gestiona l'àudio)
+        btnAturar.disabled = false;
+        btnIniciar.disabled = true;
+        btnPausar.disabled = true;
+
         return;
     }
 
@@ -86,6 +95,9 @@ function actualitzaCompteEnrere(){
 
 /* *************** INICIAR COMPTADOR ********************** */
 function iniciarCompteEnrere() {
+    // Assegura't que l'àudio està aturat i reiniciat abans d'un nou inici/represa
+    aturaAudio();
+
     // 1. Reprèn des de la pausa
     if (referenciaSetIntervalComptador && estaPausat) {
         estaPausat = false;
@@ -93,7 +105,6 @@ function iniciarCompteEnrere() {
         // Habilitats dels botons
         btnIniciar.disabled = true;
         btnPausar.disabled = false;
-        // Quan es reprèn, no s'actualitza tempsRestantSegons des dels inputs
         return;
     }
     
@@ -114,7 +125,8 @@ function iniciarCompteEnrere() {
         inputMinuts.disabled = true;
         inputSegons.disabled = true;
         btnIniciar.disabled = true;
-        btnPausar.disabled = false;
+        btnPausar.disabled = false; // Habilita Pausar
+        btnAturar.disabled = false; // Habilita Aturar
         
         mostraTemps();
         
@@ -143,6 +155,9 @@ function aturaCompteEnrere(haFinalitzat = false) {
     window.clearInterval(referenciaSetIntervalComptador);
     referenciaSetIntervalComptador = null;
     estaPausat = false;
+    
+    // C. Atura la música si s'estava reproduint
+    aturaAudio();
 
     // Restableix l'estat dels controls
     inputMinuts.disabled = false;
@@ -156,6 +171,14 @@ function aturaCompteEnrere(haFinalitzat = false) {
         tempsRestantSegons = 0;
         estatComptador.textContent = "00 minuts i 00 segons"; 
     }
+    // Si ha finalitzat, el display es manté amb el missatge "FI" (set a actualitzaCompteEnrere)
+}
+
+/* *************** ATURAR ÀUDIO (Funció Helper) ********************** */
+function aturaAudio() {
+    alarmaAudio.pause();
+    alarmaAudio.currentTime = 0; // Reinicia l'àudio
+    alarmaAudio.loop = false;
 }
 
 
@@ -170,74 +193,11 @@ function mostraTemps() {
     estatComptador.textContent = `${minutsStr} minuts i ${segonsStr} segons`;
 }
 
-//ACCIONS
+// ACCIONS DELS BOTONS
 btnIniciar.addEventListener('click', iniciarCompteEnrere);
 btnPausar.addEventListener('click', pausarComptador);
+// C. El botó Aturar també atura la música i reinicia el comptador
 btnAturar.addEventListener('click', () => aturaCompteEnrere(false)); 
-
-
-/* *************** PARTE AUDIO ********************** */
-/*
-
-let audio = document.getElementById("audio");
-audio.addEventListener("canplaythrough", function(){
-    timer.max=audio.duration;
-    timer_span.max=audio.duration;
-    let ref_interval = window.setInterval(function(){
-        timer.value = audio.currentTime;
-        timer_span.innerText=audio.currentTime
-        if(audio.currentTime== audio.duration){
-            window.clearInterval(ref_interval)
-        }
-    } ,1000)
-})
-const timer = document.getElementById("timer");
-const timer_span=document.getElementById("timer_span");
-
-function playAudio(){
-    audio.src="DRUMC0.WAV";
-    audio.play();
-}
-function playAudio2(){
-    audio.src="FANFARE1.WAV";
-    audio.play();
-}
-function clk_btn_stopAudio(){
-    audio.pause()
-    audio.currentTime=0;
-}
-function clk_btn_mute(){
-    audio.muted=!audio.muted;
-}
-function clk_btn_volUp(){
-    try{
-        audio.volume +=0.2
-    }catch(e){
-        audio.volume=1
-    }    
-    document.getElementById("vol").value=audio.volume;
-}
-function clk_btn_volDown(){
-    try{
-        audio.volume-=0.2
-    }catch(e){
-        audio.volume=0
-    }
-    document.getElementById("vol").value=audio.volume;
-}
-
-function change_inp_vol(){
-    audio.volume= document.getElementById("vol").value;
-}
-
-window.setTimeout(
-    function(){
-        document.getElementById("timer_span").innerText = audio.duration;
-    },500
-);
-
-
-*/
 
 
 
