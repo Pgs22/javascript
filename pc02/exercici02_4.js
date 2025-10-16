@@ -1,4 +1,4 @@
-  /*  
+  /* Utilitza Bootstrap per donar estils als HTML.  
 Exercici02.html
 3.2p] Crea un document HTML amb un div amb id “taula_propietats”.
 Programa amb JS que es creï una taula formada per dos columnes.
@@ -39,7 +39,7 @@ div_taula_propietats.innerHTML=`
         </table>`;
 
 }
-//generaTaulaPropietats();
+generaTaulaPropietats();
 
 
 
@@ -59,8 +59,8 @@ const btnIniciar = document.getElementById("iniciarComptador")
 const btnAturar = document.getElementById("aturarComptador")
 const btnPausar = document.getElementById("pausarComptador")
 
-// Element Audio (Assumeix que l'HTML té <audio id="alarmaAudio" src="FANFARE1.WAV"></audio>)
-const alarmaAudio = new Audio('FANFARE1.WAV');
+// Element Audio afegit a l'HTML id="idAudio" src="FANFARE1.WAV">
+const idAudio = document.getElementById("idAudio");
 
 // Variables del comptador
 let tempsRestantSegons = 0; 
@@ -68,118 +68,15 @@ let referenciaSetIntervalComptador = null;
 let estaPausat = false;
 
 /* /****************FUNCIONS *********************** */
+/*
+function mostraTemps()
+function aturaAudio()
+function aturaCompteEnrere(haFinalitzat = false)
+function actualitzaCompteEnrere()
+function iniciarCompteEnrere()
+function pausarComptador()
+*/
 
-/* *************** ACTUALITZA ********************** */
-function actualitzaCompteEnrere(){
-    if (estaPausat) return; // Sortir
-
-    if (tempsRestantSegons <= 0) {
-        aturaCompteEnrere(true); // El temps ha finalitzat, atura l'interval
-        estatComptador.textContent = "FI"; // Missatge de finalització
-        
-        // C. Quan el compte enrere arribi a 0, avisa amb una música
-        alarmaAudio.loop = true; // Per a que la música es repeteixi
-        alarmaAudio.play().catch(e => console.error("Error al reproduir l'àudio:", e));
-
-        // Un cop ha acabat, només pot aturar-se (el botó d'Aturar gestiona l'àudio)
-        btnAturar.disabled = false;
-        btnIniciar.disabled = true;
-        btnPausar.disabled = true;
-
-        return;
-    }
-
-    tempsRestantSegons--;
-    mostraTemps();
-}
-
-/* *************** INICIAR COMPTADOR ********************** */
-function iniciarCompteEnrere() {
-    // Assegura't que l'àudio està aturat i reiniciat abans d'un nou inici/represa
-    aturaAudio();
-
-    // 1. Reprèn des de la pausa
-    if (referenciaSetIntervalComptador && estaPausat) {
-        estaPausat = false;
-        btnPausar.textContent = 'Pausar';
-        // Habilitats dels botons
-        btnIniciar.disabled = true;
-        btnPausar.disabled = false;
-        return;
-    }
-    
-    // 2. Primer Inici
-    if (referenciaSetIntervalComptador === null) {
-        // LLEGIM ELS VALORS DE L'USUARI
-        const minuts = parseInt(inputMinuts.value) || 0;
-        const segons = parseInt(inputSegons.value) || 0;
-        
-        tempsRestantSegons = (minuts * 60) + segons;
-        
-        if (tempsRestantSegons <= 0) {
-            alert("Si us plau, introdueix un temps major a zero (minuts o segons).");
-            return;
-        }
-
-        // Configuració inicial
-        inputMinuts.disabled = true;
-        inputSegons.disabled = true;
-        btnIniciar.disabled = true;
-        btnPausar.disabled = false; // Habilita Pausar
-        btnAturar.disabled = false; // Habilita Aturar
-        
-        mostraTemps();
-        
-        // Inicia l'interval a 1000ms (1 segon)
-        referenciaSetIntervalComptador = window.setInterval(actualitzaCompteEnrere, 1000);
-    }
-}
-
-/* *************** PAUSAR COMPTADOR ********************** */
-function pausarComptador() {
-    if (referenciaSetIntervalComptador) {
-        estaPausat = !estaPausat; 
-        
-        if (estaPausat) {
-            btnPausar.textContent = 'Reprendre';
-            btnIniciar.disabled = false; // Permet iniciar (o reprendre) si està pausat
-        } else {
-            btnPausar.textContent = 'Pausar';
-            btnIniciar.disabled = true;
-        }
-    }
-}
-
-/* *************** ATURAR COMPTADOR ********************** */
-function aturaCompteEnrere(haFinalitzat = false) {
-    window.clearInterval(referenciaSetIntervalComptador);
-    referenciaSetIntervalComptador = null;
-    estaPausat = false;
-    
-    // C. Atura la música si s'estava reproduint
-    aturaAudio();
-
-    // Restableix l'estat dels controls
-    inputMinuts.disabled = false;
-    inputSegons.disabled = false;
-    btnIniciar.disabled = false;
-    btnPausar.disabled = true;
-    btnPausar.textContent = 'Pausar';
-
-    if (!haFinalitzat) {
-        // Si s'atura manualment, reinicia el display a 00:00
-        tempsRestantSegons = 0;
-        estatComptador.textContent = "00 minuts i 00 segons"; 
-    }
-    // Si ha finalitzat, el display es manté amb el missatge "FI" (set a actualitzaCompteEnrere)
-}
-
-/* *************** ATURAR ÀUDIO (Funció Helper) ********************** */
-function aturaAudio() {
-    alarmaAudio.pause();
-    alarmaAudio.currentTime = 0; // Reinicia l'àudio
-    alarmaAudio.loop = false;
-}
 
 
 /* *************** MOSTRAR COMPTADOR ********************** */
@@ -193,11 +90,130 @@ function mostraTemps() {
     estatComptador.textContent = `${minutsStr} minuts i ${segonsStr} segons`;
 }
 
+/* *************** ATURAR ÀUDIO (Funció Helper) ********************** */
+function aturaAudio() {
+    idAudio.pause();
+    idAudio.currentTime = 0; // Reinicia l'àudio
+    idAudio.loop = false;
+}
+
+/* *************** ATURAR COMPTADOR ********************** */
+function aturaCompteEnrere(haFinalitzat = false) {
+    window.clearInterval(referenciaSetIntervalComptador);
+    referenciaSetIntervalComptador = null;
+    estaPausat = false;
+    
+    if (idAudio.paused === false) { aturaAudio(); }
+
+    inputMinuts.disabled = false;
+    inputSegons.disabled = false;
+    btnIniciar.disabled = false;
+    btnPausar.disabled = true;
+    btnPausar.textContent = 'PAUSAR';
+    btnAturar.disabled = true; 
+
+    if (!haFinalitzat) {
+        tempsRestantSegons = 0;
+        mostraTemps(); 
+    } else {
+        btnAturar.disabled = false;
+    }
+}
+
+/* *************** ACTUALITZA ********************** */
+function actualitzaCompteEnrere(){
+    if (estaPausat) return;
+
+    if (tempsRestantSegons <= 0) {
+        // Atura l'interval
+        window.clearInterval(referenciaSetIntervalComptador);
+        referenciaSetIntervalComptador = null;
+
+        estatComptador.textContent = "FI! 🎶"; 
+        
+        // Activar alarma (Punt c)
+        idAudio.loop = true;
+        idAudio.src = "FANFARE1.WAV"; 
+        idAudio.load();
+        idAudio.play(); 
+        
+        btnIniciar.disabled = true;
+        btnPausar.disabled = true;
+        btnAturar.disabled = false;
+        
+        return;
+    }
+
+    tempsRestantSegons--;
+    mostraTemps();
+}
+
+/* *************** INICIAR COMPTADOR ********************** */
+function iniciarCompteEnrere() {
+    // 1. Reprendre des de pausa
+    if (estaPausat) {
+        estaPausat = false;
+        btnPausar.textContent = 'PAUSAR';
+        btnIniciar.disabled = true;
+        btnPausar.disabled = false;
+        return;
+    }
+    
+    // 2. Primer Inici (Només si no hi ha un interval actiu)
+    if (referenciaSetIntervalComptador === null) {
+        // LLEGIM ELS VALORS DE L'USUARI (Punt a)
+        const minuts = parseInt(inputMinuts.value) || 0;
+        const segons = parseInt(inputSegons.value) || 0;
+        
+        tempsRestantSegons = (minuts * 60) + segons;
+        
+        if (tempsRestantSegons <= 0) {
+            alert("Si us plau, introdueix un temps major a zero.");
+            return;
+        }
+
+        // Configuració d'inputs i botons
+        inputMinuts.disabled = true;
+        inputSegons.disabled = true;
+        btnIniciar.disabled = true;
+        btnPausar.disabled = false; 
+        btnAturar.disabled = false; 
+        
+        mostraTemps();
+        
+        // ** INICI DE L'INTERVAL per capturar el temps inicial **
+        referenciaSetIntervalComptador = window.setInterval(actualitzaCompteEnrere, 1000);
+    }
+}
+
+/* *************** PAUSAR COMPTADOR ********************** */
+function pausarComptador() {
+    if (referenciaSetIntervalComptador) {
+        estaPausat = !estaPausat; 
+        
+        if (estaPausat) {
+            btnPausar.textContent = 'REPRENDRE';
+            btnIniciar.disabled = false; 
+        } else {
+            btnPausar.textContent = 'PAUSAR';
+            btnIniciar.disabled = true;
+        }
+    }
+}
+
+
 // ACCIONS DELS BOTONS
 btnIniciar.addEventListener('click', iniciarCompteEnrere);
 btnPausar.addEventListener('click', pausarComptador);
-// C. El botó Aturar també atura la música i reinicia el comptador
+// Stura la música i reinicia el comptador
 btnAturar.addEventListener('click', () => aturaCompteEnrere(false)); 
+
+//Executar inici de comptador a 00:00 i controls per aturar la música
+document.addEventListener('DOMContentLoaded', () => {
+    // Inicialitza l'estat dels botons i el display a 00:00
+    aturaCompteEnrere(false); 
+});
+
 
 
 
