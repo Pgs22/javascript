@@ -56,6 +56,20 @@ function stopMusic(){
   audio.currentTime=0;
 }
 
+/*
+bton_stop.onclick=stopMusic;
+stopMusic=function (){
+  audio.pause();
+  audio.currentTime=0;
+}
+
+Funció anónima:
+bton_stop.onclick= function (){
+  audio.pause();
+  audio.currentTime=0;
+}
+  */
+
 btn_pause.onclick=pauseMusic;
 function pauseMusic(){
   audio.pause();

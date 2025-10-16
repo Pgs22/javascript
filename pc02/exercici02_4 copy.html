@@ -8,32 +8,33 @@
 </head>
 <body>
 
-    <div id="taula_propietats">  taula propietats  </div>
-
-    <div id="propietats_comptador">
-        <h3>comptador compta enrere </h3>        
-        <label>Minuts:</label>
+    <div id="taula_propietats" >
+    </div>
+    
+    <div id="Comptador">
+        <h3>Compta enrere</h3>
+        <label for="inputMinuts">Minuts:</label>
         <input type="number" id="inputMinuts" value="0" min="0">
 
-        <label>Segons:</label>
+        <label for="inputSegons">Segons:</label>
         <input type="number" id="inputSegons" value="0" min="0" max="59">
 
         <button id="iniciarComptador"> INICIAR </button>
         <button id="pausarComptador" disabled> PAUSAR </button>
         <button id="aturarComptador"> ATURAR </button>
     </div>
-
-    <div id="estatComptadorMinuts">00 minuts</div>
-    <div id="estatComptadorSegons">00 segons</div>
+    <div id="estatComptador">00 minuts i 00 segons</div>
 
     <div id="controlsAudio">
-        <h3>Controls audio</h3>
+        <h3>Controls d'Àudio</h3>
 
         <audio controls id="idAudio">
             <source src="DRUMC0.WAV" type="wav" >
             <source src="FANFARE1.WAV" type="wav">
         </audio>
-    
+    </div>
+
+    <div id="controlsMusic"></div>    
         <button id="btn_play"> PLAY </button>
         <button id="btn_pause"> PAUSE </button>
         <button id="btn_stop"> STOP </button>

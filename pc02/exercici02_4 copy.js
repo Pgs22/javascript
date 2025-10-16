@@ -50,56 +50,45 @@ b.Permet que l’usuari inicií el compte enrere i el pugui aturar (restablint-l
 c.Quan el compte enrere arribi a 0, avisa amb una música i permet que es pugui aturar.
 */
 
-
-/******************************* PROPIETATS COMPTADOR */
-
-let inputMinuts = document.getElementById("inputMinuts");
-let inputSegons = document.getElementById("inputSegons");
-let estatMinuts = document.getElementById("estatComptadorMinuts");
-let estatSegons = document.getElementById("estatComptadorSegons");
-let reset = document.getElementById("aturarComptador");
-
-let tempsRestant = 0;
-
-bton_pausarComptador.onclick=pausarComptador;
-function pausarComptador(){
-  inputMinuts = 0;
-  inputSegons = 0;
-}
-
-function iniciaComptaEnrere(){
-    const minuts = parseInt(inputMinuts.value);
-    const segons = parseInt(inputSegons.value);
-    //Pasar los minutos a segundos para parar el contador cuando llegue a 0
-    tempsRestant = (minuts * 60) + segons;
-    if(tempsRestant = 0){
-        return;
-    }
-    tempsRestant--;
-
-}
-
-iniciaComptaEnrere();
-let referenciaSetIntervalComptador = window.setInterval(iniciaComptaEnrere, 1000);
-
-//Cridar a la funció al pulsar el botó
-
+// Elements del document html dels input
+const inputMinuts = document.getElementById("inputMinuts");
+const inputSegons = document.getElementById("inputSegons");
+const estatComptador = document.getElementById("estatComptador");
+// Elements del document html dels botons
+const btnIniciar = document.getElementById("iniciarComptador")
+const btnAturar = document.getElementById("aturarComptador")
+const btnPausar = document.getElementById("pausarComptador")
 
 // Element Audio afegit a l'HTML id="idAudio" src="FANFARE1.WAV">
 const idAudio = document.getElementById("idAudio");
 
-
+// Variables del comptador
+let tempsRestantSegons = 0; 
+let referenciaSetIntervalComptador = null;
+let estaPausat = false;
 
 /* /****************FUNCIONS *********************** */
 /*
+function mostraTemps()
 function aturaAudio()
+function aturaCompteEnrere(haFinalitzat = false)
+function actualitzaCompteEnrere()
 function iniciarCompteEnrere()
 function pausarComptador()
 */
 
 
 
+/* *************** MOSTRAR COMPTADOR ********************** */
+function mostraTemps() {
+    const min = Math.floor(tempsRestantSegons / 60);
+    const sec = tempsRestantSegons % 60;
 
+    const minutsStr = String(min).padStart(2, '0');
+    const segonsStr = String(sec).padStart(2, '0');
+
+    estatComptador.textContent = `${minutsStr} minuts i ${segonsStr} segons`;
+}
 
 /* *************** ATURAR ÀUDIO (Funció Helper) ********************** */
 function aturaAudio() {
@@ -108,9 +97,123 @@ function aturaAudio() {
     idAudio.loop = false;
 }
 
+/* *************** ATURAR COMPTADOR ********************** */
+function aturaCompteEnrere(haFinalitzat = false) {
+    window.clearInterval(referenciaSetIntervalComptador);
+    referenciaSetIntervalComptador = null;
+    estaPausat = false;
+    
+    if (idAudio.paused === false) { aturaAudio(); }
+
+    inputMinuts.disabled = false;
+    inputSegons.disabled = false;
+    btnIniciar.disabled = false;
+    btnPausar.disabled = true;
+    btnPausar.textContent = 'PAUSAR';
+    btnAturar.disabled = true; 
+
+    if (!haFinalitzat) {
+        tempsRestantSegons = 0;
+        mostraTemps(); 
+    } else {
+        btnAturar.disabled = false;
+    }
+}
+
+/* *************** ACTUALITZA ********************** */
+function actualitzaCompteEnrere(){
+    if (estaPausat) return;
+
+    if (tempsRestantSegons <= 0) {
+        // Atura l'interval
+        window.clearInterval(referenciaSetIntervalComptador);
+        referenciaSetIntervalComptador = null;
+
+        estatComptador.textContent = "FI! 🎶"; 
+        
+        // Activar alarma (Punt c)
+        idAudio.loop = true;
+        idAudio.src = "FANFARE1.WAV"; 
+        idAudio.load();
+        idAudio.play(); 
+        
+        btnIniciar.disabled = true;
+        btnPausar.disabled = true;
+        btnAturar.disabled = false;
+        
+        return;
+    }
+
+    tempsRestantSegons--;
+    mostraTemps();
+}
+
+/* *************** INICIAR COMPTADOR ********************** */
+function iniciarCompteEnrere() {
+    // 1. Reprendre des de pausa
+    if (estaPausat) {
+        estaPausat = false;
+        btnPausar.textContent = 'PAUSAR';
+        btnIniciar.disabled = true;
+        btnPausar.disabled = false;
+        return;
+    }
+    
+    // 2. Primer Inici (Només si no hi ha un interval actiu)
+    if (referenciaSetIntervalComptador === null) {
+        // LLEGIM ELS VALORS DE L'USUARI (Punt a)
+        const minuts = parseInt(inputMinuts.value) || 0;
+        const segons = parseInt(inputSegons.value) || 0;
+        
+        tempsRestantSegons = (minuts * 60) + segons;
+        
+        if (tempsRestantSegons <= 0) {
+            alert("Si us plau, introdueix un temps major a zero.");
+            return;
+        }
+
+        // Configuració d'inputs i botons
+        inputMinuts.disabled = true;
+        inputSegons.disabled = true;
+        btnIniciar.disabled = true;
+        btnPausar.disabled = false; 
+        btnAturar.disabled = false; 
+        
+        mostraTemps();
+        
+        // ** INICI DE L'INTERVAL per capturar el temps inicial **
+        referenciaSetIntervalComptador = window.setInterval(actualitzaCompteEnrere, 1000);
+    }
+}
+
+/* *************** PAUSAR COMPTADOR ********************** */
+function pausarComptador() {
+    if (referenciaSetIntervalComptador) {
+        estaPausat = !estaPausat; 
+        
+        if (estaPausat) {
+            btnPausar.textContent = 'REPRENDRE';
+            btnIniciar.disabled = false; 
+        } else {
+            btnPausar.textContent = 'PAUSAR';
+            btnIniciar.disabled = true;
+        }
+    }
+}
 
 
+// ACCIONS DELS BOTONS
+btnIniciar.addEventListener('click', iniciarCompteEnrere);
+btnPausar.addEventListener('click', pausarComptador);
+// Stura la música i reinicia el comptador
+btnAturar.addEventListener('click', () => aturaCompteEnrere(false)); 
 
+//Executar inici de comptador a 00:00 i afegir controls pel volum
+document.addEventListener('DOMContentLoaded', () => {
+    // Inicialitza l'estat dels botons i el display a 00:00
+    aturaCompteEnrere(false); 
+    actualitzarVolum();
+});
 
 
 
