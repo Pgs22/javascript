@@ -74,7 +74,8 @@ function aturarComptador(){
     tempsRestant = 0;
     inputMinuts.value = "0";
     inputSegons.value = "0";
-    //Falta crear función estado del contador
+    //Llamamos a la función para mostrar contador
+    mostraComptador()
 }
 
 bton_iniciar.onclick=iniciaComptaEnrere;
@@ -107,12 +108,23 @@ function actualitzarComptador(){
         referenciaSetIntervalComptador = null;
         tempsRestant = 0;
     }
+    mostraComptador()
 }
 
-//iniciaComptaEnrere();
-//let referenciaSetIntervalComptador = window.setInterval(iniciaComptaEnrere, 1000);
+function mostraComptador() {
+    if(tempsRestant <= 0){
+        estatComptadorMinuts.innerHTML= `${inputMinuts} minuts i`;
+        estatComptadorSegons.innerHTML = `${inputSegons} segons`;
+        return;
+    }
+    //Convertir tempsRestant a minutos usar funcion Math.floor() que solo se queda con el numero entero
+    const min = Math.floor(tempsRestant / 60);
+    //Para los segundos, extraer solo el número decimal que serán los segundos, usamos el resto
+    const sec = tempsRestant % 60;
 
-
+    estatComptadorMinuts.innerText= `${min} minuts i`;
+    estatComptadorSegons.innerText = `${sec} segons`;
+}
 
 
 // Element Audio afegit a l'HTML id="idAudio" src="FANFARE1.WAV">
@@ -141,10 +153,6 @@ function aturaAudio() {
 
 
 
-
-
-
-
 /*
 5. 5p] Afegeix un rellotge que mostri la hora, minuts i segons actuals i s’actualitzi cada segon.
 a. Afegeix la possibilitat d’establir una alarma que avisi en una hora en concret
@@ -152,122 +160,4 @@ b. Al saltar l’alarma aconsegueix que soni una música i que es pugui aturar
 c. L’usuari pot escollir entre diferents músiques
 d. L’usuari pot establir el volum
 e. En qualsevol moment l’usuari pot reproduir i aturar la música de l’alarma
-*/
-
-// Elementos de control de reproducción
-const btnPlay = document.getElementById("btn_play");
-const btnPause = document.getElementById("btn_pause");
-const btnStop = document.getElementById("btn_stop");
-const selectorAudio = document.querySelector("#controlsMusic select");
-
-// Elementos de control de volumen
-const inputVolum = document.getElementById("inp_volum_Audio");
-const btnVolumUp = document.getElementById("btnVolumUp");
-const btnVolumDown = document.getElementById("btnVolumDown");
-const btnMute = document.getElementById("btnMute");
-
-// Variable para guardar el volumen antes de silenciar
-let volumAbansDeSilenciar = 1;
-
-/* *************** CONTROL DE REPRODUCCIÓN ********************** */
-
-function reproduirAudio() {
-    // Carrega l'àudio seleccionat i el reprodueix
-    idAudio.loop = false; // Assegura que no estigui en bucle per les funcions manuals
-    idAudio.play();
-}
-
-function pausarAudio() {
-    // Pausa l'àudio
-    idAudio.pause();
-}
-
-function aturarReproduccio() {
-    // Atura i reinicia l'àudio
-    idAudio.pause();
-    idAudio.currentTime = 0;
-    idAudio.loop = false;
-}
-
-function canviarSrcAudio() {
-    // Canvia el fitxer d'àudio segons la selecció
-    const nouSrc = selectorAudio.value;
-    idAudio.src = nouSrc;
-    idAudio.load(); // Carrega la nova font
-
-    // Per a una millor experiència d'usuari, es pot aturar o reiniciar l'àudio
-    // aturarReproduccio(); 
-}
-
-/* *************** CONTROL DE VOLUMEN ********************** */
-
-function actualitzarVolum() {
-    // Estableix el volum de l'element d'àudio segons el valor de l'input range
-    const nouVolum = parseFloat(inputVolum.value);
-    idAudio.volume = nouVolum;
-    
-    // Actualitza l'estat del botó silenciar
-    if (nouVolum === 0) {
-        btnMute.textContent = "Sense Silenciar";
-    } else {
-        btnMute.textContent = "Silenciar";
-    }
-}
-
-function pujarVolum() {
-    // Augmenta el volum en 0.1, sense superar el màxim (1)
-    let volumActual = parseFloat(inputVolum.value);
-    volumActual = Math.min(1, volumActual + 0.1);
-    inputVolum.value = volumActual.toFixed(1); // Actualitza el control de rang
-    actualitzarVolum(); // Aplica el canvi a l'àudio
-}
-
-function baixarVolum() {
-    // Redueix el volum en 0.1, sense baixar del mínim (0)
-    let volumActual = parseFloat(inputVolum.value);
-    volumActual = Math.max(0, volumActual - 0.1);
-    inputVolum.value = volumActual.toFixed(1); // Actualitza el control de rang
-    actualitzarVolum(); // Aplica el canvi a l'àudio
-}
-
-function silenciarAudio() {
-    const volumActual = idAudio.volume;
-
-    if (volumActual > 0) {
-        // Silenciar: guardar volum actual, posar a 0, actualitzar control/botó
-        volumAbansDeSilenciar = volumActual;
-        idAudio.volume = 0;
-        inputVolum.value = 0; 
-        btnMute.textContent = "Sense Silenciar";
-    } else {
-        // Sense silenciar: restablir al volum guardat, actualitzar control/botó
-        idAudio.volume = volumAbansDeSilenciar;
-        inputVolum.value = volumAbansDeSilenciar.toFixed(1);
-        btnMute.textContent = "Silenciar";
-    }
-}
-
-
-// Botons de control de reproducció d'àudio
-btnPlay.addEventListener('click', reproduirAudio);
-btnPause.addEventListener('click', pausarAudio);
-btnStop.addEventListener('click', aturarReproduccio);
-
-// Selector de font d'àudio
-selectorAudio.addEventListener('change', canviarSrcAudio);
-
-// Controls de volum
-inputVolum.addEventListener('input', actualitzarVolum);
-btnVolumUp.addEventListener('click', pujarVolum);
-btnVolumDown.addEventListener('click', baixarVolum);
-btnMute.addEventListener('click', silenciarAudio);
-
-
-/* Afegim el control del volum ""actualitzarVolum();"" al event exercici anterior
-//Executar inici de comptador a 00:00 i afegir controls pel volum
-document.addEventListener('DOMContentLoaded', () => {
-    // Inicialitza l'estat dels botons i el display a 00:00
-    aturaCompteEnrere(false); 
-    actualitzarVolum();
-});
 */
