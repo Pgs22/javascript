@@ -57,32 +57,62 @@ let inputMinuts = document.getElementById("inputMinuts");
 let inputSegons = document.getElementById("inputSegons");
 let estatMinuts = document.getElementById("estatComptadorMinuts");
 let estatSegons = document.getElementById("estatComptadorSegons");
-let reset = document.getElementById("aturarComptador");
+
+let referenciaSetIntervalComptador = null;
+
+let bton_aturar = document.getElementById("aturarComptador");
+let bton_iniciar = document.getElementById("iniciarComptador");
 
 let tempsRestant = 0;
 
-bton_pausarComptador.onclick=pausarComptador;
-function pausarComptador(){
-  inputMinuts = 0;
-  inputSegons = 0;
+bton_aturar.onclick=aturarComptador;
+function aturarComptador(){
+    //Para parar la función interval usamos el clear y establecemos a null su variable
+    window.clearInterval(referenciaSetIntervalComptador);
+    referenciaSetIntervalComptador = null;
+    //Reseteamos todo a 0
+    tempsRestant = 0;
+    inputMinuts.value = "0";
+    inputSegons.value = "0";
+    //Falta crear función estado del contador
 }
 
+bton_iniciar.onclick=iniciaComptaEnrere;
 function iniciaComptaEnrere(){
+    //Si ya hay un contador en marcha, que no se pueda iniciar y salga
+    if (referenciaSetIntervalComptador !== null) {
+        return;
+    }   
     const minuts = parseInt(inputMinuts.value);
     const segons = parseInt(inputSegons.value);
-    //Pasar los minutos a segundos para parar el contador cuando llegue a 0
+    //Pasar los minutos a segundos para sumar el tiempo total
     tempsRestant = (minuts * 60) + segons;
-    if(tempsRestant = 0){
+    //Si el tiempo total es mayo a 0, iniciar el contador
+    if(tempsRestant <= 0){
+        //Falta crear función estado del contador
         return;
     }
-    tempsRestant--;
-
+    //Para no repetir los calculos en la función actualiza la ejecutamos antes del intervalo
+    actualitzarComptador();
+    //Para restar segundos al contador iniciado se llama a otra función
+    referenciaSetIntervalComptador = window.setInterval(actualitzarComptador, 1000);
 }
 
-iniciaComptaEnrere();
-let referenciaSetIntervalComptador = window.setInterval(iniciaComptaEnrere, 1000);
+function actualitzarComptador(){
+    //Para restar segundos en cada intervalo:
+    tempsRestant--;
+    //Para parar el contador si llega a 0
+    if (tempsRestant <= 0) {
+        window.clearInterval(referenciaSetIntervalComptador);
+        referenciaSetIntervalComptador = null;
+        tempsRestant = 0;
+    }
+}
 
-//Cridar a la funció al pulsar el botó
+//iniciaComptaEnrere();
+//let referenciaSetIntervalComptador = window.setInterval(iniciaComptaEnrere, 1000);
+
+
 
 
 // Element Audio afegit a l'HTML id="idAudio" src="FANFARE1.WAV">
