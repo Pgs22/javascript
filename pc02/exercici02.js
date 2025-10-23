@@ -99,7 +99,6 @@ function iniciaComptaEnrere(){
         const segons = parseInt(inputSegons.value);
         //Pasar los minutos a segundos para sumar el tiempo total
         tempsRestant = (minuts * 60) + segons;
-        //Si el tiempo total es mayo a 0, iniciar el contador
     }
     //Si el tiempo restante sigue en 0 después de las acciones anteriores, salimos
     if(tempsRestant <= 0){
@@ -210,186 +209,36 @@ function aturaAutoAudio() {
 
 
 /*
-5. 5p] Afegeix un rellotge que mostri la hora, minuts i segons actuals i s’actualitzi cada segon.
-a. Afegeix la possibilitat d’establir una alarma que avisi en una hora en concret
+5. 5p] Afegeix un rellotge que mostri la hora, minuts i segons actuals i s’actualitzi cada segon. */
+function horaActual(){
+  let hora_actual = new Date();
+//crear una llista per mostrar hora actual
+div_rellotge.innerHTML=
+    `<ul> <li>Hora actual` +    hora_actual.getHours()+ `: ` +
+                                hora_actual.getMinutes()+`:`+
+                                hora_actual.getSeconds()+`</li>
+    </ul>`;
+    return function(){console.log("L'hora s'actualitzada cada segon")}; // Funcion anonima
+}
+horaActual();
+let referenciaSetIntervalHora= window.setInterval(horaActual, 1000);
+
+/*
+a. Afegeix la possibilitat d’establir una alarma que avisi en una hora en concret */
+
+function alarma(){
+    //Leer los imputs si el tiempo restante es igual o menor a 0
+    const minuts = parseInt(inputMinuts.value);
+    const segons = parseInt(inputSegons.value);
+    //Pasar los minutos a segundos para sumar el tiempo total
+    tempsRestant = (minuts * 60) + segons;
+}
+
+
+/*
 b. Al saltar l’alarma aconsegueix que soni una música i que es pugui aturar
 c. L’usuari pot escollir entre diferents músiques
 d. L’usuari pot establir el volum
 e. En qualsevol moment l’usuari pot reproduir i aturar la música de l’alarma
 */
 
-/**
- * PROPIETATS RELLOTGE I ALARMA
- */
-const rellotgeActualDiv = document.getElementById("rellotgeActual");
-const inputAlarmaHora = document.getElementById("inputAlarmaHora");
-const inputAlarmaMinut = document.getElementById("inputAlarmaMinut");
-const btnEstablirAlarma = document.getElementById("btn_establirAlarma");
-const estatAlarmaDiv = document.getElementById("estatAlarma");
-
-// Audio de la Alarma (Elemento separado del contador)
-const idAlarmaAudio = document.getElementById("idAlarmaAudio"); 
-const selectMusica = document.getElementById("selectMusica");
-const inputVolum = document.getElementById("inputVolum");
-const btnReproduirAudio = document.getElementById("btn_reproduirAudio");
-const btnAturarAudio = document.getElementById("btn_aturarAudio");
-
-let alarmaEstablerta = { hora: null, minut: null, activa: false };
-
-// El temporizador principal del reloj (se inicia inmediatamente)
-window.setInterval(actualitzarRellotge, 1000); 
-
-//--------------------------------------------------------------------------------------
-
-/**
- * FUNCIONES UTILITARIAS
- */
-
-/**
- * Función para añadir un 0 inicial si el número es menor a 10 (ej: 9 -> 09)
- */
-function formatDuesDigits(num) {
-    return num < 10 ? '0' + num : num;
-}
-
-//--------------------------------------------------------------------------------------
-
-/**
- * 5. RELOJ PRINCIPAL
- */
-
-/**
- * Actualiza el reloj cada segundo y comprueba si la alarma debe sonar.
- */
-function actualitzarRellotge() {
-    const ara = new Date();
-    const hora = ara.getHours();
-    const minut = ara.getMinutes();
-    const segon = ara.getSeconds();
-
-    // 5. Muestra la hora, minutos y segundos actuales
-    rellotgeActualDiv.textContent = 
-        `${formatDuesDigits(hora)}:${formatDuesDigits(minut)}:${formatDuesDigits(segon)}`;
-
-    // 5.a Comprueba si la alarma ha de sonar (sólo en el segundo 00)
-    if (alarmaEstablerta.activa && 
-        alarmaEstablerta.hora === hora && 
-        alarmaEstablerta.minut === minut && 
-        segon === 0) {
-        
-        activaAlarma();
-    }
-}
-
-//--------------------------------------------------------------------------------------
-
-/**
- * 5.a ESTABLECER Y CANCELAR ALARMA
- */
-
-btnEstablirAlarma.onclick = establirAlarma;
-
-function establirAlarma() {
-    // Si el botón está en modo "CANCEL·LAR", llamamos a esa función
-    if (btnEstablirAlarma.textContent === "Cancel·lar Alarma") {
-        cancelaAlarma();
-        return;
-    }
-    
-    const hora = parseInt(inputAlarmaHora.value);
-    const minut = parseInt(inputAlarmaMinut.value);
-
-    if (isNaN(hora) || isNaN(minut) || hora < 0 || hora > 23 || minut < 0 || minut > 59) {
-        alert("Si us plau, introdueix una hora i un minut vàlids (HH:MM).");
-        return;
-    }
-
-    alarmaEstablerta = {
-        hora: hora,
-        minut: minut,
-        activa: true
-    };
-    
-    estatAlarmaDiv.textContent = 
-        `Alarma establerta per a les ${formatDuesDigits(hora)}:${formatDuesDigits(minut)}`;
-    
-    // Cambia la UI
-    inputAlarmaHora.disabled = true;
-    inputAlarmaMinut.disabled = true;
-    btnEstablirAlarma.textContent = "Cancel·lar Alarma";
-}
-
-function cancelaAlarma() {
-    aturarAudioAlarma(); // 5.b: Asegura que el audio se detiene si estaba sonando
-    
-    alarmaEstablerta.activa = false;
-    alarmaEstablerta.hora = null;
-    alarmaEstablerta.minut = null;
-    
-    estatAlarmaDiv.textContent = "Alarma no establerta";
-    
-    // Restaura la UI
-    inputAlarmaHora.disabled = false;
-    inputAlarmaMinut.disabled = false;
-    btnEstablirAlarma.textContent = "Establir Alarma";
-}
-
-//--------------------------------------------------------------------------------------
-
-/**
- * 5.b ACTIVACIÓN Y 5.c, 5.d, 5.e CONTROL DE AUDIO DE LA ALARMA
- */
-
-function activaAlarma() {
-    // 5.b: Alarma ha saltado
-    reproduirAudioAlarma(); 
-    estatAlarmaDiv.textContent = "!!! ALARMA SONANT !!! (Prem 'Aturar Música' o 'Cancel·lar Alarma')";
-}
-
-btnReproduirAudio.onclick = reproduirAudioAlarma;
-function reproduirAudioAlarma() {
-    // 5.c: Carrega la música seleccionada
-    const musicaSrc = selectMusica.value;
-    
-    // Solo actualiza el src si es diferente
-    if (idAlarmaAudio.src.indexOf(musicaSrc) === -1) {
-        idAlarmaAudio.src = musicaSrc;
-        idAlarmaAudio.load(); // Vuelve a cargar el archivo
-    }
-
-    // 5.d: Estableix el volum
-    idAlarmaAudio.volume = parseFloat(inputVolum.value);
-    idAlarmaAudio.loop = true; // La alarma siempre debe sonar en bucle
-    
-    idAlarmaAudio.play()
-        .catch(error => {
-            // Manejo de error si el navegador bloquea el auto-play
-            console.warn("Reproducció d'àudio bloquejada. L'usuari ha de fer clic.", error);
-        });
-}
-
-btnAturarAudio.onclick = aturarAudioAlarma;
-function aturarAudioAlarma() {
-    idAlarmaAudio.pause();
-    idAlarmaAudio.currentTime = 0; // Reinicia l'àudio
-    idAlarmaAudio.loop = false;
-}
-
-/**
- * 5.d GESTIÓN DEL VOLUMEN (Actualización en tiempo real)
- */
-inputVolum.oninput = function() {
-    idAlarmaAudio.volume = parseFloat(inputVolum.value);
-};
-
-//--------------------------------------------------------------------------------------
-
-/**
- * INICIALIZACIÓN
- */
-actualitzarRellotge(); // Llama una vez para mostrar la hora al cargar
-
-// Configuración inicial del audio de la alarma
-const musicaInicial = selectMusica.value;
-idAlarmaAudio.src = musicaInicial;
-idAlarmaAudio.volume = parseFloat(inputVolum.value);
