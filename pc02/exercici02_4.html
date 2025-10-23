@@ -20,39 +20,17 @@
 
         <button id="iniciarComptador"> INICIAR </button>
         <button id="pausarComptador" disabled> PAUSAR </button>
-        <button id="aturarComptador"> ATURAR </button>
+        <button id="aturarComptador" disabled> ATURAR </button>
     </div>
 
     <div id="estatComptadorMinuts">00 minuts i</div>
     <div id="estatComptadorSegons">00 segons</div>
-
-    <div id="controlsAudio">
-        <h3>Controls audio</h3>
-
-        <audio controls id="idAudio">
-            <source src="DRUMC0.WAV" type="wav" >
-            <source src="FANFARE1.WAV" type="wav">
+    <div id="autoAudio">
+        <audio controls id="idAutoAudio">
+            <source src="DRUMC0.WAV" type="audio/wav">
         </audio>
-    
-        <button id="btn_play"> PLAY </button>
-        <button id="btn_pause"> PAUSE </button>
-        <button id="btn_stop"> STOP </button>
-
-        <select>    
-            <option value="DRUMC0.WAV" selected> DRUMC0 </option>
-            <option value="FANFARE1.WAV"> FANFARE1 </option>
-        </select>
+        <button id="btn_aturaAutoAudio"> STOP </button>
     </div>
-
-    <div id="controlsVolum"></div>        
-        <label>Volum:</label>
-        <input type="range" id="inp_volum_Audio" min="0" max="1" step="0.1" value="1">
-        
-        <button id="btnVolumUp">Pujar Volum</button>
-        <button id="btnVolumDown">Baixar Volum</button>
-        <button id="btnMute">Silenciar</button>
-    </div>
-   
 
 </body>
 </html>

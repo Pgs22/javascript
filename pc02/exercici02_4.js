@@ -51,7 +51,9 @@ c.Quan el compte enrere arribi a 0, avisa amb una música i permet que es pugui 
 */
 
 
-/******************************* PROPIETATS COMPTADOR */
+/**
+ * PROPIETATS COMPTADOR
+ */
 
 let inputMinuts = document.getElementById("inputMinuts");
 let inputSegons = document.getElementById("inputSegons");
@@ -59,46 +61,63 @@ let estatMinuts = document.getElementById("estatComptadorMinuts");
 let estatSegons = document.getElementById("estatComptadorSegons");
 
 let referenciaSetIntervalComptador = null;
-
-let bton_aturar = document.getElementById("aturarComptador");
-let bton_iniciar = document.getElementById("iniciarComptador");
-
 let tempsRestant = 0;
 
-bton_aturar.onclick=aturarComptador;
-function aturarComptador(){
-    //Para parar la función interval usamos el clear y establecemos a null su variable
-    window.clearInterval(referenciaSetIntervalComptador);
-    referenciaSetIntervalComptador = null;
-    //Reseteamos todo a 0
-    tempsRestant = 0;
-    inputMinuts.value = "0";
-    inputSegons.value = "0";
-    //Llamamos a la función para mostrar contador
-    mostraComptador()
-}
+/**
+ * BOTONS COMPTADOR
+ */
+
+let bton_aturar = document.getElementById("aturarComptador");
+let bton_pausar = document.getElementById("pausarComptador");
+let bton_iniciar = document.getElementById("iniciarComptador");
+
+
+/**
+ * FUNCIONS
+ * function iniciaComptaEnrere()
+ * actualitzarComptador()
+ * aturarComptador()
+ * pausarComptador()
+ * mostraComptador()
+ * aturaAudio()
+ */
+
 
 bton_iniciar.onclick=iniciaComptaEnrere;
 function iniciaComptaEnrere(){
-    //Si ya hay un contador en marcha, que no se pueda iniciar y salga
+    //Si el contador está a cero salir de la función (controlado por actualitzarComptador el cambiar a null)
     if (referenciaSetIntervalComptador !== null) {
         return;
-    }   
-    const minuts = parseInt(inputMinuts.value);
-    const segons = parseInt(inputSegons.value);
-    //Pasar los minutos a segundos para sumar el tiempo total
-    tempsRestant = (minuts * 60) + segons;
-    //Si el tiempo total es mayo a 0, iniciar el contador
+    }
+    //Si no estaba iniciado leerá los inputs de minutos y segundos para calcular el tiempo restante
+    //Si ya estaba iniciado, seguirá con el tiempo restante donde se quedó
     if(tempsRestant <= 0){
-        //Falta crear función estado del contador
+        //Leer los imputs si el tiempo restante es igual o menor a 0
+        const minuts = parseInt(inputMinuts.value);
+        const segons = parseInt(inputSegons.value);
+        //Pasar los minutos a segundos para sumar el tiempo total
+        tempsRestant = (minuts * 60) + segons;
+        //Si el tiempo total es mayo a 0, iniciar el contador
+    }
+    //Si el tiempo restante sigue en 0 después de las acciones anteriores, salimos
+    if(tempsRestant <= 0){
         return;
     }
+
+    //Para mostrar los botones habilitados y/o deshabilitados (Por defecto deshabilitados botones PAUSAR y ATURAR)
+    bton_pausar.disabled = false; // Habilitado botón PAUSAR porque se ha puesto en marcha el contador
+    bton_aturar.disabled = false; // Habilitado botón ATURAR porque se ha puesto en marcha el contador
+    bton_iniciar.disabled = true;  // Deshabilitar porque ahora está iniciado el contador
+
     //Para no repetir los calculos en la función actualiza la ejecutamos antes del intervalo
     actualitzarComptador();
-    //Para restar segundos al contador iniciado se llama a otra función
+    //Para restar segundos llamamos a la función actualitzarComptador()
+    //Para que se reste cada segundo que pasa, usamos la funcion el windows.setInterval()
+    //Guardamos en la variable referenciaSetIntervalComptador actualizar contador cada segundo (1segundo = 1000milisegundos)
     referenciaSetIntervalComptador = window.setInterval(actualitzarComptador, 1000);
 }
 
+//Llamamos a esta función en el momento que iniciamos o reanudamos la cuenta atrás
 function actualitzarComptador(){
     //Para restar segundos en cada intervalo:
     tempsRestant--;
@@ -107,14 +126,52 @@ function actualitzarComptador(){
         window.clearInterval(referenciaSetIntervalComptador);
         referenciaSetIntervalComptador = null;
         tempsRestant = 0;
+        //Si el comptador arriba a 0, comença la musica
+        reproduirAutoAudio()     
     }
     mostraComptador()
 }
 
+bton_aturar.onclick=aturarComptador;
+function aturarComptador(){
+    //Para parar la función interval usamos el clear y establecemos a null su variable
+    window.clearInterval(referenciaSetIntervalComptador);
+    referenciaSetIntervalComptador = null;
+
+    //Reseteamos todo a 0
+    tempsRestant = 0;
+    inputMinuts.value = "0";
+    inputSegons.value = "0";
+
+    //Para mostrar los botones habilitados y/o deshabilitados
+    bton_pausar.disabled = true; //Desactivado botón PAUSAR al estar parado
+    bton_aturar.disabled = true; //Desactivado botón ATURAR al estar parado
+    bton_iniciar.disabled = false; // Habilitado para poder iniciar de nuevo
+
+    //Llamamos a la función para mostrar contador
+    mostraComptador()
+}
+
+bton_pausar.onclick=pausarComptador;
+function pausarComptador(){
+    //Para parar la función interval usamos el clear y establecemos a null su variable
+    window.clearInterval(referenciaSetIntervalComptador);
+    referenciaSetIntervalComptador = null;
+
+    //Para mostrar los botones habilitados y/o deshabilitados
+    bton_pausar.disabled = true; //Desactivado botón PAUSAR al estar en pausa
+    bton_aturar.disabled = true; //Desactivado botón ATURAR al estar en pausa
+    bton_iniciar.disabled = false; // Habilitado para poder iniciar de nuevo
+
+    //Llamamos a la función para mostrar contador
+    mostraComptador()
+}
+
+
 function mostraComptador() {
     if(tempsRestant <= 0){
-        estatComptadorMinuts.innerHTML= `${inputMinuts} minuts i`;
-        estatComptadorSegons.innerHTML = `${inputSegons} segons`;
+        estatComptadorMinuts.innerHTML= `0 minuts i`;
+        estatComptadorSegons.innerHTML = `0 segons`;
         return;
     }
     //Convertir tempsRestant a minutos usar funcion Math.floor() que solo se queda con el numero entero
@@ -127,29 +184,26 @@ function mostraComptador() {
 }
 
 
-// Element Audio afegit a l'HTML id="idAudio" src="FANFARE1.WAV">
-const idAudio = document.getElementById("idAudio");
-
-
-
-/* /****************FUNCIONS *********************** */
-/*
-function aturaAudio()
-function iniciarCompteEnrere()
-function pausarComptador()
-*/
-
-
-
-
-
-/* *************** ATURAR ÀUDIO (Funció Helper) ********************** */
-function aturaAudio() {
-    idAudio.pause();
-    idAudio.currentTime = 0; // Reinicia l'àudio
-    idAudio.loop = false;
+/**
+ * REPRODUIR AUDIO AUTOMÀTICAMENT
+ */
+const idAutoAudio = document.getElementById("idAutoAudio");
+function reproduirAutoAudio() {
+    idAutoAudio.currentTime = 0;
+    idAutoAudio.loop = true;
+    idAutoAudio.play();
 }
 
+/**
+ * ATURAR AUDIO
+ */
+const btnAutoStop = document.getElementById("btn_aturaAutoAudio");
+btnAutoStop.addEventListener('click', aturaAutoAudio);
+function aturaAutoAudio() {
+    idAutoAudio.pause();
+    idAutoAudio.currentTime = 0; // Reinicia l'àudio
+    idAutoAudio.loop = false;
+}
 
 
 
