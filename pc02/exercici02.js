@@ -210,6 +210,7 @@ function aturaAutoAudio() {
 
 /*
 5. 5p] Afegeix un rellotge que mostri la hora, minuts i segons actuals i s’actualitzi cada segon. */
+
 function horaActual(){
   let hora_actual = new Date();
 //crear una llista per mostrar hora actual
@@ -226,12 +227,72 @@ let referenciaSetIntervalHora= window.setInterval(horaActual, 1000);
 /*
 a. Afegeix la possibilitat d’establir una alarma que avisi en una hora en concret */
 
+/**
+ * PROPIETATS ALARMA
+ */
+let inputHoraAlarma = document.getElementById("inputHoraAlarma");
+let inputMinutsAlarma = document.getElementById("inputMinutsAlarma");
+let inputSegonsAlarma = document.getElementById("inputSegonsAlarma");
+
+/**
+ * BOTONS MUSIC
+ */
+const btnPlay = document.getElementById("btn_play");
+const btnPause = document.getElementById("btn_pause");
+const btnStop = document.getElementById("btn_stop");
+
+/**
+ * PROPIETATS MUSIC
+ */
+let audio_actual = "";
+const controlsMusic = document.getElementById("controlsMusic");
+const idAudio = document.getElementById("idAudio");
+/**
+ * FUNCIONS
+ */
+
 function alarma(){
-    //Leer los imputs si el tiempo restante es igual o menor a 0
-    const minuts = parseInt(inputMinuts.value);
-    const segons = parseInt(inputSegons.value);
-    //Pasar los minutos a segundos para sumar el tiempo total
-    tempsRestant = (minuts * 60) + segons;
+    //Leer los imputs de la alarma
+    const hora = parseInt(inputHoraAlarma.value);
+    const minuts = parseInt(inputMinutsAlarma.value);
+    const segons = parseInt(inputSegonsAlarma.value);
+    const horaAlarma = ((hora /60) + minuts) /60 + segons;
+    SegonsTotals = 
+                    parseInt(hora_actual.getHours())+ 
+                    parseInt(hora_actual.getMinutes())+ 
+                    parseInt(hora_actual.getSeconds());
+    if(horaAlarma = segonsTotals){
+
+    }
+}
+bton_play.onclick=playMusic;
+function playMusic() {
+  if(idAudio.src!= controlsMusic.value){
+    idAudio.src = controlsMusic.value;
+    audio_actual = controlsMusic.value;
+  }    
+  audio.play();
+}
+
+bton_pausar.onclick=pausarMusic;
+function pausarMusic() {
+    // Pausa l'àudio
+    audio.pause();
+}
+
+bton_aturar.onclick=aturarMusic;
+function aturarMusic() {
+    // Atura i reinicia l'àudio
+    audio.pause();
+    audio.currentTime = 0;
+    audio.loop = false;
+}
+
+function canviarMusic() {
+    // Canvia el fitxer d'àudio segons la selecció
+    const nouSrc = controlsMusic.value;
+    idAudio.src = nouSrc;
+    idAudio.load(); // Carrega la nova font
 }
 
 
