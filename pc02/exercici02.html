@@ -36,6 +36,7 @@
 
 
     <div id="rellotge"> </div>
+    
     <div id="alarma">
         <h3> Configurar Alarma </h3>      
         
@@ -43,25 +44,26 @@
         <input type="number" id="inputHoraAlarma" value="0" min="0">
 
         <label>Minuts:</label>
-        <input type="number" id="inputMinuts" value="0" min="0" max="59">
+        <input type="number" id="inputMinutsAlarma" value="0" min="0" max="59">
 
         <label>Segons:</label>
-        <input type="number" id="inputSegons" value="0" min="0" max="59">        
+        <input type="number" id="inputSegonsAlarma" value="0" min="0" max="59">       
+        
+        <button id="btnActivarAlarma"> PROGRAMAR ALARMA </button>
+        <button id="btnCancelarAlarma"> CANCELAR </button>
     </div>
 
-    <div id="idAudio">
-        <audio controls id="idAudio">
-            <source src="DRUMC0.WAV" type="audio/wav">
-            <source src="FANFARE1.WAV" type="audio/wav">
-        </audio>
-    </div>
-
-    <div id="controlsMusic"></div>    
+    <div id="controlsMusic">
         <button id="btn_play"> PLAY </button>
         <button id="btn_pause"> PAUSE </button>
         <button id="btn_stop"> STOP </button>
 
-        <select>    
+        <audio controls id="idAudio">
+            <source src="DRUMC0.WAV" type="audio/wav">
+            <source src="FANFARE1.WAV" type="audio/wav">
+        </audio>
+
+        <select id="select_music" multiple>    
             <option value="DRUMC0.WAV" selected> DRUMC0 </option>
             <option value="FANFARE1.WAV"> FANFARE1 </option>
         </select>

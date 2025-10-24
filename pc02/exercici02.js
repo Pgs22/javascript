@@ -1,15 +1,17 @@
   /* Utilitza Bootstrap per donar estils als HTML.  
 Exercici02.html */
 
-/* 
-3.2p] Crea un document HTML amb un div amb id “taula_propietats”.
+/**
+ * Exercici 2) 3.2p
+ */
+
+/* 3.2p] Crea un document HTML amb un div amb id “taula_propietats”.
 Programa amb JS que es creï una taula formada per dos columnes.
 En la primera columna has de mostrar els texts indicats a continuació, i en la segona columna els valors corresponents obtinguts dinàmicament amb JS:
 a.Valor máxim que pot tenir un número JS
 b.Altura total de la pantalla
 c.Altura interna de la finestra
-d.URL de la web
-*/
+d.URL de la web*/
 
 //Per veure al navegador: 
 console.log("Taula de propietats");
@@ -44,13 +46,14 @@ div_taula_propietats.innerHTML=`
 generaTaulaPropietats();
 
 
+/**
+ * Exercici 2) 4.3p
+ */
 
-/*
-4.3p] Afegeix al document HTML un compte enrere inicialment a 00minuts i 00segons
+/* 4.3p] Afegeix al document HTML un compte enrere inicialment a 00minuts i 00segons
 a.Permet que l’usuari pugui establir quants minuts i segons vol que duri.
 b.Permet que l’usuari inicií el compte enrere i el pugui aturar (restablint-lo a 0) i pausar
-c.Quan el compte enrere arribi a 0, avisa amb una música i permet que es pugui aturar.
-*/
+c.Quan el compte enrere arribi a 0, avisa amb una música i permet que es pugui aturar. */
 
 
 /**
@@ -75,16 +78,8 @@ let bton_iniciar = document.getElementById("iniciarComptador");
 
 
 /**
- * FUNCIONS
- * function iniciaComptaEnrere()
- * actualitzarComptador()
- * aturarComptador()
- * pausarComptador()
- * mostraComptador()
- * aturaAudio()
+ * FUNCIO COMPTADOR INICIAR COMPTA ENRERE
  */
-
-
 bton_iniciar.onclick=iniciaComptaEnrere;
 function iniciaComptaEnrere(){
     //Si el contador está a cero salir de la función (controlado por actualitzarComptador el cambiar a null)
@@ -118,7 +113,9 @@ function iniciaComptaEnrere(){
     referenciaSetIntervalComptador = window.setInterval(actualitzarComptador, 1000);
 }
 
-//Llamamos a esta función en el momento que iniciamos o reanudamos la cuenta atrás
+/**
+ * FUNCIO COMPTADOR ACTUALITZAR QUE ES CRIDA DINTRE DE LA FUNCIO IniciaComptaEnrere()
+ */
 function actualitzarComptador(){
     //Para restar segundos en cada intervalo:
     tempsRestant--;
@@ -133,6 +130,9 @@ function actualitzarComptador(){
     mostraComptador();
 }
 
+/**
+ * FUNCIO COMPTADOR ATURAR
+ */
 bton_aturar.onclick=aturarComptador;
 function aturarComptador(){
     //Para parar la función interval usamos el clear y establecemos a null su variable
@@ -153,6 +153,9 @@ function aturarComptador(){
     mostraComptador();
 }
 
+/**
+ * FUNCIO COMPTADOR PAUSAR
+ */
 bton_pausar.onclick=pausarComptador;
 function pausarComptador(){
     //Para parar la función interval usamos el clear y establecemos a null su variable
@@ -168,14 +171,16 @@ function pausarComptador(){
     mostraComptador();
 }
 
-
+/**
+ * FUNCIO COMPTADOR QUE ES CRIDA DINTRE DE TOTES LES FUNCIONS COMPTADOR A EXCEPCIO DE IniciaComptaEnrere()
+ */
 function mostraComptador() {
     if(tempsRestant <= 0){
         estatComptadorMinuts.innerHTML= `0 minuts i`;
         estatComptadorSegons.innerHTML = `0 segons`;
         return;
     }
-    //Convertir tempsRestant a minutos usar funcion Math.floor() que solo se queda con el numero entero
+    //Convertir tempsRestant a minutos usando la funcion Math.floor() para quedarnos solo con el numero entero
     const min = Math.floor(tempsRestant / 60);
     //Para los segundos, extraer solo el número decimal que serán los segundos, usamos el resto
     const sec = tempsRestant % 60;
@@ -186,7 +191,7 @@ function mostraComptador() {
 
 
 /**
- * REPRODUIR AUDIO AUTOMÀTICAMENT
+ * FUNCIO DEL COMPTADOR PER REPRODUIR AUDIO AUTOMÀTICAMENT AL FINALITZAR LA COMPTA ENRERE
  */
 const idAutoAudio = document.getElementById("idAutoAudio");
 function reproduirAutoAudio() {
@@ -196,7 +201,7 @@ function reproduirAutoAudio() {
 }
 
 /**
- * ATURAR AUDIO
+ * FUNCIO DEL COMPTADOR PER ATURAR AUDIO INICIAT AUTOMÀTICAMENT AL FINALITZAR LA COMPTA ENRERE
  */
 const btnAutoStop = document.getElementById("btn_aturaAutoAudio");
 btnAutoStop.addEventListener('click', aturaAutoAudio);
@@ -208,8 +213,11 @@ function aturaAutoAudio() {
 
 
 
-/*
-5. 5p] Afegeix un rellotge que mostri la hora, minuts i segons actuals i s’actualitzi cada segon. */
+/**
+ * Exercici 2) 5.5p
+ */
+
+/*5. 5p] Afegeix un rellotge que mostri la hora, minuts i segons actuals i s’actualitzi cada segon. */
 
 function horaActual(){
   let hora_actual = new Date();
@@ -225,7 +233,12 @@ horaActual();
 let referenciaSetIntervalHora= window.setInterval(horaActual, 1000);
 
 /*
-a. Afegeix la possibilitat d’establir una alarma que avisi en una hora en concret */
+a. Afegeix la possibilitat d’establir una alarma que avisi en una hora en concret
+b. Al saltar l’alarma aconsegueix que soni una música i que es pugui aturar
+c. L’usuari pot escollir entre diferents músiques
+d. L’usuari pot establir el volum
+e. En qualsevol moment l’usuari pot reproduir i aturar la música de l’alarma
+*/
 
 /**
  * PROPIETATS ALARMA
@@ -245,61 +258,162 @@ const btnStop = document.getElementById("btn_stop");
  * PROPIETATS MUSIC
  */
 let audio_actual = "";
-const controlsMusic = document.getElementById("controlsMusic");
+const selectMusic = document.getElementById("select_music");
 const idAudio = document.getElementById("idAudio");
-/**
- * FUNCIONS
- */
 
-function alarma(){
+/**
+ * PROPIETATS ALARMA
+ */
+let alarma = null;
+
+/**
+ * BOTONS ALARMA
+ */
+const btnEActivarAlarma = document.getElementById("btnActivarAlarma");
+const btnCancelarAlarma = document.getElementById("btnCancelarAlarma");
+
+/**
+ * FUNCIO ALARMA
+ */
+function alarmaProgramada(){
     //Leer los imputs de la alarma
     const hora = parseInt(inputHoraAlarma.value);
     const minuts = parseInt(inputMinutsAlarma.value);
     const segons = parseInt(inputSegonsAlarma.value);
-    const horaAlarma = ((hora /60) + minuts) /60 + segons;
-    SegonsTotals = 
-                    parseInt(hora_actual.getHours())+ 
-                    parseInt(hora_actual.getMinutes())+ 
-                    parseInt(hora_actual.getSeconds());
-    if(horaAlarma = segonsTotals){
-
+    //Convertimos la hora alarma en milisegundos para usar la funcion windowsSetInterval()
+    const horaAlarma = (hora *3600*1000) + (minuts * 60*1000) + segons*1000;
+    const hora_actual = new Date();
+    //Convertimos la hora actual en milisegundos para comparar con la conversion anterior
+    const horaActualEnMs = 
+                    parseInt(hora_actual.getHours()*3600*1000)+ 
+                    parseInt(hora_actual.getMinutes())*60*1000+ 
+                    parseInt(hora_actual.getSeconds())*1000;
+    //Ahora si restamos alarma de la hora actual, si el resultado es menor a 1ms, reproducir:
+    if((Math.abs(horaAlarma - horaActualEnMs))<1000){
+        console.log("Alarma");
+        idAudio.play();
+        //Paramos alarma una vez ha sonado
+        clearInterval(alarma);
+        alarma=null;
     }
 }
-bton_play.onclick=playMusic;
+
+/**
+ * FUNCIO CONFIGURAR ALARMA
+ */
+btnActivarAlarma.onclick=activarAlarma;
+function activarAlarma(){
+    if(alarma !== null){
+        clearInterval(alarma);
+    }
+    alarma = window.setInterval(alarmaProgramada, 1000);
+    console.log("Alarma programada");
+}
+
+/**
+ * CANCELAR ALARMA
+ */
+btnCancelarAlarma.onclick=cancelarAlarma;
+function cancelarAlarma(){
+    if(alarma !== null){
+        window.clearInterval(alarma);
+        alarma = null;
+        console.log("Alarma cancelada");
+    }
+}
+
+/**
+ * FUNCIO PLAY
+ */
+btn_play.onclick=playMusic;
 function playMusic() {
-  if(idAudio.src!= controlsMusic.value){
-    idAudio.src = controlsMusic.value;
-    audio_actual = controlsMusic.value;
-  }    
-  audio.play();
+    //Comprobamos si la musica seleccionada es la actual
+    if(selectMusic.value === audio_actual){
+        idAudio.play();
+        return;
+    }    
+    //Comprobamos primero si la musica es la selecciona
+    if(idAudio.src!= selectMusic.value){
+        idAudio.src = selectMusic.value;
+        idAudio.load(); //Carga la nueva cancion
+        audio_actual = selectMusic.value;
+    }
 }
 
-bton_pausar.onclick=pausarMusic;
+/**
+ * FUNCIO PAUSAR
+ */
+btn_pause.onclick=pausarMusic;
 function pausarMusic() {
-    // Pausa l'àudio
-    audio.pause();
+    idAudio.pause();
 }
 
-bton_aturar.onclick=aturarMusic;
+/**
+ * FUNCIO ATURAR
+ */
+btn_stop.onclick=aturarMusic;
 function aturarMusic() {
-    // Atura i reinicia l'àudio
-    audio.pause();
-    audio.currentTime = 0;
-    audio.loop = false;
+    idAudio.pause();
+    idAudio.currentTime = 0;
+    idAudio.loop = false;
 }
 
-function canviarMusic() {
-    // Canvia el fitxer d'àudio segons la selecció
-    const nouSrc = controlsMusic.value;
-    idAudio.src = nouSrc;
-    idAudio.load(); // Carrega la nova font
+/**
+ * CONTROLS VOLUM
+ */
+// Elementos de control de volumen
+const inputVolum = document.getElementById("inp_volum_Audio");
+const btnVolumUp = document.getElementById("btnVolumUp");
+const btnVolumDown = document.getElementById("btnVolumDown");
+const btnMute = document.getElementById("btnMute");
+
+// Variable para guardar el volumen antes de silenciar
+let volumAbansDeSilenciar = 1;
+
+/**
+ * FUNCIO VOLUM A MUTE
+ */
+btnMute.onclick = clk_btn_mute;
+function clk_btn_mute(){
+    //Es lo mismo que hacer un if/else e intercambiar, si es true a false, si es false a true
+    idAudio.muted = !idAudio.muted;
 }
 
+/**
+ * FUNCIO VOLUM A UP
+ */
+btnVolumUp.onclick = clk_btn_vol_up;
+function clk_btn_vol_up(){    
+    if(idAudio.volume<=0.9){
+        idAudio.volume += 0.1;
+    }
+    //Para aplicarlo a la barra deslizante del volumen
+    inputVolum.value = idAudio.volume;
+}
 
-/*
-b. Al saltar l’alarma aconsegueix que soni una música i que es pugui aturar
-c. L’usuari pot escollir entre diferents músiques
-d. L’usuari pot establir el volum
-e. En qualsevol moment l’usuari pot reproduir i aturar la música de l’alarma
-*/
+/**
+ * FUNCIO DVOLUM A DOWN
+ */
+btnVolumDown.onclick = clk_btn_vol_down;
+function clk_btn_vol_down(){
+    if(idAudio.volume>=0.1){
+        idAudio.volume -= 0.1;
+    }
+    //Para aplicarlo a la barra deslizante del volumen
+    inputVolum.value = idAudio.volume;
+}
+
+/**
+ * FUNCIO VOLUM A UP/DOWN
+ */
+inputVolum.onchange = clk_inp_vol_Audio;
+function clk_inp_vol_Audio(){
+    const nuevoVolumen = parseFloat(inputVolum.value);
+    idAudio.volume = nuevoVolumen;
+    if (nuevoVolumen > 0) {
+        idAudio.muted = false;
+        volumAbansDeSilenciar = nuevoVolumen;
+    }
+}
+
 
