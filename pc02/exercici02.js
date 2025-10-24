@@ -189,7 +189,6 @@ function mostraComptador() {
     estatComptadorSegons.innerText = `${sec} segons`;
 }
 
-
 /**
  * FUNCIO DEL COMPTADOR PER REPRODUIR AUDIO AUTOMÀTICAMENT AL FINALITZAR LA COMPTA ENRERE
  */
@@ -211,8 +210,6 @@ function aturaAutoAudio() {
     idAutoAudio.loop = false;
 }
 
-
-
 /**
  * Exercici 2) 5.5p
  */
@@ -221,14 +218,14 @@ function aturaAutoAudio() {
 console.log("Rellotge");
 const div_rellotge = document.getElementById("rellotge");
 function horaActual(){
-  let hora_actual = new Date();
-//crear una llista per mostrar hora actual
-div_rellotge.innerHTML=
-    `<ul> <li>Hora actual` +    hora_actual.getHours()+ `: ` +
-                                hora_actual.getMinutes()+`:`+
-                                hora_actual.getSeconds()+`</li>
-    </ul>`;
-    
+    let hora_actual = new Date();
+    //crear una llista per mostrar hora actual
+    div_rellotge.innerHTML= 
+        `<ul> <li>` +  hora_actual.getHours()+ `:` +
+                                    hora_actual.getMinutes()+`:`+
+                                    hora_actual.getSeconds()+`</li> 
+         </ul>`;
+        
 }
 horaActual();
 let referenciaSetIntervalHora= window.setInterval(horaActual, 1000);
@@ -270,7 +267,7 @@ let alarma = null;
 /**
  * BOTONS ALARMA
  */
-const btnEActivarAlarma = document.getElementById("btnActivarAlarma");
+const btnActivarAlarma = document.getElementById("btnActivarAlarma");
 const btnCancelarAlarma = document.getElementById("btnCancelarAlarma");
 
 /**

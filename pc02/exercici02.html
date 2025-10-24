@@ -8,11 +8,12 @@
 
 </head>
 <body>
-
+    <h1>EXERCICI 2 - 3.2p</h1>
     <div id="taula_propietats">  taula propietats  </div>
 
+    <h1>EXERCICI 2 - 4.3p</h1>
     <div id="propietats_comptador">
-        <h3>comptador compta enrere </h3>        
+        <h3>Comptador compta enrere </h3>        
         <label>Minuts:</label>
         <input type="number" id="inputMinuts" value="0" min="0">
 
@@ -24,18 +25,23 @@
         <button id="aturarComptador" disabled> ATURAR </button>
     </div>
 
-    <div id="estatComptadorMinuts">00 minuts i</div>
+    <div id="estatComptadorMinuts">00 minuts</div>
     <div id="estatComptadorSegons">00 segons</div>
 
     <div id="autoAudio">
+        <h3> Música automàtica quan el comptador arribi a 0</h3>   
+        <h4>Preneu stop si la voleu parar</h4>   
         <audio controls id="idAutoAudio">
             <source src="DRUMC0.WAV" type="audio/wav">
         </audio>
         <button id="btn_aturaAutoAudio"> STOP </button>
+
     </div>
 
-
-    <div id="rellotge"> <h3>Hora actual </h3>   </div>
+    <h1>EXERCICI 2 - 5.5p</h1>
+    <h3>Hora actual:</h3>
+    <div id="rellotge">  </div>
+    
     
     <div id="alarma">
         <h3> Configurar Alarma </h3>      
@@ -53,20 +59,25 @@
         <button id="btnCancelarAlarma"> CANCELAR </button>
     </div>
 
-    <div id="controlsMusic">
-        <button id="btn_play"> PLAY </button>
-        <button id="btn_pause"> PAUSE </button>
-        <button id="btn_stop"> STOP </button>
-
-        <audio controls id="idAudio">
-            <source src="DRUMC0.WAV" type="audio/wav">
-            <source src="FANFARE1.WAV" type="audio/wav">
-        </audio>
-
+    <div>
+        <h3> Escollir música </h3>    
         <select id="select_music" multiple>    
             <option value="DRUMC0.WAV" selected> DRUMC0 </option>
             <option value="FANFARE1.WAV"> FANFARE1 </option>
         </select>
+    </div>
+
+    <div id="controlsMusic">
+        <audio controls id="idAudio">
+            <source src="DRUMC0.WAV" type="audio/wav">
+            <source src="FANFARE1.WAV" type="audio/wav">
+        </audio>
+    </div>
+
+    <div id="reproductor">
+        <button id="btn_play"> PLAY </button>
+        <button id="btn_pause"> PAUSE </button>
+        <button id="btn_stop"> STOP </button>
     </div>
 
     <div id="controlsVolum"></div>        
