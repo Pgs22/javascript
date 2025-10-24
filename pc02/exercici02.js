@@ -218,7 +218,8 @@ function aturaAutoAudio() {
  */
 
 /*5. 5p] Afegeix un rellotge que mostri la hora, minuts i segons actuals i s’actualitzi cada segon. */
-
+console.log("Rellotge");
+const div_rellotge = document.getElementById("rellotge");
 function horaActual(){
   let hora_actual = new Date();
 //crear una llista per mostrar hora actual
@@ -227,7 +228,7 @@ div_rellotge.innerHTML=
                                 hora_actual.getMinutes()+`:`+
                                 hora_actual.getSeconds()+`</li>
     </ul>`;
-    return function(){console.log("L'hora s'actualitzada cada segon")}; // Funcion anonima
+    
 }
 horaActual();
 let referenciaSetIntervalHora= window.setInterval(horaActual, 1000);
