@@ -328,15 +328,34 @@ function playMusic() {
     //Comprobamos si la musica seleccionada es la actual
     if(selectMusic.value === audio_actual){
         idAudio.play();
+        inputTime.value = idAudio.currentTime;
         return;
     }    
     //Comprobamos primero si la musica es la selecciona
     if(idAudio.src!= selectMusic.value){
         idAudio.src = selectMusic.value;
-        idAudio.load(); //Carga la nueva cancion
+        idAudio.load(); //Carga la nueva cancion y ejecuta funcion actualizarDuracion
         audio_actual = selectMusic.value;
     }
 }
+
+/**
+ * Función para actualizar la duración si cambia de canción
+ */
+function actualizarDuracion() {
+    idAudio.onloadedmetadata = actualizarDuracion;
+}
+idAudio.onloadedmetadata = actualizarDuracion;
+/**
+ * Para que la barra de progreso se sincronice con el play
+ */
+idAudio.ontimeupdate = function() {
+    inputTime.value = idAudio.currentTime;
+};
+inputTime.onchange = function() {
+    // Cuando el slider cambia, establece la posición del audio
+    idAudio.currentTime = parseFloat(inputTime.value);
+};
 
 /**
  * FUNCIO PAUSAR
@@ -344,6 +363,7 @@ function playMusic() {
 btn_pause.onclick=pausarMusic;
 function pausarMusic() {
     idAudio.pause();
+    inputTime.value = idAudio.currentTime;
 }
 
 /**
@@ -354,16 +374,18 @@ function aturarMusic() {
     idAudio.pause();
     idAudio.currentTime = 0;
     idAudio.loop = false;
+    inputTime.value = 0;
 }
 
 /**
- * CONTROLS VOLUM
+ * CONTROLS AUDIO
  */
 // Elementos de control de volumen
 const inputVolum = document.getElementById("inp_volum_Audio");
 const btnVolumUp = document.getElementById("btnVolumUp");
 const btnVolumDown = document.getElementById("btnVolumDown");
 const btnMute = document.getElementById("btnMute");
+const inputTime = document.getElementById("inp_time_Audio");
 
 // Variable para guardar el volumen antes de silenciar
 let volumAbansDeSilenciar = 1;

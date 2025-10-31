@@ -58,7 +58,6 @@
         <button id="btnActivarAlarma"> PROGRAMAR ALARMA </button>
         <button id="btnCancelarAlarma"> CANCELAR </button>
     </div>
-
     <div>
         <h3> Escollir música </h3>    
         <select id="select_music" multiple>    
@@ -66,28 +65,26 @@
             <option value="FANFARE1.WAV"> FANFARE1 </option>
         </select>
     </div>
-
     <div id="controlsMusic">
         <audio controls id="idAudio">
             <source src="DRUMC0.WAV" type="audio/wav">
             <source src="FANFARE1.WAV" type="audio/wav">
         </audio>
     </div>
-
     <div id="reproductor">
         <button id="btn_play"> PLAY </button>
         <button id="btn_pause"> PAUSE </button>
         <button id="btn_stop"> STOP </button>
     </div>
-
-    <div id="controlsVolum"></div>        
+    <div id="controlsAudio"></div>        
         <label>Volum:</label>
         <input type="range" id="inp_volum_Audio" min="0" max="1" step="0.1" value="1">
-        
+         <label>Time:</label>
+        <input type="range" id="inp_time_Audio" min="0" value="0">
+
         <button id="btnVolumUp">Pujar Volum</button>
         <button id="btnVolumDown">Baixar Volum</button>
         <button id="btnMute">Silenciar</button>
     </div>
-
 </body>
 </html>
