@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="Exercici02.js" defer></script>
+
+</head>
+<body>
+    <h3> Llistat de àudios disponibles </h3>
+    <div id="llista_audios_disponibles"> </div>
+
+    <h3> Llistat de àudios favorits </h3>
+    <div id="llista_favorits"></div>
+
+    <h3> Llistes privades creades </h3>
+    <div id="llistes_privades"></div>
+
+    <h3> Crear llista de reproducció </h3>
+    <div id="gestionar_llistas_reproduccio"></div>
+
+    <button id="btn_crear_llista">Crear llista</button>
+    <button id="btn_esborrar_llista">Mostrar llistes</button>
+
+    <h3> Llista de reproducció </h3>
+    <div id="llista_privada_reproduccio"></div>
+
+    <div>
+        <select id="LlistatAudios" multiple>    
+            <option value="DRUMC0.WAV" selected> DRUMC0 </option>
+            <option value="FANFARE1.WAV"> FANFARE1 </option>
+            <option value="ek_raat_vilen.mp3"> ek_raat_vilen </option>
+        </select>
+    </div>
+    <div id="controlsAudio">
+        <audio controls id="idAudio">
+            <source src="DRUMC0.WAV" type="audio/wav">
+            <source src="FANFARE1.WAV" type="audio/wav">
+            <source src="ek_raat_vilen.mp3" type="audio/mp3">
+        </audio>
+    </div>
+    
+    <div id="reproductor">
+        <button id="btn_play"> PLAY </button>
+        <button id="btn_pause"> PAUSE </button>
+        <button id="btn_stop"> STOP </button>
+    </div>
+
+    <div id="controlsVolum"></div>        
+        <label>Volum:</label>
+        <input type="range" id="inp_volum_Audio" min="0" max="1" step="0.1" value="1">
+        
+        <button id="btnVolumUp">Pujar Volum</button>
+        <button id="btnVolumDown">Baixar Volum</button>
+        <button id="btnMute">Silenciar</button>
+    </div>
+
+</body>
+</html>
