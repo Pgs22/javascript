@@ -31,7 +31,7 @@ class Musica {
 //a. automàticament ha d’assignar la seva extensió com a  “media type”
     set nom(nom){
         if(nom.length>1){
-            if(nom.content(".")){
+            if(nom.includes(".")){
                 const validMusicExtensions = ["mp3", "wav", "ogg", "flac", "m4a"];                
                 const partes = fileName.split('.');
                 //Nos quedamos solo conla extension:
@@ -61,7 +61,7 @@ class Musica {
                    
 
                 }                
-            }
+            }console.log("No contiene . el nombre del archivo");
         }
         
     }
