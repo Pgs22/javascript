@@ -10,12 +10,27 @@
 
 class Musica {
     //Creamos una variable privada que asignamos automaticamente en el setter 
-    _mediaType=""
-    constructor(titol = "Default", nom, etiquetes){        
+    _mediaType="";
+    _etiquetes = ["jazz", "pop", "animades", "rock", "clasica"];
+
+    //Creamos el constructor
+    constructor(titol = "Default", nom){        
         this.titol = titol       
         this.nom = nom
         this.etiquetes = etiquetes
-        this.media = media
+    }
+
+    get mediaType(){
+        return this._mediaType;
+    }
+    get titol(){
+        return this._titol;
+    }
+    get nom(){
+        return this._nom;
+    }
+    get etiquetes(){
+        return this._etiquetes;
     }
 
 //1.  Titol - mínim de dos caràcters 
@@ -24,9 +39,7 @@ class Musica {
             this._titol = titol;
         }
     }
-    get mediaType(){
-        return this._mediaType;
-    }
+
 //2. nom de l’arxiu - mínim de un caràcter i acabat amb alguna extensió correcte
 //a. automàticament ha d’assignar la seva extensió com a  “media type”
     set nom(nom){
@@ -65,5 +78,11 @@ class Musica {
         }
         
     }
-    
+
+//4. etiquetes – un array de strings per classificar la música (jazz, pop, animades..) 
+    set etiquetes(etiquete){
+        if(etiquetes.includes(etiquete)){
+            _etiquete
+        }
+    }
 }
