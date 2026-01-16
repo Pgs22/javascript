@@ -33,3 +33,8 @@
     l. Permet filtrar les llistes de músiques per etiquetes
 
 */
+const etiquetes_disponibles=["jazz", "pop", "animades", "rock", "clasica"];
+const etiquetes_tots=["tots"]
+
+//aqui creo un objecte de llistamusques
+//aqui creo un objecte de musica

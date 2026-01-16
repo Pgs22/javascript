@@ -3,4 +3,7 @@ class LlistaMusiques {
         this.titol = titol
 
     }
+
+//aqui creo un objecte de musica
+
 }

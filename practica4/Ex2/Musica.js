@@ -11,13 +11,15 @@
 class Musica {
     //Creamos una variable privada que asignamos automaticamente en el setter 
     _mediaType="";
-    _etiquetes = ["jazz", "pop", "animades", "rock", "clasica"];
+    _etiquetes=["jazz", "pop", "animades", "rock", "clasica"];
+
+    
 
     //Creamos el constructor
-    constructor(titol = "Default", nom){        
+    constructor(titol = "Default", nom, etiquetes=[]){        
         this.titol = titol       
         this.nom = nom
-        this.etiquetes = etiquetes
+        etiquetes = etiquetes // Seleccionar más de un choisse del html
     }
 
     get mediaType(){
@@ -80,9 +82,10 @@ class Musica {
     }
 
 //4. etiquetes – un array de strings per classificar la música (jazz, pop, animades..) 
-    set etiquetes(etiquete){
-        if(etiquetes.includes(etiquete)){
-            _etiquete
+    set etiquetes(etiquetes){
+        if(etiquetes.includes(etiquetes=[])){
+            this._etiquetes=etiquetes;
         }
     }
+
 }
