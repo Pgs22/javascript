@@ -47,9 +47,10 @@ class Musica {
     set nom(nom){
         if(nom.length>1){
             if(nom.includes(".")){
-                const validMusicExtensions = ["mp3", "wav", "ogg", "flac", "m4a"];                
+                const validMusicExtensions = ["mp3", "wav", "ogg", "flac", "m4a"];    
+                //Para separar donde encuentre punto y a su vez elimina el punto         
                 const partes = fileName.split('.');
-                //Nos quedamos solo conla extension:
+                //Nos quedamos solo conla extension si tiene más de un digito:
                 const extension = partes.length > 1 ? partes.pop().toLowerCase() : "";
                 //Comprobamos si la extensión coincide con algun elemento del array
                 if(validMusicExtensions.includes(extension)){
