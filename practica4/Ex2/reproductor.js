@@ -33,6 +33,16 @@
     l. Permet filtrar les llistes de músiques per etiquetes
 
 */
+
+/*
+    c. Crea un objecte del tipus LlistaMusiques amb: 
+        i. Getters i setters: 
+            1. Titol: “disponibles” 
+            2. Etiquetes “tots” 
+            3. Llistat de músiques: ha de contenir la informació de totes les músiques 
+            disponibles 
+*/
+
 const etiquetes_disponibles=["jazz", "pop", "animades", "rock", "clasica"];
 const etiquetes_tots=["tots"]
 
