@@ -17,6 +17,8 @@ class Musica {
     //Creamos una variable privada que asignamos automaticamente en el setter 
     _mediaType="";
     _etiquetes=[];
+    _titol = "";
+    _nom = "";
     //_etiquetes=["jazz", "pop", "animades", "rock", "clasica"];
     
     //Creamos el constructor
@@ -26,9 +28,6 @@ class Musica {
         this.etiquetes = etiquetes // Seleccionar más de un choisse del html
     }
 //2.a.i. Getters i setters:
-    get mediaType(){
-        return this._mediaType;
-    }
     get titol(){
         return this._titol;
     }
@@ -37,6 +36,9 @@ class Musica {
     }
     get etiquetes(){
         return this._etiquetes;
+    }
+    get mediaType(){
+        return this._mediaType;
     }
 
 //2.a.i.1.  Titol - mínim de dos caràcters 
@@ -57,7 +59,7 @@ class Musica {
                 const extension = partes.length > 1 ? partes.pop().toLowerCase() : "";
                 //Comprobamos si la extensión coincide con algun elemento del array
                 if(validMusicExtensions.includes(extension)){
-                    this._titol = titol;
+                    this._nom = nom;
                     //2.a.3. media type  - rebrà la extensió i haurà d’assignar el media type segons: 
                     //         a. mp3 -> audio/mpeg 
                     //         b. ogg -> audio/ogg 
@@ -84,7 +86,7 @@ class Musica {
 
 //2.a.4. etiquetes – un array de strings per classificar la música (jazz, pop, animades..) 
     set etiquetes(etiquete){
-        if(etiquetes.includes(etiquete=[])){
+        if(Array.isArray(etiquete=[])){
             this._etiquetes=etiquetes;
         }
     }
@@ -95,7 +97,7 @@ class Musica {
         }
     }
     eliminarEtiquete(etiquete){
-        const index = this.etiquetes.indexOf(etiquete); // Per guardar posicio
+        const index = this._etiquetes.indexOf(etiquete); // Per guardar posicio
         if (index !== -1) {
             this._etiquetes.splice(index, 1);
         }

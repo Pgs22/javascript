@@ -7,12 +7,14 @@
 */
 
 class LlistaMusiques {
-    _llistat_musica=[];
-    _etiquetes=[];
     _titol="";
+    _etiquetes=[];
+    _llistat_musica=[];    
 
-    constructor(titol = "Default", etiquetes=[], llistat=[]){
+    constructor(titol = "Default", etiquetes=[], llistat_musica=[]){
         this.titol = titol
+        this.etiquetes = etiquetes;
+        this.llistat_musica = llistat_musica;
     }
 
     /* *******************GETTERS***************** */
@@ -27,11 +29,20 @@ class LlistaMusiques {
     }
 
     /* *******************SETTERS***************** */
-    set llistat(llistat=[]){
-        this._llistat_musica = llistat;
+    set titol(titol){
+        this._titol = titol;
     }
 
+    set etiquetes(etiquete){
+        if(Array.isArray(etiquete)){
+            this._etiquetes=etiquetes;
+        }
+    }
 
-    //aqui creo un objecte de musica
+    set llistat(llista){
+        if(Array.isArray(llista)){
+            this._llistat_musicat=llista;
+        }
+    }    
 
 }
