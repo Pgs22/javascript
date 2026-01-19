@@ -83,10 +83,22 @@ class Musica {
     }
 
 //2.a.4. etiquetes – un array de strings per classificar la música (jazz, pop, animades..) 
-    set etiquetes(etiquetes){
-        if(etiquetes.includes(etiquetes=[])){
+    set etiquetes(etiquete){
+        if(etiquetes.includes(etiquete=[])){
             this._etiquetes=etiquetes;
         }
     }
+
+    afegirEtiquete(etiquete){
+        if(!this._etiquetes.includes(etiquete)){
+            this._etiquetes.push(etiquete);
+        }
+    }
+    eliminarEtiquete(etiquete){
+        const index = this.etiquetes.indexOf(etiquete); // Per guardar posicio
+        if (index !== -1) {
+            this._etiquetes.splice(index, 1);
+        }
+    }    
 
 }

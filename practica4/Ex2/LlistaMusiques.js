@@ -7,7 +7,7 @@
 */
 
 class LlistaMusiques {
-    _llistat=[];
+    _llistat_musica=[];
     _etiquetes=[];
     _titol="";
 
@@ -17,7 +17,7 @@ class LlistaMusiques {
 
     /* *******************GETTERS***************** */
     get llistat(){
-        return this._llistat;
+        return this._llistat_musica;
     }
     get etiquetes(){
         return this._etiquetes;
@@ -28,7 +28,7 @@ class LlistaMusiques {
 
     /* *******************SETTERS***************** */
     set llistat(llistat=[]){
-        this._llistat = llistat;
+        this._llistat_musica = llistat;
     }
 
 
