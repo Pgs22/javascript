@@ -18,9 +18,51 @@
 import {Musica} from "./Musicajs"
 const etiquetes_disponibles=["jazz", "pop", "animades", "rock", "clasica"];
 const etiquetes_tots=["tots"]
+const llista_musiques= new LlistaMusiques("disponibles", etiquetes_tots, []);
 
+
+document.getElementById("btn_crear_musica").onclick=crearMusica;
+function crearMusica(){
+    const titol = document.getElementById("input_titol").value;
+    const nom = document.getElementById("input_nom").value;
+    const novaMusica = new Musica("disponibles", "musica", etiquetes_tots)
+    llista_musiques.llistat_musica.push(novaMusica);
+/*
+    const minut= document.getElementById("input_minut").value;
+    const segon = document.getElementById("input_segon").value;
+    const musica = document.getElementById("input_musica").value;
+    const novaAlarma = new Alarma(titol, hora, minut,segon, musica)
+
+    alarmes.push(novaAlarma);
+    actualitzaLlistaAlarmes();
+
+    */
+}
+
+function actualitzaLlistaMusiques(){
+    const div_llista_musiques= document.getElementById("div_llista_musiques")
+    div_llista_musiques.innerHTML=""
+    llista_musiques.forEach(function(titol, index){
+        //div_llista_musiques.innerHTML+=index+"-"+musica.generaCodiHTML(index)
+    })
+}
+
+/*
+generaCodiHTML(index) {
+    return `<div><h2>` + this.titol + `</h2>
+                <div> hora alarma: ${this.hora_completa} </div>
+                <div> musica: ${this.musica}</div>
+                <div> activa:${this.activa}</div>
+                <button onclick="activaAlarma(${index})">ACTIVA</button>
+                    <button onclick="desactivaAlarma(${index})">DESACTIVA</button>
+            </div>`;
+}
+*/
+
+/*
 const novaMusica = new Musica("disponibles", "musica", etiquetes_tots)
 console.log(novaMusica.titol);
+*
 
 /*
     d. Permet mostrar la informació d’un àudio 

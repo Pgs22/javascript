@@ -4,9 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reproductor</title>
-    <script src="despertador.js"></script>
+    <script src="reproductor.js" defer type="module"></script>
+    <script src="Musica.js" defer type="module"></script>
+    <script src="LlistaMusiques.js" defer type="module"></script>
 </head>
 <body>
+    titol: <input type="text" id="input_titol"> <br />
+    nom: <input type="text" id="input_nom"> <br />
     
+
+    minut: <input type="number" id="input_minut"> <br />
+    segon: <input type="number" id="input_segon"> <br />
+    musica: <input type="text" id="input_musica"> <br />
+
+    <button id="btn_crear_musica" > CREAR </button>
+    <button onclick="afegirEtiquete()"> AFEGIR </button>
+    <button onclick="eliminarEtiquete()"> ELIMINAR </button>
+
+    <div id="div_llista_musiques"></div>
 </body>
 </html>
