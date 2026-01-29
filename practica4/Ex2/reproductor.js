@@ -15,9 +15,11 @@
             3. Llistat de músiques: ha de contenir la informació de totes les músiques 
             disponibles 
 */
-import {Musica} from "./Musicajs"
+import {Musica} from "./Musica.js";
+import { LlistaMusiques } from "./LlistaMusiques.js";
 const etiquetes_disponibles=["jazz", "pop", "animades", "rock", "clasica"];
 const etiquetes_tots=["tots"] //Per poder afegir mes etiquetes
+const llistat_disponibles = [];
 
 /**
  * Creo un objeto de LlistaMusiques:
@@ -26,13 +28,12 @@ const etiquetes_tots=["tots"] //Per poder afegir mes etiquetes
  * punto3 -Creo un objeto Musica dentro de mi listado 
  */
 
-const llista_musiques_disponibles= new LlistaMusiques("llista1", etiquetes_tots, [
+const llista_inicial= new LlistaMusiques("llista1", etiquetes_tots, [
     new Musica("Song 1", "song1.mp3", ["pop", "animades"]), 
     new Musica("Song 2", "song2.ogg", ["rock"]),
     new Musica("Song 3", "song3.wav", ["jazz", "clasica"])]);
 
-    alarmes.push(novaAlarma);
-    actualitzaLlistaAlarmes();
+    llistat_disponibles.push(llista_inicial);
 
 /**
  * crear llista
@@ -41,21 +42,26 @@ document.getElementById("btn_crear_llista").onclick=crearLlista;
 function crearLlista(){
     const nomLlista = document.getElementById("input_nomLlista").value;
     const novaLlista = new LlistaMusiques(nomLlista, etiquetes_tots, []);
-    llista_musiques_disponibles.llistat_musica.push(novaLlista);
-    console.log(llista_musiques_disponibles);
+
+    llistat_disponibles.push(novaLlista);
+    console.log(llistat_disponibles);
+    actualitzaLlistaMusiques()
 }
+//document.getElementById("btn_crear_llista").addEventListener("click", crearLlista);
 
-
-    /*
+/**
+ * actualitza llista
+ */
 function actualitzaLlistaMusiques(){
     const div_llista_musiques= document.getElementById("div_llista_musiques")
     div_llista_musiques.innerHTML=""
-    llista_musiques._llistat_musica.forEach(function(musica, index){
-        div_llista_musiques.innerHTML+=index+"-"+_nom.generaCodiHTML(index)
+    llistat_musiques.forEach(function(musica, index){
+        div_llista_musiques.innerHTML+=index+"-"+musica.generaCodiHTML(index)
         
     })
-}
-    */
+}    
+actualitzaLlistaMusiques();
+
 
 /*
 generaCodiHTML() {

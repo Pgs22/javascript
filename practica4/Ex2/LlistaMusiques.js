@@ -6,20 +6,20 @@
             3. Llistat de músiques (#disponibles, [tots], [musiques]) #es el nombre del objeto al crear llistat disponibles
 */
 
-class LlistaMusiques {
+export class LlistaMusiques {
     _titol="";
     _etiquetes=[];
-    _llistat_musica=[];    
+    _llistat_musiques=[];    
 
-    constructor(titol = "Default", etiquetes=[], llistat_musica=[]){
+    constructor(titol = "Default", etiquetes=[], llista=[]){
         this.titol = titol
         this.etiquetes = etiquetes;
-        this.llistat_musica = llistat_musica;
+        this.llistat_musiques = llista;
     }
 
     /* *******************GETTERS***************** */
     get llistat(){
-        return this._llistat_musica;
+        return this._llistat_musiques;
     }
     get etiquetes(){
         return this._etiquetes;
@@ -35,14 +35,20 @@ class LlistaMusiques {
 
     set etiquetes(etiquete){
         if(Array.isArray(etiquete)){
-            this._etiquetes=etiquetes;
+            this._etiquetes=etiquete;
         }
     }
 
     set llistat(llista){
         if(Array.isArray(llista)){
-            this._llistat_musicat=llista;
+            this._llistat_musiques=llista;
         }
     }    
+
+    generaCodiHTML() {
+    return `<div><h2>` + this.titol + `</h2>
+                <div> Nom llista: ${this.titol}</div>
+            </div>`;
+}
 
 }

@@ -27,6 +27,7 @@ class Musica {
         this.nom = nom
         this.etiquetes = etiquetes // Seleccionar más de un choisse del html
     }
+    
 //2.a.i. Getters i setters:
     get titol(){
         return this._titol;
@@ -52,7 +53,7 @@ class Musica {
 //2.a.2.a. automàticament ha d’assignar la seva extensió com a  “media type”
     set nom(nom){
         if((nom.length>1) & (nom.includes("."))){
-                const validMusicExtensions = ["mp3", "wav", "ogg", "flac", "m4a"];    
+                const validMusicExtensions = ["mp3", "wav", "ogg"];    
                 //Para separar donde encuentre punto en un array y elimina el punto         
                 const partes = fileName.split('.'); //La extension esta al final del array
                 //Nos quedamos solo con la extension si tiene más de un caracter:
