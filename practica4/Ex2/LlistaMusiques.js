@@ -1,9 +1,9 @@
 /*
     b. Crea una classe  LlistaMusiques 
         i. Getters i setters: 
-            1. Titol 
-            2. Etiquetes 
-            3. Llistat de músiques   
+            1. Titol (su nombre)
+            2. Etiquetes (Tots, se pone como un array porque se pueden añadir más)
+            3. Llistat de músiques (#disponibles, [tots], [musiques]) #es el nombre del objeto al crear llistat disponibles
 */
 
 class LlistaMusiques {
