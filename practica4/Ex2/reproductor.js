@@ -26,13 +26,25 @@ const etiquetes_tots=["tots"] //Per poder afegir mes etiquetes
  * punto3 -Creo un objeto Musica dentro de mi listado 
  */
 
-const llista_musiques= new LlistaMusiques("llista1", etiquetes_tots, [
+const llista_musiques_disponibles= new LlistaMusiques("llista1", etiquetes_tots, [
     new Musica("Song 1", "song1.mp3", ["pop", "animades"]), 
     new Musica("Song 2", "song2.ogg", ["rock"]),
     new Musica("Song 3", "song3.wav", ["jazz", "clasica"])]);
 
     alarmes.push(novaAlarma);
     actualitzaLlistaAlarmes();
+
+/**
+ * crear llista
+ */
+document.getElementById("btn_crear_llista").onclick=crearLlista;
+function crearLlista(){
+    const nomLlista = document.getElementById("input_nomLlista").value;
+    const novaLlista = new LlistaMusiques(nomLlista, etiquetes_tots, []);
+    llista_musiques_disponibles.llistat_musica.push(novaLlista);
+    console.log(llista_musiques_disponibles);
+}
+
 
     /*
 function actualitzaLlistaMusiques(){
