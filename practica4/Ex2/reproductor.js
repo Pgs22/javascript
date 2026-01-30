@@ -55,8 +55,8 @@ function crearLlista(){
 function actualitzaLlistaMusiques(){
     const div_llista_musiques= document.getElementById("div_llista_musiques")
     div_llista_musiques.innerHTML=""
-    llistat_musiques.forEach(function(musica, index){
-        div_llista_musiques.innerHTML+=index+"-"+musica.generaCodiHTML(index)
+    llistat_disponibles.forEach(function(llistat, index){
+        div_llista_musiques.innerHTML+=index+"-"+llistat.generaCodiHTML(index);
         
     })
 }    

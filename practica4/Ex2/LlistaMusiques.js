@@ -18,7 +18,7 @@ export class LlistaMusiques {
     }
 
     /* *******************GETTERS***************** */
-    get llistat(){
+    get llistat_musiques(){
         return this._llistat_musiques;
     }
     get etiquetes(){
@@ -39,15 +39,24 @@ export class LlistaMusiques {
         }
     }
 
-    set llistat(llista){
+    set llistat_musiques(llista){
         if(Array.isArray(llista)){
             this._llistat_musiques=llista;
         }
     }    
 
+    mostraMusiques(){
+        let llistatString="";
+        this.llistat_musiques.forEach(function(musica, index){
+           llistatString+= index+"-"+musica.titol+"-"+musica.nom+"-"+musica.etiquetes;
+        })
+        return llistatString;
+    }
+
     generaCodiHTML() {
     return `<div><h2>` + this.titol + `</h2>
                 <div> Nom llista: ${this.titol}</div>
+                <div> Musica1: ${this.mostraMusiques()}</div>
             </div>`;
 }
 

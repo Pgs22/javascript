@@ -13,7 +13,7 @@
 
 //2. Millora el reproductor d’àudio creant les classes Musica i Llista músiques. Segueix els següents punts:  
 //    a. Crea una classe Musica amb com a mínim: 
-class Musica {
+export class Musica {
     //Creamos una variable privada que asignamos automaticamente en el setter 
     _mediaType="";
     _etiquetes=[];
@@ -55,7 +55,7 @@ class Musica {
         if((nom.length>1) & (nom.includes("."))){
                 const validMusicExtensions = ["mp3", "wav", "ogg"];    
                 //Para separar donde encuentre punto en un array y elimina el punto         
-                const partes = fileName.split('.'); //La extension esta al final del array
+                const partes = nom.split('.'); //La extension esta al final del array
                 //Nos quedamos solo con la extension si tiene más de un caracter:
                 const extension = partes.length > 1 ? partes.pop().toLowerCase() : "";
                 //Comprobamos si la extensión coincide con algun elemento del array
@@ -88,7 +88,7 @@ class Musica {
 //2.a.4. etiquetes – un array de strings per classificar la música (jazz, pop, animades..) 
     set etiquetes(etiquete){
         if(Array.isArray(etiquete=[])){
-            this._etiquetes=etiquetes;
+            this._etiquetes=etiquete;
         }
     }
 
