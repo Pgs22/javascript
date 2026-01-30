@@ -54,10 +54,10 @@ export class LlistaMusiques {
     }
 
     generaCodiHTML() {
-    return `<div><h2>` + this.titol + `</h2>
-                <div> Nom llista: ${this.titol}</div>
-                <div> Musica1: ${this.mostraMusiques()}</div>
-            </div>`;
-}
+        return `<div><h2>` + this.titol + `</h2>
+                    <div> Nom llista: ${this.titol}</div>
+                    <div> Musica1: ${this.mostraMusiques()}</div>
+                </div>`;
+    }
 
 }

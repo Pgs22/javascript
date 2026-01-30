@@ -93,7 +93,7 @@ export class Musica {
     }
 
     afegirEtiquete(etiquete){
-        if(!this._etiquetes.includes(etiquete)){
+        if(!this._etiquetes.includes(etiquete)){    
             this._etiquetes.push(etiquete);
         }
     }

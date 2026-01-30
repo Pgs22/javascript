@@ -35,6 +35,19 @@ const llista_inicial= new LlistaMusiques("llista1", etiquetes_tots, [
 
     llistat_disponibles.push(llista_inicial);
 
+
+    //Para ver el array de las musicas que hay dentro del array de llistat_disponibles
+    //La idea es mostrar un select de cada posicion que pinte
+    // llista_inicial.llistat_musiques.forEach(function(musica, index){
+/*
+        return `<div><h2>` + this.titol + `</h2>
+                    <div> Nom llista: ${this.titol}</div>
+                    <div> Musica1: ${this.mostraMusiques()}</div>
+                </div>`;
+*/
+
+    //     console.log("Musica "+index+": "+musica.titol+"-"+musica.nom+"-"+musica.mediaType+"-"+musica.etiquetes);
+    // }
 /**
  * crear llista
  */
