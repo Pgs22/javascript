@@ -15,84 +15,42 @@
             3. Llistat de músiques: ha de contenir la informació de totes les músiques 
             disponibles 
 */
-import {Musica} from "./Musica.js";
+import { Musica } from "./Musica.js";
 import { LlistaMusiques } from "./LlistaMusiques.js";
-const etiquetes_disponibles=["jazz", "pop", "animades", "rock", "clasica"];
-const etiquetes_tots=["tots"] //Per poder afegir mes etiquetes
+
+const etiquetes_tots = ["tots"];
 const llistat_disponibles = [];
 
-/**
- * Creo un objeto de LlistaMusiques:
- * punto1 -nombre de la lista
- * punto2 -etiquetas "no se para que lo necesito"
- * punto3 -Creo un objeto Musica dentro de mi listado 
- */
-
-const llista_inicial= new LlistaMusiques("llista1", etiquetes_tots, [
-    new Musica("Song 1", "song1.mp3", ["pop", "animades"]), 
+// Crear llista inicial con canciones
+const llista_inicial = new LlistaMusiques("Disponibles", etiquetes_tots, [
+    new Musica("Song 1", "song1.mp3", ["pop", "animades"]),
     new Musica("Song 2", "song2.ogg", ["rock"]),
-    new Musica("Song 3", "song3.wav", ["jazz", "clasica"])]);
+    new Musica("Song 3", "song3.wav", ["jazz", "clasica"])
+]);
 
-    llistat_disponibles.push(llista_inicial);
+llistat_disponibles.push(llista_inicial);
 
+// Función para actualizar la vista
+function actualitzaLlistaMusiques() {
+    const div_llista_musiques = document.getElementById("div_llista_musiques");
+    div_llista_musiques.innerHTML = "";
+    llistat_disponibles.forEach(function(llistat, index) {
+        div_llista_musiques.innerHTML += llistat.generaCodiHTML();
+    });
+}
 
-    //Para ver el array de las musicas que hay dentro del array de llistat_disponibles
-    //La idea es mostrar un select de cada posicion que pinte
-    // llista_inicial.llistat_musiques.forEach(function(musica, index){
-/*
-        return `<div><h2>` + this.titol + `</h2>
-                    <div> Nom llista: ${this.titol}</div>
-                    <div> Musica1: ${this.mostraMusiques()}</div>
-                </div>`;
-*/
-
-    //     console.log("Musica "+index+": "+musica.titol+"-"+musica.nom+"-"+musica.mediaType+"-"+musica.etiquetes);
-    // }
-/**
- * crear llista
- */
-document.getElementById("btn_crear_llista").onclick=crearLlista;
-function crearLlista(){
+// Evento para crear nuevas listas
+document.getElementById("btn_crear_llista").onclick = function() {
     const nomLlista = document.getElementById("input_nomLlista").value;
-    const novaLlista = new LlistaMusiques(nomLlista, etiquetes_tots, []);
+    if (nomLlista) {
+        const novaLlista = new LlistaMusiques(nomLlista, ["tots"], []);
+        llistat_disponibles.push(novaLlista);
+        actualitzaLlistaMusiques();
+    }
+};
 
-    llistat_disponibles.push(novaLlista);
-    console.log(llistat_disponibles);
-    actualitzaLlistaMusiques()
-}
-//document.getElementById("btn_crear_llista").addEventListener("click", crearLlista);
-
-/**
- * actualitza llista
- */
-function actualitzaLlistaMusiques(){
-    const div_llista_musiques= document.getElementById("div_llista_musiques")
-    div_llista_musiques.innerHTML=""
-    llistat_disponibles.forEach(function(llistat, index){
-        div_llista_musiques.innerHTML+=index+"-"+llistat.generaCodiHTML(index);
-        
-    })
-}    
+// Render inicial
 actualitzaLlistaMusiques();
-
-
-/*
-generaCodiHTML() {
-    return `<div><h2>` + this.titol + `</h2>
-                <div> Nom llista: ${this.titol}</div>
-            </div>`;
-}
-*/
-
-//Para poder crear musica añadiendo un boton desde la vista
-/*document.getElementById("btn_crear_musica").onclick=crearMusica;
-function crearMusica(){
-    const nomLlista = document.getElementById("input_titol").value;
-    const nom = document.getElementById("input_nom").value;
-    const novaMusica = new Musica("disponibles", "musica", etiquetes_tots)
-    llista_musiques.llistat_musica.push(novaMusica);
-}
-*/
 
 /*
     d. Permet mostrar la informació d’un àudio 

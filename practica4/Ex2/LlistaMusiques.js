@@ -7,57 +7,47 @@
 */
 
 export class LlistaMusiques {
-    _titol="";
-    _etiquetes=[];
-    _llistat_musiques=[];    
+    _titol = "";
+    _etiquetes = [];
+    _llistat_musiques = [];
 
-    constructor(titol = "Default", etiquetes=[], llista=[]){
-        this.titol = titol
+    constructor(titol = "Default", etiquetes = [], llista = []) {
+        this.titol = titol;
         this.etiquetes = etiquetes;
         this.llistat_musiques = llista;
     }
 
-    /* *******************GETTERS***************** */
-    get llistat_musiques(){
-        return this._llistat_musiques;
-    }
-    get etiquetes(){
-        return this._etiquetes;
-    }
-    get titol(){
-        return this._titol;
-    }
+    get llistat_musiques() { return this._llistat_musiques; }
+    get etiquetes() { return this._etiquetes; }
+    get titol() { return this._titol; }
 
-    /* *******************SETTERS***************** */
-    set titol(titol){
-        this._titol = titol;
-    }
+    set titol(titol) { this._titol = titol; }
+    set etiquetes(etiquete) { if (Array.isArray(etiquete)) this._etiquetes = etiquete; }
+    set llistat_musiques(llista) { if (Array.isArray(llista)) this._llistat_musiques = llista; }
 
-    set etiquetes(etiquete){
-        if(Array.isArray(etiquete)){
-            this._etiquetes=etiquete;
-        }
-    }
-
-    set llistat_musiques(llista){
-        if(Array.isArray(llista)){
-            this._llistat_musiques=llista;
-        }
-    }    
-
-    mostraMusiques(){
-        let llistatString="";
-        this.llistat_musiques.forEach(function(musica, index){
-           llistatString+= index+"-"+musica.titol+"-"+musica.nom+"-"+musica.etiquetes;
-        })
-        return llistatString;
+    mostraMusiques() {
+        let llistatHTML = "<ul>";
+        this.llistat_musiques.forEach((musica) => {
+            llistatHTML += `
+                <li>
+                    <strong>${musica.titol}</strong> (${musica.mediaType})<br>
+                    <audio controls>
+                        <source src="${musica.nom}" type="${musica.mediaType}">
+                        Tu navegador no soporta audio.
+                    </audio>
+                    <p>Etiquetas: ${musica.etiquetes.join(", ")}</p>
+                </li>`;
+        });
+        llistatHTML += "</ul>";
+        return llistatHTML;
     }
 
     generaCodiHTML() {
-        return `<div><h2>` + this.titol + `</h2>
-                    <div> Nom llista: ${this.titol}</div>
-                    <div> Musica1: ${this.mostraMusiques()}</div>
-                </div>`;
+        return `
+            <div style="border: 1px solid #ccc; margin: 10px; padding: 10px;">
+                <h2>Llista: ${this.titol}</h2>
+                <p>Etiquetes llista: ${this.etiquetes.join(", ")}</p>
+                ${this.mostraMusiques()}
+            </div>`;
     }
-
 }
