@@ -7,14 +7,18 @@
     <script src="reproductor.js" defer type="module"></script>
 </head>
 <body>
-    nova llista: <input type="text" id="input_nomLlista"> <br />
+    <h3>Gestió de Llistes</h3>
+    Nova llista: <input type="text" id="input_nomLlista"> 
     <button id="btn_crear_llista"> CREAR LLISTA</button>
-    
-    <button id="btn_afegir_etiqueta"> AFEGIR ETIQUETA </button>
-    <button id="btn_eliminar_etiqueta"> ELIMINAR ETIQUETA </button>
 
     <br><br>
-    Canción a añadir: <select id="select_musica_disponible"></select>
+    Cançó a afegir: <select id="select_musica_disponible"></select>
+    
+    <hr>
+    <h3>Filtre</h3>
+    Filtrar llistes per etiqueta: <input type="text" id="input_filtre" placeholder="Escriu una etiqueta...">
+    <button id="btn_filtrar">FILTRAR</button>
+    <button id="btn_netejar_filtre">MOSTRAR TOTES</button>
     <hr>
 
     <div id="div_llista_musiques"></div>

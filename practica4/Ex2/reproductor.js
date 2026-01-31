@@ -18,125 +18,114 @@
 import { Musica } from "./Musica.js";
 import { LlistaMusiques } from "./LlistaMusiques.js";
 
-const etiquetes_tots = ["tots"];
 const llistat_disponibles = [];
 
-// 1. Creamos la lista inicial (el almacén de canciones)
-const llista_inicial = new LlistaMusiques("Disponibles", etiquetes_tots, [
-    new Musica("Song 1", "song1.mp3", ["pop", "animades"]),
+// 1. Datos iniciales
+const llista_inicial = new LlistaMusiques("Disponibles", ["tots"], [
+    new Musica("Song 1", "song1.mp3", ["pop"]),
     new Musica("Song 2", "song2.ogg", ["rock"]),
-    new Musica("Song 3", "song3.wav", ["jazz", "clasica"])
+    new Musica("Song 3", "song3.wav", ["jazz"])
 ]);
-
-// La añadimos al array global
 llistat_disponibles.push(llista_inicial);
 
-// 2. Función para crear listas nuevas
-function crearLlista() {
-    const inputNom = document.getElementById("input_nomLlista");
-    const nomLlista = inputNom.value;
-
-    if (nomLlista.trim() !== "") {
-        const novaLlista = new LlistaMusiques(nomLlista, ["tots"], []);
-        llistat_disponibles.push(novaLlista);
-        inputNom.value = ""; // Limpiamos el input
+// 2. Eventos de la interfaz superior
+document.getElementById("btn_crear_llista").onclick = () => {
+    const nom = document.getElementById("input_nomLlista").value;
+    if(nom) {
+        llistat_disponibles.push(new LlistaMusiques(nom, ["tots"], []));
+        document.getElementById("input_nomLlista").value = ""; // Limpiar
         actualitzaLlistaMusiques();
-    } else {
-        alert("Escriu un nom per a la llista");
     }
-}
+};
 
-// 3. Función para actualizar la interfaz
-function actualitzaLlistaMusiques() {
-    const div_llista_musiques = document.getElementById("div_llista_musiques");
-    div_llista_musiques.innerHTML = ""; 
+document.getElementById("btn_filtrar").onclick = () => {
+    const filtre = document.getElementById("input_filtre").value;
+    actualitzaLlistaMusiques(filtre);
+};
 
-    llistat_disponibles.forEach(function(llistat, index) {
-        const contenedorLista = document.createElement("div");
-        contenedorLista.style.border = "1px solid #444";
-        contenedorLista.style.margin = "15px 0";
-        contenedorLista.style.padding = "10px";
+document.getElementById("btn_netejar_filtre").onclick = () => {
+    document.getElementById("input_filtre").value = "";
+    actualitzaLlistaMusiques();
+};
+
+// 3. Función de renderizado (Aquí están tus botones de etiquetas)
+function actualitzaLlistaMusiques(filtre = "") {
+    const contenedorPrincipal = document.getElementById("div_llista_musiques");
+    contenedorPrincipal.innerHTML = "";
+
+    llistat_disponibles.forEach((llista) => {
+        // Filtrado
+        if (filtre && !llista.etiquetes.some(e => e.toLowerCase().includes(filtre.toLowerCase()))) {
+            return; 
+        }
+
+        const divLista = document.createElement("div");
+        divLista.style.border = "2px solid #ccc";
+        divLista.style.padding = "15px";
+        divLista.style.margin = "10px 0";
+        divLista.style.borderRadius = "8px";
         
-        // 1. Pintamos el HTML base de la clase
-        contenedorLista.innerHTML = llistat.generaCodiHTML();
+        // HTML de la clase (Título, etiquetas actuales y canciones con audio)
+        divLista.innerHTML = llista.generaCodiHTML();
 
-        // --- SECCIÓN GESTIÓN DE ETIQUETAS DE LISTA (Punto k) ---
-        const divTags = document.createElement("div");
-        divTags.style.marginTop = "10px";
-
-        // Botón Añadir Etiqueta
+        // --- BOTONES DE ETIQUETAS (Punto k) ---
         const btnAddTag = document.createElement("button");
-        btnAddTag.innerText = "+ Etiqueta";
+        btnAddTag.innerText = "＋ Etiqueta";
         btnAddTag.onclick = () => {
-            const nuevaTag = prompt("Nombre de la nueva etiqueta para '" + llistat.titol + "':");
-            if (nuevaTag) {
-                // Usamos el setter de la clase
-                let misTags = llistat.etiquetes; 
-                misTags.push(nuevaTag);
-                llistat.etiquetes = misTags; 
-                actualitzaLlistaMusiques();
+            const nueva = prompt("Nueva etiqueta para " + llista.titol);
+            if(nueva) {
+                let t = llista.etiquetes;
+                t.push(nueva);
+                llista.etiquetes = t; // Llama al setter
+                actualitzaLlistaMusiques(filtre);
             }
         };
 
-        // Botón Quitar Etiqueta
         const btnDelTag = document.createElement("button");
-        btnDelTag.innerText = "- Etiqueta";
+        btnDelTag.innerText = "－ Etiqueta";
         btnDelTag.style.marginLeft = "5px";
         btnDelTag.onclick = () => {
-            let misTags = llistat.etiquetes;
-            if (misTags.length > 0) {
-                const tagAEliminar = prompt("¿Qué etiqueta quieres quitar? (" + misTags.join(", ") + ")");
-                const i = misTags.indexOf(tagAEliminar);
-                if (i !== -1) {
-                    misTags.splice(i, 1);
-                    llistat.etiquetes = misTags;
-                    actualitzaLlistaMusiques();
-                } else {
-                    alert("Etiqueta no encontrada");
-                }
+            let t = llista.etiquetes;
+            if(t.length > 0) {
+                t.pop(); // Quita la última
+                llista.etiquetes = t;
+                actualitzaLlistaMusiques(filtre);
             }
         };
 
-        divTags.appendChild(btnAddTag);
-        divTags.appendChild(btnDelTag);
-        contenedorLista.appendChild(divTags);
-
-        // --- SECCIÓN AÑADIR MÚSICA (Lo que ya teníamos) ---
+        // --- BOTÓN AÑADIR CANCIÓN (Punto j) ---
         const btnAfegirMusica = document.createElement("button");
-        btnAfegirMusica.innerText = "Afegir cançó seleccionada";
+        btnAfegirMusica.innerText = "🎵 Afegir cançó seleccionada";
         btnAfegirMusica.style.display = "block";
         btnAfegirMusica.style.marginTop = "10px";
-        btnAfegirMusica.style.backgroundColor = "#e1e1e1";
-        
-        btnAfegirMusica.onclick = function() {
-            const select = document.getElementById("select_musica_disponible");
-            const musicaAñadir = llista_inicial.llistat_musiques[select.value];
-            llistat.llistat_musiques.push(musicaAñadir);
-            actualitzaLlistaMusiques();
+        btnAfegirMusica.onclick = () => {
+            const index = document.getElementById("select_musica_disponible").value;
+            llista.llistat_musiques.push(llista_inicial.llistat_musiques[index]);
+            actualitzaLlistaMusiques(filtre);
         };
 
-        contenedorLista.appendChild(btnAfegirMusica);
-        div_llista_musiques.appendChild(contenedorLista);
+        // Añadir botones al div de la lista
+        divLista.appendChild(btnAddTag);
+        divLista.appendChild(btnDelTag);
+        divLista.appendChild(btnAfegirMusica);
+        
+        contenedorPrincipal.appendChild(divLista);
     });
 }
 
-// 4. Rellenar el selector de canciones (solo una vez al inicio)
-function inicializarSelect() {
+// 4. Inicialización
+function init() {
     const select = document.getElementById("select_musica_disponible");
-    llista_inicial.llistat_musiques.forEach((musica, index) => {
-        const opcion = document.createElement("option");
-        opcion.value = index;
-        opcion.text = musica.titol;
-        select.appendChild(opcion);
+    llista_inicial.llistat_musiques.forEach((m, i) => {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.text = m.titol;
+        select.appendChild(opt);
     });
+    actualitzaLlistaMusiques();
 }
 
-// 5. Asignar eventos y arranque
-document.getElementById("btn_crear_llista").onclick = crearLlista;
-
-// Ejecución inicial
-inicializarSelect();
-actualitzaLlistaMusiques();
+init();
 
 /*
     d. Permet mostrar la informació d’un àudio 

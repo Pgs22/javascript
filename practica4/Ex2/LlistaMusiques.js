@@ -26,20 +26,18 @@ export class LlistaMusiques {
     set llistat_musiques(llista) { if (Array.isArray(llista)) this._llistat_musiques = llista; }
 
     mostraMusiques() {
-        let llistatHTML = "<ul>";
-        this.llistat_musiques.forEach((musica) => {
-            llistatHTML += `
-                <li>
-                    <strong>${musica.titol}</strong> (${musica.mediaType})<br>
-                    <audio controls>
+        let llistatString = "";
+        this.llistat_musiques.forEach(function(musica) {
+            llistatString += `
+                <div style="margin-bottom: 10px; border-top: 1px dashed #ccc;">
+                    <p><strong>${musica.titol}</strong> (${musica.etiquetes.join(", ")})</p>
+                    <audio controls style="height: 30px;">
                         <source src="${musica.nom}" type="${musica.mediaType}">
-                        Tu navegador no soporta audio.
+                        El teu navegador no suporta audio.
                     </audio>
-                    <p>Etiquetas: ${musica.etiquetes.join(", ")}</p>
-                </li>`;
+                </div>`;
         });
-        llistatHTML += "</ul>";
-        return llistatHTML;
+        return llistatString || "<p>Llista buida</p>";
     }
 
     generaCodiHTML() {
