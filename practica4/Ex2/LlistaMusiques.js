@@ -44,10 +44,10 @@ export class LlistaMusiques {
 
     generaCodiHTML() {
         return `
-            <div style="border: 1px solid #ccc; margin: 10px; padding: 10px;">
+            <div style="border-bottom: 2px solid black; padding: 10px;">
                 <h2>Llista: ${this.titol}</h2>
-                <p>Etiquetes llista: ${this.etiquetes.join(", ")}</p>
-                ${this.mostraMusiques()}
+                <div><strong>Etiquetes:</strong> ${this.etiquetes.join(", ")}</div>
+                <div><strong>Cançons:</strong><br> ${this.mostraMusiques()}</div>
             </div>`;
     }
 }

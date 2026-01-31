@@ -49,8 +49,6 @@ document.getElementById("btn_crear_llista").onclick = function() {
     }
 };
 
-// Render inicial
-actualitzaLlistaMusiques();
 
 /*
     d. Permet mostrar la informació d’un àudio 
@@ -71,3 +69,49 @@ actualitzaLlistaMusiques();
 
 //aqui creo un objecte de llistamusques
 //aqui creo un objecte de musica
+
+
+// ... (mantenemos las importaciones y constantes iniciales) ...
+
+// Función para rellenar el SELECT con las canciones de llista_inicial
+function actualizarSelectMusicas() {
+    const select = document.getElementById("select_musica_disponible");
+    select.innerHTML = "";
+    llista_inicial.llistat_musiques.forEach((musica, index) => {
+        const option = document.createElement("option");
+        option.value = index; // Guardamos el índice de la canción
+        option.text = musica.titol;
+        select.appendChild(option);
+    });
+}
+
+// Modificamos la función actualitzaLlistaMusiques para añadir el evento de "Afegir"
+function actualitzaLlistaMusiques(){
+    const div_llista_musiques = document.getElementById("div_llista_musiques");
+    div_llista_musiques.innerHTML = "";
+    
+    llistat_disponibles.forEach(function(llistat, index){
+        // Creamos un contenedor para la lista
+        const contenedor = document.createElement("div");
+        contenedor.innerHTML = llistat.generaCodiHTML();
+        
+        // Creamos un botón de "Afegir cançó seleccionada" para CADA lista
+        const btnAfegir = document.createElement("button");
+        btnAfegir.innerText = "Afegir cançó seleccionada a esta llista";
+        btnAfegir.onclick = () => {
+            const indexMusica = document.getElementById("select_musica_disponible").value;
+            const musicaSeleccionada = llista_inicial.llistat_musiques[indexMusica];
+            
+            // Añadimos la canción a la lista correspondiente
+            llistat.llistat_musiques.push(musicaSeleccionada);
+            actualitzaLlistaMusiques(); // Refrescamos la vista
+        };
+        
+        contenedor.appendChild(btnAfegir);
+        div_llista_musiques.appendChild(contenedor);
+    });
+}
+
+// Llamada inicial para llenar el select y la vista
+actualizarSelectMusicas();
+actualitzaLlistaMusiques();
