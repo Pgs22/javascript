@@ -114,7 +114,7 @@ function pintaLlistaIndividual(llista, filtre) {
         }
     };
 
-    // 4. Montaje de la caja de acciones
+    // Montatge contenidor de cançoms
     const divAccions = document.createElement("div");
     divAccions.style.marginTop = "10px";
     divAccions.appendChild(label);
@@ -123,46 +123,48 @@ function pintaLlistaIndividual(llista, filtre) {
     divAccions.appendChild(btnTag);
 
     divLista.appendChild(divAccions);
-    return divLista; // Devolvemos el elemento listo para ser colgado en el DOM
+    return divLista; // Per pintar totalment la llista
 }
 
 /**
  * Etiquetes i llistes
  * Selecció de música per llista individual, permet afegir cançons a cada llista per tindre a mà el selector
- * @param {*} filtre pot estár vuit per netetjar filtre o omplir amb el nom per filtrar les llistes
+ * @param {*} filtre pot estar vuit per netetjar filtre o omplir amb el nom per filtrar les llistes
  */  
 function actualitzaLlistaMusiques(filtre = "") {
     const contenedorPrincipal = document.getElementById("div_llista_musiques");
-    contenedorPrincipal.innerHTML = ""; // Limpiar pantalla
 
-    // Actualizar el selector de filtros (si lo usas como select)
-    if(typeof actualitzaSelectorFiltre === "function") actualitzaSelectorFiltre();
+    actualitzaSelectorFiltre();
 
+    contenedorPrincipal.innerHTML = ""; // Neteja el contenidor
+
+    // Actualizar el selector de filtres
     llistat_disponibles.forEach((llista) => {
-        // ¿Pasa el filtro?
-        if (filtre && !llista.etiquetes.includes(filtre)) {
-            return; 
-        }
+        if (filtre !== "" && !llista.etiquetes.includes(filtre)) return;
 
-        // Llamamos a la función de pintura y colgamos el resultado
+        // Mostra resultats
         const elementoLlista = pintaLlistaIndividual(llista, filtre);
         contenedorPrincipal.appendChild(elementoLlista);
     });
 }
 
-// 4. Inicialización
-function init() {
-    const select = document.getElementById("select_musica_disponible");
-    llista_inicial.llistat_musiques.forEach((m, i) => {
-        const opt = document.createElement("option");
-        opt.value = i;
-        opt.text = m.titol;
-        select.appendChild(opt);
-    });
-    actualitzaLlistaMusiques();
-}
+function actualitzaLlistaMusiques(filtre = "") {
+    const contenedorPrincipal = document.getElementById("div_llista_musiques");
+    
+    // 1. PRIMERO: Actualizamos el menú de filtros para que salgan las nuevas etiquetas
+    actualitzaSelectorFiltre(); 
 
-init();
+    // 2. SEGUNDO: Limpiamos y dibujamos las listas
+    contenedorPrincipal.innerHTML = "";
+    
+    llistat_disponibles.forEach((llista) => {
+        // Filtrado...
+        if (filtre !== "" && !llista.etiquetes.includes(filtre)) return;
+
+        const elementoLlista = pintaLlistaIndividual(llista, filtre);
+        contenedorPrincipal.appendChild(elementoLlista);
+    });
+}
 
 /**
  * Función para llenar el SELECT del filtro con etiquetas únicas
@@ -195,5 +197,8 @@ document.getElementById("btn_netejar_filtre").onclick = function() {
     document.getElementById("select_filtre").value = "";
     actualitzaLlistaMusiques();
 };
+
+//Per mostrar la llista inicial
+actualitzaLlistaMusiques();
 
 
