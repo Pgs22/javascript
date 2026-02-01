@@ -148,51 +148,38 @@ function actualitzaLlistaMusiques(filtre = "") {
     });
 }
 
-function actualitzaLlistaMusiques(filtre = "") {
-    const contenedorPrincipal = document.getElementById("div_llista_musiques");
-    
-    // 1. PRIMERO: Actualizamos el menú de filtros para que salgan las nuevas etiquetas
-    actualitzaSelectorFiltre(); 
-
-    // 2. SEGUNDO: Limpiamos y dibujamos las listas
-    contenedorPrincipal.innerHTML = "";
-    
-    llistat_disponibles.forEach((llista) => {
-        // Filtrado...
-        if (filtre !== "" && !llista.etiquetes.includes(filtre)) return;
-
-        const elementoLlista = pintaLlistaIndividual(llista, filtre);
-        contenedorPrincipal.appendChild(elementoLlista);
-    });
-}
-
 /**
- * Función para llenar el SELECT del filtro con etiquetas únicas
+ * Función pel SELECT del filtre amb etiquetes úniques
  */
 function actualitzaSelectorFiltre() {
     const selectFiltre = document.getElementById("select_filtre");
-    const valorActual = selectFiltre.value; // Guardamos lo que estaba seleccionado
-    
-    // Obtenemos todas las etiquetas de todas las listas y las aplanamos en un array único
-    const todasLasTags = llistat_disponibles.flatMap(l => l.etiquetes);
-    const etiquetasUnicas = [...new Set(todasLasTags)]; // Eliminamos duplicados
+    const etiquetasUnicas = [];
+    //Per entrar en cada llista i subllista
+    llistat_disponibles.forEach(llista => {
+        llista.etiquetes.forEach(tag => {
+            if (etiquetasUnicas.indexOf(tag) === -1) {
+                etiquetasUnicas.push(tag);
+            }
+        });
+    });
 
+    // Implementem les dades al SELECT
     selectFiltre.innerHTML = '<option value="">-- Totes les etiquetes --</option>';
+    
     etiquetasUnicas.forEach(tag => {
         const opt = document.createElement("option");
         opt.value = tag;
         opt.text = tag;
-        if(tag === valorActual) opt.selected = true;
         selectFiltre.appendChild(opt);
     });
 }
 
-// Evento: Filtrar cuando el usuario cambia la opción del selector
+// Filtrar al canviar el selector
 document.getElementById("select_filtre").onchange = function() {
     actualitzaLlistaMusiques(this.value);
 };
 
-// Evento: Limpiar filtro
+// Netejar filtre i actualitzar llista
 document.getElementById("btn_netejar_filtre").onclick = function() {
     document.getElementById("select_filtre").value = "";
     actualitzaLlistaMusiques();
