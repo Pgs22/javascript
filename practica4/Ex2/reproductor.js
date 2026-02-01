@@ -40,9 +40,9 @@ const llistat_disponibles = [];
  * Musiques inicials
  */
 const llista_inicial = new LlistaMusiques("Disponibles", ["tots"], [
-    new Musica("Song 1", "song1.mp3", ["pop"]),
-    new Musica("Song 2", "song2.ogg", ["rock"]),
-    new Musica("Song 3", "song3.wav", ["jazz"])
+    new Musica("Drum Beat", "DRUMC0.WAV", ["percusio"], "audio/wav"),
+    new Musica("Fanfare", "FANFARE1.WAV", ["efectes"], "audio/wav"),
+    new Musica("Ek Raat Vilen", "ek_raat_vilen.mp3", ["pop"], "audio/mpeg")
 ]);
 llistat_disponibles.push(llista_inicial);
 
@@ -69,8 +69,7 @@ document.getElementById("btn_netejar_filtre").onclick = () => {
 };
 
 /**
- * FUNCIÓN 1: La "Fábrica" de HTML (Pinta una sola lista)
- * Se encarga de crear el DIV, el SELECT de música y los botones.
+ * Afegim el codi HTML quan es crea una llista
  */
 function pintaLlistaIndividual(llista, filtre) {
     const divLista = document.createElement("div");
@@ -79,10 +78,12 @@ function pintaLlistaIndividual(llista, filtre) {
     divLista.style.margin = "10px 0";
     divLista.style.borderRadius = "8px";
 
-    // 1. Contenido base (Título y canciones)
+    // Mostrar musiques amb els stils de la llista individual
     divLista.innerHTML = llista.generaCodiHTML();
 
-    // 2. Pack de "Afegir Cançó"
+    /**
+     * Per afegir MUSICA a cada llista mostrem el select per  llista (Per tindre a mà les cançons a afegir)
+     */
     const label = document.createElement("label");
     label.innerText = "Tria cançó: ";
     
@@ -95,15 +96,15 @@ function pintaLlistaIndividual(llista, filtre) {
     });
 
     const btnAfegir = document.createElement("button");
-    btnAfegir.innerText = "🎵 Afegir";
+    btnAfegir.innerText = "Afegir";
     btnAfegir.onclick = () => {
         llista.llistat_musiques.push(llista_inicial.llistat_musiques[selectLocal.value]);
-        actualitzaLlistaMusiques(filtre); // Refresca la vista general
+        actualitzaLlistaMusiques(filtre);
     };
 
     // 3. Botón "Afegir Tag"
     const btnTag = document.createElement("button");
-    btnTag.innerText = "＋ Tag";
+    btnTag.innerText = "Tag";
     btnTag.style.marginLeft = "10px";
     btnTag.onclick = () => {
         const nueva = prompt("Nova etiqueta:");

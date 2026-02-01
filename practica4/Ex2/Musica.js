@@ -25,17 +25,31 @@ export class Musica {
         this.etiquetes = etiquetes;
     }
 
-    get titol() { return this._titol; }
-    get nom() { return this._nom; }
-    get etiquetes() { return this._etiquetes; }
-    get mediaType() { return this._mediaType; }
+    /**
+     * GETTERS
+     */
+    get titol() {
+        return this._titol;
+    }
+    get nom() {
+        return this._nom;
+        
+    }
+    get etiquetes() {
+        return this._etiquetes;
+    }
+    get mediaType() {
+        return this._mediaType;        
+    }
 
+    /**
+     * SETTERS
+     */
     set titol(titol) {
         if (titol.length >= 2) { // Mínimo 2 caracteres
             this._titol = titol;
         }
     }
-
     set nom(nom) {
         if (nom.length > 1 && nom.includes(".")) {
             const validMusicExtensions = ["mp3", "wav", "ogg"];
@@ -52,11 +66,8 @@ export class Musica {
             }
         }
     }
-
     set etiquetes(etiquete) {
-        if (Array.isArray(etiquete)) { // Corregido: eliminado el =[]
-            this._etiquetes = etiquete;
-        }
+        this._etiquetes = etiquete;
     }
 
     afegirEtiquete(etiquete) {
@@ -71,4 +82,7 @@ export class Musica {
             this._etiquetes.splice(index, 1);
         }
     }
+
+    
+
 }

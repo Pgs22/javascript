@@ -17,20 +17,38 @@ export class LlistaMusiques {
         this.llistat_musiques = llista;
     }
 
-    get llistat_musiques() { return this._llistat_musiques; }
-    get etiquetes() { return this._etiquetes; }
-    get titol() { return this._titol; }
+    /**
+     * GETTERS
+     */
+    get llistat_musiques() {
+        return this._llistat_musiques;
+    }
+    get etiquetes() {
+        return this._etiquetes;
+    }
+    get titol() {
+        return this._titol;
+    }
 
-    set titol(titol) { this._titol = titol; }
-    set etiquetes(etiquete) { if (Array.isArray(etiquete)) this._etiquetes = etiquete; }
-    set llistat_musiques(llista) { if (Array.isArray(llista)) this._llistat_musiques = llista; }
+    /**
+     * SETTERS
+     */
+    set titol(titol) {
+        this._titol = titol;
+    }
+    set etiquetes(etiquete) {
+        this._etiquetes = etiquete;
+    }
+    set llistat_musiques(llista) {
+        this._llistat_musiques = llista;
+    }
 
     mostraMusiques() {
         let llistatString = "";
         this.llistat_musiques.forEach(function(musica) {
             llistatString += `
                 <div style="margin-bottom: 10px; border-top: 1px dashed #ccc;">
-                    <p><strong>${musica.titol}</strong> (${musica.etiquetes.join(", ")})</p>
+                    <p><strong>${musica.titol}</strong> (${musica.etiquetes})</p>
                     <audio controls style="height: 30px;">
                         <source src="${musica.nom}" type="${musica.mediaType}">
                         El teu navegador no suporta audio.
@@ -41,9 +59,11 @@ export class LlistaMusiques {
     }
 
     generaCodiHTML() {
+        let textoEtiquetas = this.etiquetes.length > 0 ? this.etiquetes : "Cap";
+        
         return `
             <h2>Llista: ${this.titol}</h2>
-            <p><strong>Etiquetes de llista:</strong> ${this.etiquetes.length > 0 ? this.etiquetes.join(", ") : "Cap"}</p>
+            <p><strong>Etiquetes de llista:</strong> ${textoEtiquetas}</p>
             <div>${this.mostraMusiques()}</div>
         `;
     }
