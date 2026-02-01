@@ -69,73 +69,83 @@ document.getElementById("btn_netejar_filtre").onclick = () => {
 };
 
 /**
+ * FUNCIÓN 1: La "Fábrica" de HTML (Pinta una sola lista)
+ * Se encarga de crear el DIV, el SELECT de música y los botones.
+ */
+function pintaLlistaIndividual(llista, filtre) {
+    const divLista = document.createElement("div");
+    divLista.style.border = "2px solid #ccc";
+    divLista.style.padding = "15px";
+    divLista.style.margin = "10px 0";
+    divLista.style.borderRadius = "8px";
+
+    // 1. Contenido base (Título y canciones)
+    divLista.innerHTML = llista.generaCodiHTML();
+
+    // 2. Pack de "Afegir Cançó"
+    const label = document.createElement("label");
+    label.innerText = "Tria cançó: ";
+    
+    const selectLocal = document.createElement("select");
+    llista_inicial.llistat_musiques.forEach((musica, i) => {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.text = musica.titol;
+        selectLocal.appendChild(opt);
+    });
+
+    const btnAfegir = document.createElement("button");
+    btnAfegir.innerText = "🎵 Afegir";
+    btnAfegir.onclick = () => {
+        llista.llistat_musiques.push(llista_inicial.llistat_musiques[selectLocal.value]);
+        actualitzaLlistaMusiques(filtre); // Refresca la vista general
+    };
+
+    // 3. Botón "Afegir Tag"
+    const btnTag = document.createElement("button");
+    btnTag.innerText = "＋ Tag";
+    btnTag.style.marginLeft = "10px";
+    btnTag.onclick = () => {
+        const nueva = prompt("Nova etiqueta:");
+        if(nueva) {
+            llista.etiquetes.push(nueva);
+            actualitzaLlistaMusiques(filtre);
+        }
+    };
+
+    // 4. Montaje de la caja de acciones
+    const divAccions = document.createElement("div");
+    divAccions.style.marginTop = "10px";
+    divAccions.appendChild(label);
+    divAccions.appendChild(selectLocal);
+    divAccions.appendChild(btnAfegir);
+    divAccions.appendChild(btnTag);
+
+    divLista.appendChild(divAccions);
+    return divLista; // Devolvemos el elemento listo para ser colgado en el DOM
+}
+
+/**
  * Etiquetes i llistes
  * Selecció de música per llista individual, permet afegir cançons a cada llista per tindre a mà el selector
  * @param {*} filtre pot estár vuit per netetjar filtre o omplir amb el nom per filtrar les llistes
- */
+ */  
 function actualitzaLlistaMusiques(filtre = "") {
     const contenedorPrincipal = document.getElementById("div_llista_musiques");
-    contenedorPrincipal.innerHTML = "";
+    contenedorPrincipal.innerHTML = ""; // Limpiar pantalla
 
-    // Actualizamos el selector de etiquetas por si se han añadido nuevas
-    actualitzaSelectorFiltre();
+    // Actualizar el selector de filtros (si lo usas como select)
+    if(typeof actualitzaSelectorFiltre === "function") actualitzaSelectorFiltre();
 
-    //Per buscar nom la llista que afegim al escriu nom de la llista
     llistat_disponibles.forEach((llista) => {
+        // ¿Pasa el filtro?
         if (filtre && !llista.etiquetes.includes(filtre)) {
             return; 
         }
 
-        const divLlista = document.createElement("div");
-        divLlista.style.border = "2px solid #ccc";
-        divLlista.style.padding = "15px";
-        divLlista.style.margin = "10px 0";
-        divLlista.style.borderRadius = "8px";
-        
-        // Per mostrar la llista a la vista amb totes les dades
-        divLlista.innerHTML = llista.generaCodiHTML();
-        
-        // --- SELECTOR DE CANCIONES ---
-        const label = document.createElement("label");
-        label.innerText = "Seleccionar musica: ";
-        const selectLocal = document.createElement("select");
-        llista_inicial.llistat_musiques.forEach((musica, i) => {
-            const opt = document.createElement("option");
-            opt.value = i;
-            opt.text = musica.titol;
-            selectLocal.appendChild(opt);
-        });
-
-        //Botó per afegir musica
-        const btnAfegir = document.createElement("button");
-        btnAfegir.innerText = "Afegir musica";
-        btnAfegir.onclick = () => {
-            llista.llistat_musiques.push(llista_inicial.llistat_musiques[selectLocal.value]);
-            actualitzaLlistaMusiques(filtre);
-        };
-
-        // --- BOTONES PARA GESTIONAR ETIQUETAS DE LA LISTA ---
-        const btnNovaTag = document.createElement("button");
-        btnNovaTag.innerText = "＋ Tag";
-        btnNovaTag.style.marginLeft = "10px";
-        btnNovaTag.onclick = () => {
-            const tag = prompt("Nova etiqueta:");
-            if(tag) {
-                llista.etiquetes.push(tag);
-                actualitzaLlistaMusiques(filtre);
-            }
-        };
-
-        const divAccions = document.createElement("div");
-        divAccions.style.marginTop = "10px";
-        divAccions.appendChild(label);
-        divAccions.appendChild(selectLocal);
-        divAccions.appendChild(btnAfegir);
-        divAccions.appendChild(btnNovaTag);
-
-        // Agregamos todo al div de la lista
-        divLlista.appendChild(divAccions);
-        contenedorPrincipal.appendChild(divLista);
+        // Llamamos a la función de pintura y colgamos el resultado
+        const elementoLlista = pintaLlistaIndividual(llista, filtre);
+        contenedorPrincipal.appendChild(elementoLlista);
     });
 }
 
