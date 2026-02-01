@@ -53,17 +53,31 @@ export class Musica {
     set nom(nom) {
         if (nom.length > 1 && nom.includes(".")) {
             const validMusicExtensions = ["mp3", "wav", "ogg"];
+            
+            // Separamos por el punto y nos quedamos con la última parte
             const partes = nom.split('.');
             const extension = partes.pop().toLowerCase();
 
             if (validMusicExtensions.includes(extension)) {
                 this._nom = nom;
+                
+                // Asignamos el mediaType según la extensión usando un switch
                 switch (extension) {
-                    case 'mp3': this._mediaType = 'audio/mpeg'; break;
-                    case 'ogg': this._mediaType = 'audio/ogg'; break;
-                    case 'wav': this._mediaType = 'audio/wav'; break;
+                    case 'mp3':
+                        this._mediaType = 'audio/mpeg';
+                        break;
+                    case 'ogg':
+                        this._mediaType = 'audio/ogg';
+                        break;
+                    case 'wav':
+                        this._mediaType = 'audio/wav';
+                        break;
                 }
+            } else {
+                console.error("Extensió no vàlida");
             }
+        } else {
+            console.error("El nom de l'arxiu no és correcte");
         }
     }
     set etiquetes(etiquete) {
