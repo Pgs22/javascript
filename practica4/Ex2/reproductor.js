@@ -58,15 +58,15 @@ document.getElementById("btn_crear_llista").onclick = () => {
     }
 };
 
-document.getElementById("btn_filtrar").onclick = () => {
-    const filtre = document.getElementById("input_filtre").value;
-    actualitzaLlistaMusiques(filtre);
-};
+// document.getElementById("btn_filtrar").onclick = () => {
+//     const filtre = document.getElementById("input_filtre").value;
+//     actualitzaLlistaMusiques(filtre);
+// };
 
-document.getElementById("btn_netejar_filtre").onclick = () => {
-    document.getElementById("input_filtre").value = "";
-    actualitzaLlistaMusiques();
-};
+// document.getElementById("btn_netejar_filtre").onclick = () => {
+//     document.getElementById("input_filtre").value = "";
+//     actualitzaLlistaMusiques();
+// };
 
 /**
  * Afegim el codi HTML quan es crea una llista

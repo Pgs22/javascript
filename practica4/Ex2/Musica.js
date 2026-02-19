@@ -14,10 +14,10 @@
 //2. Millora el reproductor d’àudio creant les classes Musica i Llista músiques. Segueix els següents punts:  
 //    a. Crea una classe Musica amb com a mínim: 
 export class Musica {
-    _mediaType = "";
-    _etiquetes = [];
     _titol = "";
     _nom = "";
+    _etiquetes = [];
+    _mediaType = "";
 
     constructor(titol = "Default", nom = "", etiquetes = []) {
         this.titol = titol;
