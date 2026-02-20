@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reproductor</title>
+    <script src="reproductor.js" defer type="module"></script>
+</head>
+<body>
+    <h3>Gestió de Llistes</h3>
+    Nova llista: <input type="text" id="input_nomLlista"> 
+    <button id="btn_crear_llista"> CREAR LLISTA</button>
+
+    <hr>
+    <h3>Filtre</h3>
+    Filtrar llistes per etiqueta: 
+    <select id="select_filtre">
+        <option value="">-- Totes les etiquetes --</option>
+    </select>
+    <button id="btn_netejar_filtre">MOSTRAR TOTES</button>
+    <hr>
+
+    <div id="div_llista_musiques"></div>
+
+</body>
+</html>
