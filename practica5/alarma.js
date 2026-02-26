@@ -34,4 +34,8 @@ const form = document.getElementById("form_alarma");
 
 document.getElementById("bnt_valida").onclick = clk_validaNomInput;
 
+alarmes.set("alarma 1", 0, 0, 0, "DRUMC0.WAV", true);
+alarmes.set("alarma 2", 12, 30, 0, "DRUMC0.WAV", true);
+alarmes.set("alarma 3", 1, 0, 0, "DRUMC0.WAV", true);
+
 
