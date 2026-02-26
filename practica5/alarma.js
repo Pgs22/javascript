@@ -9,6 +9,29 @@
         // iii. Música (select amb les músiques disponibles del reproductor)
         // iv. Activa (checkbox)
 
+//Crear constructor i getters i setters per a la classe Alarma amb les següents propietats:
+    // a. Títol de l’alarma (mínim 2 caràcters)
+    // b. Hora, minut i segon (validar que són números i que estan dins dels rangs correctes)
+    // c. Música (ha de ser un objecte del tipus Musica)
+    // d. Activa (boolean)
 
+class Alarma {
+    constructor(titulo, hora, minuto, segundo, musica, activa) {
+        this.titulo = titulo;
+        this.hora = hora;
+        this.minuto = minuto;
+        this.segundo = segundo;
+        this.musica = musica;
+        this.activa = activa;
+    }
+}
+
+// Map per guardar alarmes
+let alarmes = new Map();
+
+// formulari html
+const form = document.getElementById("form_alarma");
+
+document.getElementById("bnt_valida").onclick = clk_validaNomInput;
 
 
