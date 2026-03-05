@@ -1,19 +1,5 @@
-//Reproductor.html 
-//2. Millora el reproductor d’àudio creant les classes Musica i Llista músiques. Segueix els següents punts:  
-//    a. Crea una classe Musica amb com a mínim: 
-//   i. Getters i setters: 
-    //         1.  Titol - mínim de dos caràcters 
-    //     2. nom de l’arxiu - mínim de un caràcter i acabat amb alguna extensió correcte 
-    //         a. automàticament ha d’assignar la seva extensió com a  “media type”  
-    //     3. media type  - rebrà la extensió i haurà d’assignar el media type segons: 
-    //         a. mp3 -> audio/mpeg 
-    //         b. ogg -> audio/ogg 
-    //         c. wav -> audio/wav 
-    //     4. etiquetes – un array de strings per classificar la música (jazz, pop, animades..) 
-
-//2. Millora el reproductor d’àudio creant les classes Musica i Llista músiques. Segueix els següents punts:  
-//    a. Crea una classe Musica amb com a mínim: 
-export class Musica {
+// mantenemos de la practica 4 en la practica 5 para crear objetos de tipo Musica
+class Musica {
     _titol = "";
     _nom = "";
     _etiquetes = [];
@@ -96,7 +82,5 @@ export class Musica {
             this._etiquetes.splice(index, 1);
         }
     }
-
-    
 
 }
