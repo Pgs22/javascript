@@ -1,5 +1,5 @@
 // mantenemos de la practica 4 en la practica 5 para crear objetos de tipo Musica
-class Musica {
+export class Musica {
     _titol = "";
     _nom = "";
     _etiquetes = [];
