@@ -18,14 +18,12 @@
 import { Musica } from "./Musica.js";
 import { LlistaMusiques } from "./LlistaMusiques.js";
 
-// 1. Datos iniciales
 const llista_inicial = new LlistaMusiques("Disponibles", ["tots"], [
     new Musica("Drum Beat", "DRUMC0.WAV", ["percusio"], "audio/wav"),
     new Musica("Fanfare", "FANFARE1.WAV", ["efectes"], "audio/wav"),
     new Musica("Ek Raat Vilen", "ek_raat_vilen.mp3", ["pop"], "audio/mpeg")
 ]);
 
-// 2. Definición de la Clase Alarma
 class Alarma {
     _activa = false;
 
@@ -38,7 +36,6 @@ class Alarma {
         this.activa = activa;
     }
 
-    // GETTERS
     get titol() { return this._titol; }
     get hora() { return this._hora; }
     get minut() { return this._minut; }
@@ -46,7 +43,7 @@ class Alarma {
     get musica() { return this._musica; }
     get activa() { return this._activa; }
 
-    // SETTERS amb les validacions
+
     set titol(titol) {
         if (titol.length >= 2) {
             this._titol = titol;
@@ -108,12 +105,12 @@ function formatearNumero(numero) {
 
 // Per validar alarmes abans d'enviar formulari
 function clk_validaAlarma() {
-    const f = document.forms["form_alarma"];
+    const f = document.forms["form_alarma"]; //Per capturar directament amb value els atributs
     
-    // Captura nodos per name, no per id como feiam abans
+    // Captura nodos per name, no per id como feiem abans
     const titol = f["titol"].value; 
 
-    // Captura valors formulari - Per capturar, entre [] tenim el name del input
+    // Captura valors formulari - Per capturar: Entre [] tenim el name del input
     let h = f["hora"].value;
     let m = f["minut"].value;
     let s = f["segon"].value;
@@ -122,27 +119,23 @@ function clk_validaAlarma() {
     const horaFormat = formatearNumero(h);
     const minutFormat = formatearNumero(m);
     const segonFormat = formatearNumero(s);
-
-    // Ahora creamos la clave para el Map (ya se verá como 08:05:00)
     const horaCompleta = `${horaFormat}:${minutFormat}:${segonFormat}`;
     
     let formOk = true;
 
-    // --- VALIDACIONES ---
-    
-    // Validació titol amb formulari
-    const spanTitol = f["titol"].nextElementSibling; //Saltamos al nodo siguiente sin contar espacios
+    // Validacions del formulari alarma
+    const spanTitol = f["titol"].nextElementSibling; // Per saltar al seguent node desde el inici del formulari
     if (titol.length < 3) {
         spanTitol.innerText = "Mínim 3 caràcters";
-        spanTitol.style.color = "red";
+        spanTitol.style.color = "red"; //Posem color vermell al missatge d'error
         formOk = false;
     } else {
-        spanTitol.innerText = "OK";
-        spanTitol.style.color = "green";
+        spanTitol.innerText = "OK"; //Posem missatge ok
+        spanTitol.style.color = "green"; //Posem color verd al missatge ok
     }
 
-    // Validació hora completa (si ja existeix al Map)
-    const spanReloj = f["segon"].nextElementSibling; //Saltamos al nodo siguiente sin contar espacios
+    // Validació si ja existeix hora alarma
+    const spanReloj = f["segon"].nextElementSibling;
     if (alarmes.has(horaCompleta)) {
         spanReloj.innerText = "Aquesta hora ja existeix!";
         spanReloj.style.color = "red";
@@ -151,14 +144,14 @@ function clk_validaAlarma() {
         spanReloj.innerText = "";
     }
 
-    // crear formulari amb map si la validació és correcta
+    // Si la validació és correcta
     if (formOk) {
         try {
 
-            // Usamos la funcion llistat_musiques con el parametro entrada que ""Obtenemos el objeto Musica seleccionado capturado anteriormente como indice del select
+            // Amb llistat_musiques objete Música
             const musica = llista_inicial.llistat_musiques[musicaIdx];
 
-            // Crear instancia
+            // Crear instancia Alarma
             const nuevaAlarma = new Alarma(titol, h, m, s, musica, activa);
             
             // Guardar en Map
