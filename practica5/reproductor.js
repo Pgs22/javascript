@@ -34,17 +34,18 @@
 import { Musica } from "./Musica.js";
 import { LlistaMusiques } from "./LlistaMusiques.js";
 
-const llistat_disponibles = [];
+// const llistat_disponibles = [];
 
 /**
  * Musiques inicials
  */
-const llista_inicial = new LlistaMusiques("Disponibles", ["tots"], [
-    new Musica("Drum Beat", "DRUMC0.WAV", ["percusio"], "audio/wav"),
-    new Musica("Fanfare", "FANFARE1.WAV", ["efectes"], "audio/wav"),
-    new Musica("Ek Raat Vilen", "ek_raat_vilen.mp3", ["pop"], "audio/mpeg")
-]);
-llistat_disponibles.push(llista_inicial);
+// const llista_inicial = new LlistaMusiques("Disponibles", ["tots"], [
+//     new Musica("Drum Beat", "DRUMC0.WAV", ["percusio"], "audio/wav"),
+//     new Musica("Fanfare", "FANFARE1.WAV", ["efectes"], "audio/wav"),
+//     new Musica("Ek Raat Vilen", "ek_raat_vilen.mp3", ["pop"], "audio/mpeg")
+// ]);
+// llistat_disponibles.push(llista_inicial);
+
 
 /**
  * Crear llista nova
@@ -179,3 +180,58 @@ document.getElementById("btn_netejar_filtre").onclick = function() {
 actualitzaLlistaMusiques();
 
 
+// Parte 2  - Reproductor d’àudio millorad
+// Reproductor.html
+// 4. Reproductor.html ha de tenir un formulari per crear nous objectes Musica:
+// a. El formulari ha de permetre indicar:
+    // i. Títol
+    // ii. Nom del fitxer (select amb els noms dels arxius disponibles)
+    // iii. Etiquetes (checkbox)
+const mapLlistes = new Map();
+const llista_inicial = new LlistaMusiques("Disponibles", ["tots"], [
+    new Musica("Drum Beat", "DRUMC0.WAV", ["percusio"], "audio/wav"),
+    new Musica("Fanfare", "FANFARE1.WAV", ["efectes"], "audio/wav"),
+    new Musica("Ek Raat Vilen", "ek_raat_vilen.mp3", ["pop"], "audio/mpeg")
+]);
+mapLlistes.set(llista_inicial.titol, llista_inicial);
+
+// b.// Implementa les següents validacions amb JS:
+    // i. Títol entre 2 i 20 caràcters
+    // ii. Nom del fitxer amb extensió vàlida (mp3, ogg, wav)
+    // iii. Com a mínim una etiqueta seleccionada
+
+
+// c. Implementa el següent feed-back
+    // i. Un cop omplert un input correctament mostra un missatge d’OK
+    // ii. Un cop omplert un input incorrectament:
+        // 1.// Desactiva el botó d’enviar
+        // 2.// Mostra informació explicativa de l’error
+
+
+// d. Si tot és correcte, crea l’objecte Musica i:
+    // i. Afegeix-    lo a LlistaMusiques “disponible”
+    // ii. Neteja el formulari
+
+
+// 5. Guarda les diferents LlistaMusiques utilitzant un Map amb la següent estructura:
+    // a. Clau: títol de la llista
+    // b. Valor: objecte LlistaMusiques
+
+
+// 6. Reproductor.html ha de tenir un formulari per crear noves LlistaMusiques:
+// a. El formulari ha de permetre indicar:
+    // i. Títol
+    // ii. Etiquetes (checkbox)
+    // iii. Músiques (select múltiple)
+
+
+// b. Implementa les següents validacions amb JS:
+    // i. Títol entre 2 i 10 caràcters
+    // ii. Com a mínim una etiqueta
+    // iii. Com a mínim dues cançons
+
+    
+// c. Implementa el següent feed-back
+    // i. Mostra en tot moment un missatge indicant si el títol és correcte o incorrecte (en cas que sigui incorrecte digues el format que ha de tenir)
+    // ii. Deixa que l’usuari cliqui el botó per afegir la llista sempre, però no l’afegeixis si hi ha algun error
+    // iii. Mostra missatges d’errors explicatius
