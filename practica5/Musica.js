@@ -32,7 +32,7 @@ export class Musica {
      * SETTERS
      */
     set titol(titol) {
-        if (titol.length >= 2) { // Mínimo 2 caracteres
+        if (titol.length >= 2) { // Mínim 2 caracters
             this._titol = titol;
         }
     }

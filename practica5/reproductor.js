@@ -34,11 +34,11 @@
 import { Musica } from "./Musica.js";
 import { LlistaMusiques } from "./LlistaMusiques.js";
 
-// const llistat_disponibles = [];
+//  const llistat_disponibles = [];
 
-/**
- * Musiques inicials
- */
+// /**
+//  * Musiques inicials
+//  */
 // const llista_inicial = new LlistaMusiques("Disponibles", ["tots"], [
 //     new Musica("Drum Beat", "DRUMC0.WAV", ["percusio"], "audio/wav"),
 //     new Musica("Fanfare", "FANFARE1.WAV", ["efectes"], "audio/wav"),
@@ -105,7 +105,7 @@ function pintaLlistaIndividual(llista, filtre) {
         }
     };
 
-    // Montatge contenidor de cançoms
+    // Montatge contenidor de cançons
     const divAccions = document.createElement("div");
     divAccions.style.marginTop = "10px";
     divAccions.appendChild(label);
@@ -184,7 +184,7 @@ actualitzaLlistaMusiques();
 // Reproductor.html
 // 4. Reproductor.html ha de tenir un formulari per crear nous objectes Musica:
 // a. El formulari ha de permetre indicar:
-    // i. Títol
+    // i. Títol (Mínim 2 caracters max 20)
     // ii. Nom del fitxer (select amb els noms dels arxius disponibles)
     // iii. Etiquetes (checkbox)
 const mapLlistes = new Map();
