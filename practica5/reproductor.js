@@ -1,63 +1,109 @@
-/**
- * EXERCICI 2 PRACTICA 4
-  Reproductor d’àudio millorad
-
-    Reproductor.html 
-    2. Millora el reproductor d’àudio creant les classes Musica i Llista músiques. Segueix els següents punts:  
-        
-        {{ ARXIU musica }} 
-        a. Crea una classe Musica
-
-        {{ ARXIU llistaMusiques }} 
-        b. Crea una classe  LlistaMusiques 
-        
-        {{ ARXIU reproductor.html y reproductor.js }}    
-        c. Crea un objecte del tipus LlistaMusiques amb: 
-            i. Getters i setters: 
-                1. Titol: “disponibles” 
-                2. Etiquetes “tots” 
-                3. Llistat de músiques: ha de contenir la informació de totes les músiques 
-                disponibles 
-        
-        d. Permet mostrar la informació d’un àudio 
-        e. Permet que l’usuari pugui reproduir, aturar, posar en pausa i pujar i baixar el volum de  
-        qualsevol àudio de l’array. 
-        f. Permet que l’usuari pugui crear vàries llistes de músiques  
-        g. Permet afegir i treure etiquetes a un àudio 
-        h. Permet filtrar els àudios per etiquetes 
-        i. Permet crear noves llistes de músiques 
-        j. Permet afegir i treure músiques a  les noves llistes de músiques 
-        k. Permet afegir i treure etiquetes a una llista de músiques 
-        l. Permet filtrar les llistes de músiques per etiquetes
- */
 
 import { Musica } from "./Musica.js";
 import { LlistaMusiques } from "./LlistaMusiques.js";
 
-//  const llistat_disponibles = [];
+// Parte 2  - Reproductor d’àudio millorad
+// Reproductor.html
+// 4. Reproductor.html ha de tenir un formulari per crear nous objectes Musica:
+// a. El formulari ha de permetre indicar:
+    // i. Títol (Mínim 2 caracters max 20)
+    // ii. Nom del fitxer (select amb els noms dels arxius disponibles)
+    // iii. Etiquetes (checkbox)
+const mapLlistes = new Map();
+const llista_inicial = new LlistaMusiques("Disponibles", ["tots"], [
+    new Musica("Drum Beat", "DRUMC0.WAV", ["percusio"], "audio/wav"),
+    new Musica("Fanfare", "FANFARE1.WAV", ["efectes"], "audio/wav"),
+    new Musica("Ek Raat Vilen", "ek_raat_vilen.mp3", ["pop"], "audio/mpeg")
+]);
+mapLlistes.set(llista_inicial.titol, llista_inicial);
 
-// /**
-//  * Musiques inicials
-//  */
-// const llista_inicial = new LlistaMusiques("Disponibles", ["tots"], [
-//     new Musica("Drum Beat", "DRUMC0.WAV", ["percusio"], "audio/wav"),
-//     new Musica("Fanfare", "FANFARE1.WAV", ["efectes"], "audio/wav"),
-//     new Musica("Ek Raat Vilen", "ek_raat_vilen.mp3", ["pop"], "audio/mpeg")
-// ]);
-// llistat_disponibles.push(llista_inicial);
+function crearMusica() {
+    const f = document.forms["form_musica"];
+    const titol = f["titol"].value;
+    const fitxer = f["fitxer"].value;
+    const checkboxes = f.querySelectorAll('input[name="etiqueta"]:checked');
+    const btn = document.getElementById("btn_valida_musica");
 
+    let formOk = true;
 
-/**
- * Crear llista nova
- */
-document.getElementById("btn_crear_llista").onclick = () => {
-    const nom = document.getElementById("input_nomLlista").value;
-    if(nom) {
-        llistat_disponibles.push(new LlistaMusiques(nom, ["tots"], []));
-        document.getElementById("input_nomLlista").value = "";
+    // Validación Título (2-20)
+    const spanTitol = f["titol"].nextElementSibling;
+    if (titol.length >= 2 && titol.length <= 20) {
+        spanTitol.innerText = " OK";
+        spanTitol.style.color = "green";
+    } else {
+        spanTitol.innerText = " Error: 2-20 caràcters";
+        spanTitol.style.color = "red";
+        formOk = false;
+    }
+
+    // Validación Archivo (Extensión)
+    const spanFitxer = f["fitxer"].nextElementSibling;
+    const extValidas = [".mp3", ".wav", ".ogg"];
+    const esValido = extValidas.some(ext => fitxer.toLowerCase().endsWith(ext));
+
+    if (esValido) {
+        spanFitxer.innerText = " OK";
+        spanFitxer.style.color = "green";
+    } else {
+        spanFitxer.innerText = " Error: Extensió no vàlida";
+        spanFitxer.style.color = "red";
+        formOk = false;
+    }
+
+    // Validación Etiquetas (Mínimo 1)
+    const spanEtiquetes = document.getElementById("error_etiquetes");
+    if (checkboxes.length >= 1) {
+        spanEtiquetes.innerText = " OK";
+        spanEtiquetes.style.color = "green";
+    } else {
+        spanEtiquetes.innerText = " Tria al menys una";
+        spanEtiquetes.style.color = "red";
+        formOk = false;
+    }
+
+    // Feedback: Bloquear botón si está mal
+    btn.disabled = !formOk;
+
+    if (formOk) {
+        // 1. Extraer etiquetas en un array
+        const tags = Array.from(checkboxes).map(cb => cb.value);
+        
+        // 2. Crear objeto Musica
+        const novaMusica = new Musica(titol, fitxer, tags, "audio/mpeg");
+
+        // 3. Añadir a la lista "Disponibles" que está en el Map
+        mapLlistes.get("Disponibles").llistat_musiques.push(novaMusica);
+
+        f.reset();
+        alert("Música '" + titol + "' afegida a Disponibles!");
+        
+        // 4. Actualizar la vista
         actualitzaLlistaMusiques();
     }
-};
+}
+
+/**
+ * ADAPTACIÓN: Pintar las listas desde el MAP
+ */
+function actualitzaLlistaMusiques(filtre = "") {
+    const contenedor = document.getElementById("div_llista_musiques");
+    contenedor.innerHTML = "";
+
+    // Como ahora es un Map, lo recorremos así:
+    mapLlistes.forEach((llista) => {
+        // Filtro (si existe)
+        if (filtre !== "" && !llista.etiquetes.includes(filtre)) return;
+
+        // Reutilizamos tu función pintaLlistaIndividual
+        const divLlista = pintaLlistaIndividual(llista, filtre);
+        contenedor.appendChild(divLlista);
+    });
+
+    actualitzaSelectorFiltre();
+}
+
+// ... (Aquí irían tus funciones pintaLlistaIndividual y actualitzaSelectorFiltre)
 
 /**
  * Afegim el codi HTML quan es crea una llista
@@ -118,28 +164,6 @@ function pintaLlistaIndividual(llista, filtre) {
 }
 
 /**
- * Etiquetes i llistes
- * Selecció de música per llista individual, permet afegir cançons a cada llista per tindre a mà el selector
- * @param {*} filtre pot estar vuit per netetjar filtre o omplir amb el nom per filtrar les llistes
- */  
-function actualitzaLlistaMusiques(filtre = "") {
-    const contenedorPrincipal = document.getElementById("div_llista_musiques");
-
-    actualitzaSelectorFiltre();
-
-    contenedorPrincipal.innerHTML = ""; // Neteja el contenidor
-
-    // Actualizar el selector de filtres
-    llistat_disponibles.forEach((llista) => {
-        if (filtre !== "" && !llista.etiquetes.includes(filtre)) return;
-
-        // Mostra resultats
-        const elementoLlista = pintaLlistaIndividual(llista, filtre);
-        contenedorPrincipal.appendChild(elementoLlista);
-    });
-}
-
-/**
  * Función pel SELECT del filtre amb etiquetes úniques
  */
 function actualitzaSelectorFiltre() {
@@ -165,35 +189,15 @@ function actualitzaSelectorFiltre() {
     });
 }
 
-// Filtrar al canviar el selector
-document.getElementById("select_filtre").onchange = function() {
-    actualitzaLlistaMusiques(this.value);
-};
+// Solo asegúrate de que pintaLlistaIndividual use 'mapLlistes.get("Disponibles")'
+// para llenar su select de canciones.
 
-// Netejar filtre i actualitzar llista
-document.getElementById("btn_netejar_filtre").onclick = function() {
-    document.getElementById("select_filtre").value = "";
+window.onload = () => {
+    document.getElementById("btn_valida_musica").onclick = crearMusica;
     actualitzaLlistaMusiques();
 };
 
-//Per mostrar la llista inicial
-actualitzaLlistaMusiques();
-
-
-// Parte 2  - Reproductor d’àudio millorad
-// Reproductor.html
-// 4. Reproductor.html ha de tenir un formulari per crear nous objectes Musica:
-// a. El formulari ha de permetre indicar:
-    // i. Títol (Mínim 2 caracters max 20)
-    // ii. Nom del fitxer (select amb els noms dels arxius disponibles)
-    // iii. Etiquetes (checkbox)
-const mapLlistes = new Map();
-const llista_inicial = new LlistaMusiques("Disponibles", ["tots"], [
-    new Musica("Drum Beat", "DRUMC0.WAV", ["percusio"], "audio/wav"),
-    new Musica("Fanfare", "FANFARE1.WAV", ["efectes"], "audio/wav"),
-    new Musica("Ek Raat Vilen", "ek_raat_vilen.mp3", ["pop"], "audio/mpeg")
-]);
-mapLlistes.set(llista_inicial.titol, llista_inicial);
+/******************************************************************************************************************************************************************** */
 
 // b.// Implementa les següents validacions amb JS:
     // i. Títol entre 2 i 20 caràcters
@@ -235,3 +239,71 @@ mapLlistes.set(llista_inicial.titol, llista_inicial);
     // i. Mostra en tot moment un missatge indicant si el títol és correcte o incorrecte (en cas que sigui incorrecte digues el format que ha de tenir)
     // ii. Deixa que l’usuari cliqui el botó per afegir la llista sempre, però no l’afegeixis si hi ha algun error
     // iii. Mostra missatges d’errors explicatius
+
+
+
+
+
+
+
+
+
+
+
+
+/******************************************************************************** */
+
+/**
+ * Crear llista nova
+ */
+document.getElementById("btn_crear_llista").onclick = () => {
+    const nom = document.getElementById("input_nomLlista").value;
+    if(nom) {
+        llistat_disponibles.push(new LlistaMusiques(nom, ["tots"], []));
+        document.getElementById("input_nomLlista").value = "";
+        actualitzaLlistaMusiques();
+    }
+};
+
+
+
+/**
+ * Etiquetes i llistes
+ * Selecció de música per llista individual, permet afegir cançons a cada llista per tindre a mà el selector
+ * @param {*} filtre pot estar vuit per netetjar filtre o omplir amb el nom per filtrar les llistes
+ */  
+function actualitzaLlistaMusiques(filtre = "") {
+    const contenedorPrincipal = document.getElementById("div_llista_musiques");
+
+    actualitzaSelectorFiltre();
+
+    contenedorPrincipal.innerHTML = ""; // Neteja el contenidor
+
+    // Actualizar el selector de filtres
+    llistat_disponibles.forEach((llista) => {
+        if (filtre !== "" && !llista.etiquetes.includes(filtre)) return;
+
+        // Mostra resultats
+        const elementoLlista = pintaLlistaIndividual(llista, filtre);
+        contenedorPrincipal.appendChild(elementoLlista);
+    });
+}
+
+
+
+// Filtrar al canviar el selector
+document.getElementById("select_filtre").onchange = function() {
+    actualitzaLlistaMusiques(this.value);
+};
+
+// Netejar filtre i actualitzar llista
+document.getElementById("btn_netejar_filtre").onclick = function() {
+    document.getElementById("select_filtre").value = "";
+    actualitzaLlistaMusiques();
+};
+
+//Per mostrar la llista inicial
+actualitzaLlistaMusiques();
+
+
+

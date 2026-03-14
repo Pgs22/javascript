@@ -22,23 +22,32 @@
 
     <div id="div_llista_musiques"></div>
 
+    <!-- crear objectes musica amb formulari -->
 
-    <div id="formulari">
+    <div id="formulari_musica">
         <h1>Gestió de Música</h1>
-    <form name="form_musica" novalidate>
-        <input type="text" name="titol" placeholder="Títol (mínim 2 caracters)">
-        <span></span><br>
+        <form name="form_musica" novalidate>
+            <input type="text" name="titol" placeholder="Títol cançó (2-20)">
+            <span></span><br>
 
-        <select name="musica">
+            <select name="fitxer">
+                <option value="pista1.mp3">pista1.mp3</option>
+                <option value="pista2.wav">pista2.wav</option>
+                <option value="pista3.ogg">pista3.ogg</option>
             </select>
-        <span></span><br>
+            <span></span><br>
 
-        
-        <label>Etiquetes: <input type="checkbox" name="activa" checked></label>
-    </form>
+            <label>Pop <input type="checkbox" name="etiqueta" value="pop"></label>
+            <label>Rock <input type="checkbox" name="etiqueta" value="rock"></label>
+            <label>Efectes <input type="checkbox" name="etiqueta" value="efectes"></label>
+            <span id="error_etiquetes"></span><br>
 
-    <button id="bnt_valida">VALIDAT</button>
-    <div id="llista_alarmes"></div>
+            <button type="button" id="btn_valida_musica">CREAR MÚSICA</button>
+        </form>
+    </div>
+
+    <hr>
+    <div id="div_llista_musiques"></div>
 
 </body>
 </html>
