@@ -270,9 +270,13 @@ function actualitzaSelectorFiltre() {
  */
 window.onload = () => {
     const btnMusica = document.getElementById("btn_valida_musica");
-    if(btnMusica) {
-        btnMusica.onclick = crearMusica;
-        document.forms["form_musica"].oninput = crearMusica;
+    const formMusica = document.forms["form_musica"];
+
+    if (btnMusica) {
+        btnMusica.onclick = () => crearMusica(true);
+    }
+    if (formMusica) {
+        formMusica.oninput = () => crearMusica(false);
     }
 
     document.getElementById("btn_netejar_filtre").onclick = function() {
