@@ -106,7 +106,7 @@ function sonarAlarma(objAlarma) {
     }
 }
 
-function inicializarFormulario() {
+function inicialitzarFormulari() {
     const select = document.forms["form_alarma"]["musica"];
     
     // iii. Música (select amb les músiques disponibles del reproductor)
@@ -209,12 +209,12 @@ function clk_validaAlarma() {
 }
 
 window.onload = () => {
-    inicializarFormulario();
+    inicialitzarFormulari();
     document.getElementById("bnt_valida").onclick = clk_validaAlarma;
     //Per actualitar la llista de músiques disponibles cada cop que es fa focus al select de músiques del formulari d'alarma
     const selectMusica = document.forms["form_alarma"]["musica"];
     selectMusica.onfocus = () => {
         console.log("Actualitzant llista de músiques disponibles...");
-        inicializarFormulario();
+        inicialitzarFormulari();
     };
 };
