@@ -35,11 +35,9 @@
     // iii. Mostra missatges d’errors explicatius
 
 
-
-
 import { Musica } from "./Musica.js";
 import { LlistaMusiques } from "./LlistaMusiques.js";
-
+export { mapLlistes };
 /**
  * 5. Guarda les diferents LlistaMusiques utilitzant un Map:
  * a. Clau: títol de la llista | b. Valor: objecte LlistaMusiques

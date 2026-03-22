@@ -17,6 +17,7 @@
 
 import { Musica } from "./Musica.js";
 import { LlistaMusiques } from "./LlistaMusiques.js";
+import { mapLlistes } from "./reproductor.js";
 
 const llista_inicial = new LlistaMusiques("Disponibles", ["tots"], [
     new Musica("Drum Beat", "DRUMC0.WAV", ["percusio"], "audio/wav"),
@@ -79,15 +80,41 @@ class Alarma {
     set activa(activa) { this._activa = activa; }
 }
 
-
 let alarmes = new Map();
 
-// Formulari per crear alarmes, capturem names dels inputs
+setInterval(() => {
+    const ara = new Date();
+    const h = ara.getHours().toString().padStart(2, '0');
+    const m = ara.getMinutes().toString().padStart(2, '0');
+    const s = ara.getSeconds().toString().padStart(2, '0');
+    
+    const clauHoraActual = `${h}:${m}:${s}`;
+
+    if (alarmes.has(clauHoraActual)) {
+        const alarmaAReproduir = alarmes.get(clauHoraActual);
+        if (alarmaAReproduir.activa) {
+            sonarAlarma(alarmaAReproduir);
+        }
+    }
+}, 1000);
+
+function sonarAlarma(objAlarma) {
+    const canco = objAlarma.musica; 
+    if (canco && canco.fitxer) {
+        const audio = new Audio("audio/" + canco.fitxer);
+        audio.play();
+        alert(`Alarma: ${objAlarma.titol}\n ${canco.titol}`);
+    }
+}
+
+
 function inicializarFormulario() {
     const form = document.forms["form_alarma"];
     const select = form["musica"];
-    // Omplim el select amb les músiques disponibles del reproductor
-    llista_inicial.llistat_musiques.forEach((m, index) => {
+
+    const llistaDisponibles = mapLlistes.get("Disponibles") || llista_inicial;
+
+llistaDisponibles.llistat_musiques.forEach((m, index) => {
         const opt = document.createElement("option");
         opt.value = index;
         opt.text = m.titol;
@@ -103,38 +130,30 @@ function formatearNumero(numero) {
     return numero;
 }
 
-// Per validar alarmes abans d'enviar formulari
 function clk_validaAlarma() {
-    const f = document.forms["form_alarma"]; //Per capturar directament amb value els atributs
-    
-    // Captura nodos per name, no per id como feiem abans
+    const f = document.forms["form_alarma"];
     const titol = f["titol"].value; 
+    const h = f["hora"].value;
+    const m = f["minut"].value;
+    const s = f["segon"].value;
+    const musicaIdx = f["musica"].value;
+    const activa = f["activa"].checked;
 
-    // Captura valors formulari - Per capturar: Entre [] tenim el name del input
-    let h = f["hora"].value;
-    let m = f["minut"].value;
-    let s = f["segon"].value;
-
-    // Per afegir un 0 davant si té mes d'un dígit
-    const horaFormat = formatearNumero(h);
-    const minutFormat = formatearNumero(m);
-    const segonFormat = formatearNumero(s);
-    const horaCompleta = `${horaFormat}:${minutFormat}:${segonFormat}`;
-    
+    const horaCompleta = `${formatearNumero(h)}:${formatearNumero(m)}:${formatearNumero(s)}`;
     let formOk = true;
 
-    // Validacions del formulari alarma
-    const spanTitol = f["titol"].nextElementSibling; // Per saltar al seguent node desde el inici del formulari
+    // Validació títol
+    const spanTitol = f["titol"].nextElementSibling;
     if (titol.length < 3) {
         spanTitol.innerText = "Mínim 3 caràcters";
-        spanTitol.style.color = "red"; //Posem color vermell al missatge d'error
+        spanTitol.style.color = "red";
         formOk = false;
     } else {
-        spanTitol.innerText = "OK"; //Posem missatge ok
-        spanTitol.style.color = "green"; //Posem color verd al missatge ok
+        spanTitol.innerText = "OK";
+        spanTitol.style.color = "green";
     }
 
-    // Validació si ja existeix hora alarma
+    // Validació hora duplicada
     const spanReloj = f["segon"].nextElementSibling;
     if (alarmes.has(horaCompleta)) {
         spanReloj.innerText = "Aquesta hora ja existeix!";
@@ -144,24 +163,20 @@ function clk_validaAlarma() {
         spanReloj.innerText = "";
     }
 
-    // Si la validació és correcta
     if (formOk) {
         try {
+            // Buscar select musisc
+            const llistaDisponibles = mapLlistes.get("Disponibles") || llista_inicial;
+            const musicaObjecte = llistaDisponibles.llistat_musiques[musicaIdx];
 
-            // Amb llistat_musiques objete Música
-            const musica = llista_inicial.llistat_musiques[musicaIdx];
-
-            // Crear instancia Alarma
-            const nuevaAlarma = new Alarma(titol, h, m, s, musica, activa);
+            const nuevaAlarma = new Alarma(titol, h, m, s, musicaObjecte, activa);
             
             // Guardar en Map
             alarmes.set(horaCompleta, nuevaAlarma);
             
-            console.log("Mapa actual d'alarmes:", alarmes);
             alert(`Alarma "${titol}" creada a les ${horaCompleta}`);
-            
-            f.reset(); // Neteja el formulari
-            mostrarAlarmasConsola(); // Funció per veure el Map
+            f.reset();
+            mostrarAlarmasConsola(); 
             
         } catch (error) {
             alert(error.message);
@@ -169,18 +184,14 @@ function clk_validaAlarma() {
     }
 }
 
-// Funció per visualitzar hora alarmes guardades recorrent el Map
 function mostrarAlarmasConsola() {
-    console.log("--- RECORRE MAP llistat alarmes ---");
-    for (let [hora, alarma] of alarmes.entries()) {
-        console.log(`Clau: ${hora} | Títol: ${alarma.titol} | Música: ${alarma.musica.titol}`);
-    }
+    console.log("Llistat alarmes");
+    alarmes.forEach((alarma, clau) => {
+        console.log(`Hora: ${clau} | Títol: ${alarma.titol} | Estat: ${alarma.activa ? 'Activa' : 'Inactiva'}`);
+    });
 }
 
-// Events
 window.onload = () => {
     inicializarFormulario();
     document.getElementById("bnt_valida").onclick = clk_validaAlarma;
-};
-
-
+}; 

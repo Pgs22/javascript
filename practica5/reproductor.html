@@ -5,33 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reproductor Musical Pro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="reproductor.js" defer type="module"></script>
+    
+    <script type="module" src="/reproductor.js"></script>
+
     <style>
         body { background-color: #f4f7f6; }
         .card { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .btn-primary { background-color: #6366f1; border: none; }
         .btn-primary:hover { background-color: #4f46e5; }
-        .error-message { font-size: 0.85rem; font-weight: bold; }
+        .error-message { font-size: 0.85rem; font-weight: bold; min-height: 1.2rem; display: block; }
     </style>
 </head>
 <body>
 
 <div class="container py-5">
     
-    <section class="card p-4 mb-4">
+    <section class="card p-4 mb-4 border-start border-4 border-info">
         <h3 class="h5 mb-3 text-primary">🎧 Gestió de Llistes</h3>
         <div class="input-group">
             <input type="text" id="input_nomLlista" class="form-control" placeholder="Nom de la nova llista...">
             <button id="btn_crear_llista" class="btn btn-primary">CREAR LLISTA</button>
         </div>
+        <small id="error_titol_llista" class="error-message text-danger mt-1"></small>
     </section>
 
-    <section class="card p-4 mb-4">
-        <h3 class="h5 mb-3 text-secondary">🔍 Filtre</h3>
+    <section class="card p-4 mb-4 shadow-sm">
+        <h3 class="h5 mb-3 text-secondary">🔍 Filtre d'Etiquetes</h3>
         <div class="row g-3 align-items-center">
-            <div class="col-auto">
-                <label for="select_filtre" class="col-form-label">Etiqueta:</label>
-            </div>
             <div class="col-auto">
                 <select id="select_filtre" class="form-select">
                     <option value="">-- Totes les etiquetes --</option>
@@ -46,14 +46,13 @@
     <div id="div_llista_musiques" class="row g-4 mb-5">
         </div>
 
-    <section id="formulari_musica" class="card p-4 border-top border-4 border-primary">
-        <h1 class="h4 mb-4">🎵 Afegir Nova Cançó a Disponibles</h1>
+    <section id="formulari_musica" class="card p-4 border-top border-4 border-primary shadow">
+        <h1 class="h4 mb-4 text-center">🎵 Afegir Nova Cançó</h1>
         <form name="form_musica" class="row g-3" novalidate>
             <div class="col-md-6">
                 <label class="form-label fw-bold">Títol de la cançó</label>
                 <input type="text" name="titol" class="form-control" placeholder="Ex: Summer Night">
-                <span class="error-message text-danger"></span>
-            </div>
+                <span class="error-message"></span> </div>
 
             <div class="col-md-6">
                 <label class="form-label fw-bold">Arxiu d'àudio</label>
@@ -63,12 +62,11 @@
                     <option value="instrumental-dramatic-hip-hop.mp3">instrumental-dramatic-hip-hop.mp3</option>
                     <option value="tomomi_kato-improvisation.mp3">tomomi_kato-improvisation.mp3</option>
                 </select>
-                <span class="error-message text-danger"></span>
-            </div>
+                <span class="error-message"></span> </div>
 
             <div class="col-12">
                 <label class="form-label fw-bold d-block">Etiquetes</label>
-                <div class="bg-light p-3 rounded d-flex gap-4">
+                <div class="bg-light p-3 rounded d-flex flex-wrap gap-4">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="etiqueta" value="pop" id="pop">
                         <label class="form-check-label" for="pop">Pop</label>
@@ -86,8 +84,8 @@
             </div>
 
             <div class="col-12 mt-4">
-                <button type="button" id="btn_valida_musica" class="btn btn-primary w-100 py-3 fw-bold">
-                    GUARDAR MÚSICA
+                <button type="button" id="btn_valida_musica" class="btn btn-primary w-100 py-3 fw-bold shadow-sm">
+                    GUARDAR MÚSICA EN DISPONIBLES
                 </button>
             </div>
         </form>

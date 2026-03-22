@@ -1,38 +1,88 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="ca">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alarma</title>
+    <title>Gestor d'Alarmes Musical</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="alarma.js" type="module"></script>
+    <style>
+        body { background-color: #f8f9fa; }
+        .card { border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .form-label { font-weight: bold; }
+        span.ms-2 { font-size: 0.9rem; }
+    </style>
 </head>
 
 <body>
-    <button id="btn_creaInput"> CREA INPUT</button>
-    <div id="formulari">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            
+            <div class="col-md-6">
+                <div class="card p-4 mb-4">
+                    <h2 class="text-center mb-4 text-primary">⏰ Nova Alarma</h2>
+                    
+                    <form name="form_alarma" novalidate>
+                        <div class="mb-3">
+                            <label class="form-label">Títol de l'Alarma</label>
+                            <input type="text" name="titol" class="form-control" placeholder="Ex: Gimnàs, Estudiar...">
+                            <span class="ms-2"></span>
+                        </div>
 
-<form name="form_alarma" novalidate>
-    <input type="text" name="titol" placeholder="Títol (mínim 3)">
-    <span></span><br>
+                        <div class="mb-3">
+                            <label class="form-label">Hora Programada (HH:MM:SS)</label>
+                            <div class="input-group">
+                                <input type="number" name="hora" class="form-control" placeholder="HH" min="0" max="23">
+                                <input type="number" name="minut" class="form-control" placeholder="MM" min="0" max="59">
+                                <input type="number" name="segon" class="form-control" placeholder="SS" min="0" max="59">
+                            </div>
+                            <span class="ms-2"></span>
+                        </div>
 
-    <input type="number" name="hora" placeholder="HH">
-    <input type="number" name="minut" placeholder="MM">
-    <input type="number" name="segon" placeholder="SS">
-    <span></span><br>
+                        <div class="mb-3">
+                            <label class="form-label">Tria el Tò d'Alarma</label>
+                            <select name="musica" class="form-select">
+                                </select>
+                            <span class="ms-2"></span>
+                        </div>
 
-    <select name="musica">
-        </select>
-    <span></span><br>
+                        <div class="mb-4 form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="activa" id="activaCheck" checked>
+                            <label class="form-check-label" for="activaCheck">Alarma Activa</label>
+                        </div>
 
-    <label>Activa: <input type="checkbox" name="activa" checked></label>
-</form>
+                        <button type="button" id="bnt_valida" class="btn btn-primary w-100 fw-bold">
+                            CREAR ALARMA
+                        </button>
+                    </form>
+                </div>
+            </div>
 
-<button id="bnt_valida">VALIDAT</button>
-<div id="llista_alarmes"></div>
+            <div class="col-md-8 mt-4">
+                <div class="card p-4">
+                    <h3 class="h5 mb-3 fw-bold">Llistat d'Alarmes Programades</h3>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Hora</th>
+                                    <th>Títol</th>
+                                    <th>Música</th>
+                                    <th>Estat</th>
+                                </tr>
+                            </thead>
+                            <tbody id="llista_alarmes_body">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
-
-        
 </html>
