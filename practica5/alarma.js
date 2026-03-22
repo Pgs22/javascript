@@ -44,7 +44,6 @@ class Alarma {
     get musica() { return this._musica; }
     get activa() { return this._activa; }
 
-
     set titol(titol) {
         if (titol.length >= 2) {
             this._titol = titol;
@@ -82,6 +81,7 @@ class Alarma {
 
 let alarmes = new Map();
 
+// Comprovació de l'alarma cada segon
 setInterval(() => {
     const ara = new Date();
     const h = ara.getHours().toString().padStart(2, '0');
@@ -103,18 +103,17 @@ function sonarAlarma(objAlarma) {
     if (canco && canco.fitxer) {
         const audio = new Audio("audio/" + canco.fitxer);
         audio.play();
-        alert(`Alarma: ${objAlarma.titol}\n ${canco.titol}`);
+        alert(`Alarma: ${objAlarma.titol}\nSona: ${canco.titol}`);
     }
 }
-
 
 function inicializarFormulario() {
     const form = document.forms["form_alarma"];
     const select = form["musica"];
-
     const llistaDisponibles = mapLlistes.get("Disponibles") || llista_inicial;
 
-llistaDisponibles.llistat_musiques.forEach((m, index) => {
+    select.innerHTML = ""; // Netegem per si de cas
+    llistaDisponibles.llistat_musiques.forEach((m, index) => {
         const opt = document.createElement("option");
         opt.value = index;
         opt.text = m.titol;
@@ -122,20 +121,42 @@ llistaDisponibles.llistat_musiques.forEach((m, index) => {
     });
 }
 
-// Per afegir un 0 davant si té mes d'un dígit
 function formatearNumero(numero) {
-    if (numero < 10) {
-        return "0" + numero;
-    }
-    return numero;
+    return numero.toString().padStart(2, '0');
+}
+
+/**
+ * NOVA FUNCIÓ: Pinta les alarmes a la taula HTML
+ */
+function actualitzarTaulaHTML() {
+    const tbody = document.getElementById("llista_alarmes_body");
+    if (!tbody) return;
+
+    tbody.innerHTML = ""; // Netegem la taula abans de repintar
+
+    alarmes.forEach((alarma, clauHora) => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td class="fw-bold">${clauHora}</td>
+            <td>${alarma.titol}</td>
+            <td>${alarma.musica ? alarma.musica.titol : 'Sense música'}</td>
+            <td>
+                <span class="badge ${alarma.activa ? 'bg-success' : 'bg-danger'}">
+                    ${alarma.activa ? 'Activa' : 'Inactiva'}
+                </span>
+            </td>
+        `;
+        tbody.appendChild(fila);
+    });
 }
 
 function clk_validaAlarma() {
     const f = document.forms["form_alarma"];
     const titol = f["titol"].value; 
-    const h = f["hora"].value;
-    const m = f["minut"].value;
-    const s = f["segon"].value;
+    const h = f["hora"].value || 0;
+    const m = f["minut"].value || 0;
+    const s = f["segon"].value || 0;
     const musicaIdx = f["musica"].value;
     const activa = f["activa"].checked;
 
@@ -144,20 +165,20 @@ function clk_validaAlarma() {
 
     // Validació títol
     const spanTitol = f["titol"].nextElementSibling;
-    if (titol.length < 3) {
-        spanTitol.innerText = "Mínim 3 caràcters";
-        spanTitol.style.color = "red";
+    if (titol.length < 2) {
+        spanTitol.innerText = " Error: Mínim 2 caràcters";
+        spanTitol.className = "ms-2 text-danger fw-bold";
         formOk = false;
     } else {
-        spanTitol.innerText = "OK";
-        spanTitol.style.color = "green";
+        spanTitol.innerText = " OK";
+        spanTitol.className = "ms-2 text-success fw-bold";
     }
 
     // Validació hora duplicada
-    const spanReloj = f["segon"].nextElementSibling;
+    const spanReloj = f["segon"].parentElement.nextElementSibling;
     if (alarmes.has(horaCompleta)) {
-        spanReloj.innerText = "Aquesta hora ja existeix!";
-        spanReloj.style.color = "red";
+        spanReloj.innerText = " Aquesta hora ja existeix!";
+        spanReloj.className = "ms-2 text-danger fw-bold";
         formOk = false;
     } else {
         spanReloj.innerText = "";
@@ -165,7 +186,6 @@ function clk_validaAlarma() {
 
     if (formOk) {
         try {
-            // Buscar select musisc
             const llistaDisponibles = mapLlistes.get("Disponibles") || llista_inicial;
             const musicaObjecte = llistaDisponibles.llistat_musiques[musicaIdx];
 
@@ -175,8 +195,12 @@ function clk_validaAlarma() {
             alarmes.set(horaCompleta, nuevaAlarma);
             
             alert(`Alarma "${titol}" creada a les ${horaCompleta}`);
+            
             f.reset();
-            mostrarAlarmasConsola(); 
+            spanTitol.innerText = ""; 
+            
+            // ACTUALITZEM LA VISTA
+            actualitzarTaulaHTML(); 
             
         } catch (error) {
             alert(error.message);
@@ -184,14 +208,7 @@ function clk_validaAlarma() {
     }
 }
 
-function mostrarAlarmasConsola() {
-    console.log("Llistat alarmes");
-    alarmes.forEach((alarma, clau) => {
-        console.log(`Hora: ${clau} | Títol: ${alarma.titol} | Estat: ${alarma.activa ? 'Activa' : 'Inactiva'}`);
-    });
-}
-
 window.onload = () => {
     inicializarFormulario();
     document.getElementById("bnt_valida").onclick = clk_validaAlarma;
-}; 
+};

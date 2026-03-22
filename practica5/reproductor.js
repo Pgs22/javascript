@@ -37,12 +37,12 @@
 
 import { Musica } from "./Musica.js";
 import { LlistaMusiques } from "./LlistaMusiques.js";
-export { mapLlistes };
+
 /**
  * 5. Guarda les diferents LlistaMusiques utilitzant un Map:
  * a. Clau: títol de la llista | b. Valor: objecte LlistaMusiques
  */
-const mapLlistes = new Map();
+export const mapLlistes = new Map();
 
 // Inicialització de la llista per defecte
 const llista_inicial = new LlistaMusiques("Disponibles", ["tots"], [
@@ -311,4 +311,4 @@ window.onload = () => {
     };
 
     actualitzaLlistaMusiques();
-};   
+};
