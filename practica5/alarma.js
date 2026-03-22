@@ -15,15 +15,7 @@
     // c. Música (ha de ser un objecte del tipus Musica)
     // d. Activa (boolean)
 
-import { Musica } from "./Musica.js";
-import { LlistaMusiques } from "./LlistaMusiques.js";
 import { mapLlistes } from "./reproductor.js";
-
-const llista_inicial = new LlistaMusiques("Disponibles", ["tots"], [
-    new Musica("Drum Beat", "DRUMC0.WAV", ["percusio"], "audio/wav"),
-    new Musica("Fanfare", "FANFARE1.WAV", ["efectes"], "audio/wav"),
-    new Musica("Ek Raat Vilen", "ek_raat_vilen.mp3", ["pop"], "audio/mpeg")
-]);
 
 class Alarma {
     _activa = false;
@@ -91,34 +83,43 @@ setInterval(() => {
     const clauHoraActual = `${h}:${m}:${s}`;
 
     if (alarmes.has(clauHoraActual)) {
-        const alarmaAReproduir = alarmes.get(clauHoraActual);
-        if (alarmaAReproduir.activa) {
-            sonarAlarma(alarmaAReproduir);
+        const a = alarmes.get(clauHoraActual);
+        
+        console.log("!!! HORA COINCIDE !!!");
+        console.log("Intentant reproduir fitxer:", a.musica ? a.musica.fitxer : "SENSE FITXER");
+
+        if (a.activa) {
+            sonarAlarma(a);
+        } else {
+            console.log("L'alarma està programada però no està activa (switch OFF).");
         }
     }
+
 }, 1000);
 
 function sonarAlarma(objAlarma) {
     const canco = objAlarma.musica; 
     if (canco && canco.fitxer) {
-        const audio = new Audio("audio/" + canco.fitxer);
+        const audio = new Audio(canco.fitxer);
         audio.play();
         alert(`Alarma: ${objAlarma.titol}\nSona: ${canco.titol}`);
     }
 }
 
 function inicializarFormulario() {
-    const form = document.forms["form_alarma"];
-    const select = form["musica"];
-    const llistaDisponibles = mapLlistes.get("Disponibles") || llista_inicial;
-
-    select.innerHTML = ""; // Netegem per si de cas
-    llistaDisponibles.llistat_musiques.forEach((m, index) => {
-        const opt = document.createElement("option");
-        opt.value = index;
-        opt.text = m.titol;
-        select.appendChild(opt);
-    });
+    const select = document.forms["form_alarma"]["musica"];
+    
+    // iii. Música (select amb les músiques disponibles del reproductor)
+    const llistaDisponibles = mapLlistes.get("Disponibles");
+    if (llistaDisponibles) {
+        select.innerHTML = ""; 
+        llistaDisponibles.llistat_musiques.forEach((musica, index) => {
+            const opt = document.createElement("option");
+            opt.value = index;
+            opt.text = musica.titol;
+            select.appendChild(opt);
+        });
+    }
 }
 
 function formatearNumero(numero) {
@@ -126,13 +127,13 @@ function formatearNumero(numero) {
 }
 
 /**
- * NOVA FUNCIÓ: Pinta les alarmes a la taula HTML
+ * Pinta les alarmes creadas
  */
 function actualitzarTaulaHTML() {
     const tbody = document.getElementById("llista_alarmes_body");
     if (!tbody) return;
 
-    tbody.innerHTML = ""; // Netegem la taula abans de repintar
+    tbody.innerHTML = "";
 
     alarmes.forEach((alarma, clauHora) => {
         const fila = document.createElement("tr");
@@ -199,7 +200,6 @@ function clk_validaAlarma() {
             f.reset();
             spanTitol.innerText = ""; 
             
-            // ACTUALITZEM LA VISTA
             actualitzarTaulaHTML(); 
             
         } catch (error) {
@@ -211,4 +211,10 @@ function clk_validaAlarma() {
 window.onload = () => {
     inicializarFormulario();
     document.getElementById("bnt_valida").onclick = clk_validaAlarma;
+    //Per actualitar la llista de músiques disponibles cada cop que es fa focus al select de músiques del formulari d'alarma
+    const selectMusica = document.forms["form_alarma"]["musica"];
+    selectMusica.onfocus = () => {
+        console.log("Actualitzant llista de músiques disponibles...");
+        inicializarFormulario();
+    };
 };
