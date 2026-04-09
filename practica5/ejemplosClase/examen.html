@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Práctica de Validación</title>
+    <style>
+        .contenedor-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        input {
+            width: 300px;
+            display: block;
+        }
+
+        span {
+            font-size: 0.9em;
+            color: #d90000;
+            font-weight: bold;
+        }
+
+        /* Estilos que cambian según la validez de los inputs */
+        input:valid {
+            background-color: rgba(0, 121, 0, 0.2);
+            border: 2px solid green;
+        }
+
+        input:invalid {
+            background-color: rgba(255, 0, 0, 0.2);
+            border: 2px solid red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Formulario de Práctica</h2>
+
+    <div class="contenedor-form">
+        <form name="form_practica" novalidate>
+            
+            <label>Código (3 letras mayúsculas):</label>
+            <input type="text" name="codigo" pattern="[A-Z]{3}" required>
+            <span></span>
+
+            <br>
+
+            <label>Password (4 a 8 números):</label>
+            <input type="text" name="pass" pattern="[0-9]{4,8}" required>
+            <span></span>
+
+            <br>
+
+            <label>¿Aceptar términos?</label>
+            <select name="terminos">
+                <option value="no">No, gracias</option>
+                <option value="si">Sí, acepto</option>
+            </select>
+
+            <br><br>
+
+            <input type="submit" value="Enviar Registro">
+            <span></span>
+
+        </form>
+    </div>
+
+    <hr>
+
+    <h3>Validación Externa</h3>
+    Escribe algo: <input type="text" id="inputExterno">
+    <button id="btn_externo">Validar Externo</button>
+    <span id="mensajeExterno"></span>
+
+    <script src="practica_js.js" defer></script>
+</body>
+
+</html>

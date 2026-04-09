@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Reserva de Vols - Pràctica</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; padding: 40px; background-color: #e9ecef; }
+        .card { background: white; padding: 25px; border-radius: 12px; width: 450px; margin: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { color: #0056b3; margin-top: 0; }
+        
+        .grup { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; color: #333; }
+        input[type="text"], input[type="date"], select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        
+        /* Estils de validació */
+        input:valid { border-left: 5px solid #28a745; }
+        input:invalid { border-left: 5px solid #dc3545; }
+
+        .error-txt { color: #dc3545; font-size: 0.85em; display: block; margin-top: 4px; min-height: 1.2em; }
+        .checkbox-grup { display: flex; align-items: center; gap: 10px; }
+        input[type="checkbox"] { width: 18px; height: 18px; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>✈️ Reserva de Vol</h2>
+        
+        <form name="form_vol" novalidate>
+            
+            <div class="grup">
+                <label>Codi de Vol (Ex: AB1234):</label>
+                <input type="text" name="codi" pattern="[A-Z]{2}[0-9]{4}" required>
+                <span class="error-txt"></span>
+            </div>
+
+            <div class="grup">
+                <label>Data del viatge:</label>
+                <input type="date" name="data_vol" required>
+                <span class="error-txt"></span>
+            </div>
+
+            <div class="grup checkbox-grup">
+                <input type="checkbox" name="asseguranca" id="check_as">
+                <label for="check_as">Accepto l'assegurança de viatge</label>
+            </div>
+            <span class="error-txt" id="error_check"></span>
+
+            <br>
+            <input type="submit" value="Confirmar Reserva">
+        </form>
+    </div>
+
+    <script src="examen2.js" defer></script>
+</body>
+</html>

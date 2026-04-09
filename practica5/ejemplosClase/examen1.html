@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Examen Validació Premium</title>
+    <style>
+        body { font-family: sans-serif; padding: 30px; background-color: #f4f4f4; }
+        .form-container { background: white; padding: 20px; border-radius: 8px; width: 400px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        
+        .camp { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; }
+        input, select { width: 100%; padding: 8px; box-sizing: border-box; }
+        
+        /* Missatges d'error */
+        .error-hint { color: #d90000; font-size: 0.85em; margin-top: 5px; display: block; min-height: 1.2em; }
+
+        /* Estats de validació */
+        input:valid { border: 2px solid #28a745; background-color: #eaffea; }
+        input:invalid { border: 2px solid #dc3545; background-color: #fff0f0; }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Subscripció Premium</h2>
+        
+        <form name="form_premium" novalidate>
+            
+            <div class="camp">
+                <label>Usuari Twitter (ex: @pep):</label>
+                <input type="text" name="twitter" pattern="@[a-z]{3,8}" required>
+                <span class="error-hint"></span>
+            </div>
+
+            <div class="camp">
+                <label>Edat (mínim 18 anys):</label>
+                <input type="number" name="edat" min="18" required>
+                <span class="error-hint"></span>
+            </div>
+
+            <div class="camp">
+                <label>Tipus de subscripció:</label>
+                <select name="tipus">
+                    <option value="buit">Selecciona una opció...</option>
+                    <option value="mensual">Mensual - 10€</option>
+                    <option value="anual">Anual - 100€</option>
+                </select>
+                <span class="error-hint"></span>
+            </div>
+
+            <input type="submit" value="Donar-se d'alta">
+        </form>
+    </div>
+
+    <script src="examen1.js" defer></script>
+</body>
+</html>
