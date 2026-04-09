@@ -1,23 +1,27 @@
 // Enunciado del Examen: Gestión de Concesionaria
 // Creación: Crea un Map llamado concesionaria.
-
 // Añadir Objetos: Inserta estos 3 coches usando la matrícula como clave:
-
 // 1234BBB -> { "marca": "Seat", "model": "Ibiza" }
-
 // 5678CCC -> { "marca": "Tesla", "model": "Model 3" }
-
 // 9012DDD -> { "marca": "Toyota", "model": "Corolla" }
-
 // Añadir Metadatos:
-
 // Clave: ciutat -> Valor: Barcelona
-
 // Clave: stock -> Valor: 45
+let concesionaria =new Map();
+concesionaria.set("1234BBB", {"marca": "Seat", "model": "Ibiza"});
+concesionaria.set("5678CCC", {"marca": "Tesla", "model": "Model 3"});
+concesionaria.set("9012DDD", {"marca": "Toyota", "model": "Corolla"});
+concesionaria.set("ciutat", "Barcelona");
+concesionaria.set("stock", 45);
+
 
 // Acceso: Muestra por consola la marca y el modelo del coche con matrícula 5678CCC.
+let coche = concesionaria.get("5678CCC");
+console.log(`marca: ${coche.marca}`);
+console.log(`model: ${coche.model}`);
 
 // Metadatos: Muestra por consola el valor de la clave ciutat.
+console.log(`ciutat: ${concesionaria.get("ciutat")}`);
 
 // Bucle Keys: Haz un for of para mostrar todas las matrículas (claves) del Map.
 
