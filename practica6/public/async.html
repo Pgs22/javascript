@@ -1,25 +1,294 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="async.js"></script>
-    <script src="asyncPromise.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Star Wars Personatges</title>
+  <style>
+    :root {
+      --bg: #f5f0e6;
+      --ink: #111111;
+      --muted: #5b5b5b;
+      --accent: #ffcc00;
+      --accent-dark: #b48a00;
+      --panel: #ffffff;
+      --line: #e4dccf;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Bebas Neue", "Trebuchet MS", Arial, sans-serif;
+      background: radial-gradient(circle at 10% 10%, #fff2c7 0%, #f5f0e6 45%, #efe6d7 100%);
+      color: var(--ink);
+      letter-spacing: 0.3px;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 18px 60px;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-family: "Trebuchet MS", Arial, sans-serif;
+      font-size: 0.9rem;
+    }
+
+    button {
+      border: 2px solid var(--ink);
+      background: var(--accent);
+      color: var(--ink);
+      padding: 10px 16px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 var(--ink);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 20px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 2px solid var(--ink);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    #personatges {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    #personatges .card {
+      border: 2px solid var(--ink);
+      border-radius: 12px;
+      padding: 12px;
+      background: #fff5d6;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      box-shadow: 3px 3px 0 var(--ink);
+      font-family: "Trebuchet MS", Arial, sans-serif;
+      font-size: 0.92rem;
+    }
+
+    #personatges .card:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 var(--ink);
+    }
+
+    #personatges h3 {
+      margin: 0 0 6px 0;
+      font-size: 1.1rem;
+    }
+
+    #paginacio {
+      margin-top: 14px;
+    }
+
+    #paginacio button {
+      margin: 0 6px 8px 0;
+      background: #ffffff;
+    }
+
+    .section {
+      margin-top: 16px;
+    }
+
+    .starwardle {
+      display: grid;
+      gap: 10px;
+    }
+
+    .starwardle input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid var(--ink);
+      font-size: 1rem;
+    }
+
+    #suggestions {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+      border: 1px dashed var(--ink);
+      border-radius: 10px;
+      overflow: hidden;
+      font-family: "Trebuchet MS", Arial, sans-serif;
+    }
+
+    #suggestions li {
+      cursor: pointer;
+      padding: 6px 10px;
+      background: #fffdf7;
+      border-bottom: 1px solid var(--line);
+    }
+
+    #suggestions li:hover {
+      background-color: #fff1c0;
+    }
+
+    .match-true {
+      color: #008a2a;
+      font-weight: 700;
+    }
+
+    .match-false {
+      color: #c00000;
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      font-family: "Trebuchet MS", Arial, sans-serif;
+    }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.9rem;
+      gap: 6px;
+    }
+
+    input[type="text"],
+    input[type="file"] {
+      padding: 6px;
+      border: 2px solid var(--ink);
+      background: #fffdf7;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="page">
+    <header>
+      <h1>Personatges Star Wars</h1>
+      <div class="controls">
+        <button id="btnCargar">Carregar 10 personatges</button>
+        <button id="btnTodo">Veure tots els personatges</button>
+        <button id="btnGuardarLlistat">Guardar llistat al servidor</button>
+      </div>
+    </header>
 
+    <div class="layout">
+      <section class="panel">
+        <h2>Personatges</h2>
+        <div id="personatges"></div>
+        <div id="paginacio"></div>
+        <div id="saveListMsg" class="muted"></div>
+      </section>
 
-   <h1>Personatges Star Wars</h1>
+      <section class="panel">
+        <div class="starwardle">
+          <h2>Starwardle</h2>
+          <button id="btnStartStarwardle">Iniciar Starwardle</button>
+          <div id="starwardleStatus"></div>
+          <div class="controls">
+            <input type="text" id="guessInput" placeholder="Escriu un nom" />
+            <button id="btnCheck">Comprovar</button>
+          </div>
+          <ul id="suggestions"></ul>
+          <div id="starwardleResult"></div>
+        </div>
+      </section>
+    </div>
 
-  <button id="btnCargar">Cargar personatges</button>
-  <div id="personatges"></div>
+    <div class="layout section">
+      <section class="panel">
+        <h2>Detall del personatge (servidor)</h2>
+        <div id="detalle">Fes clic en un personatge guardat.</div>
+      </section>
 
-  <!-- CONTENEDOR DE PAGINACIÓN -->
-  <div id="paginacio"></div>
-
-  <!-- CONEXIÓN CON JS -->
-  <script src="async.js"></script>
-    
+      <section class="panel">
+        <h2>Guardar personatge al servidor</h2>
+        <form id="personaForm">
+          <div class="grid">
+            <label>Nom
+              <input type="text" name="name" required />
+            </label>
+            <label>Altura
+              <input type="text" name="height" />
+            </label>
+            <label>Cabell
+              <input type="text" name="hair_color" />
+            </label>
+            <label>Pell
+              <input type="text" name="skin_color" />
+            </label>
+            <label>Ulls
+              <input type="text" name="eye_color" />
+            </label>
+            <label>Naixement
+              <input type="text" name="birth_year" />
+            </label>
+            <label>Genere
+              <input type="text" name="gender" />
+            </label>
+            <label>Imatge
+              <input type="file" name="image" accept="image/*" />
+            </label>
+          </div>
+          <button type="submit">Guardar personatge</button>
+        </form>
+        <div id="serverMsg"></div>
+      </section>
+    </div>
+  </div>
 </body>
 </html>
