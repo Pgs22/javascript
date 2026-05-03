@@ -1,0 +1,78 @@
+/* RESET BÁSICO */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* BODY */
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #0f172a; /* azul oscuro */
+  color: #f1f5f9;
+  padding: 30px;
+}
+
+/* TÍTULO */
+h1 {
+  text-align: center;
+  font-size: 36px;
+  margin-bottom: 30px;
+  color: #22c55e; /* verde */
+  letter-spacing: 1px;
+}
+
+/* BOTÓN */
+button {
+  display: block;
+  margin: 0 auto 30px auto;
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #0f172a;
+  background: #22c55e;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* HOVER BOTÓN */
+button:hover {
+  background: #16a34a;
+  transform: translateY(-2px);
+}
+
+/* CONTENEDOR PERSONAJES */
+#personajes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* TARJETAS */
+.card {
+  background: #1e293b;
+  border-radius: 10px;
+  padding: 15px;
+  border: 1px solid #334155;
+  transition: all 0.2s ease;
+}
+
+/* HOVER TARJETA */
+.card:hover {
+  transform: translateY(-5px);
+  border-color: #22c55e;
+}
+
+/* NOMBRE PERSONAJE */
+.card h3 {
+  color: #22c55e;
+  margin-bottom: 10px;
+}
+
+/* TEXTO */
+.card p {
+  font-size: 14px;
+  margin: 3px 0;
+}
