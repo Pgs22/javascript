@@ -209,3 +209,115 @@ async function mostrarDetallePersonaje(nombre) {
     console.error("Error al cargar detalle:", error);
   }
 }
+
+const btnIniciarStarwardle = document.getElementById("btnIniciarStarwardle");
+const inputStarwardle = document.getElementById("inputStarwardle");
+const sugerenciasStarwardle = document.getElementById("sugerenciasStarwardle");
+const btnComprobarStarwardle = document.getElementById("btnComprobarStarwardle");
+const resultadoStarwardle = document.getElementById("resultadoStarwardle");
+
+btnIniciarStarwardle.addEventListener("click", iniciarStarwardle);
+inputStarwardle.addEventListener("input", buscarSugerenciasStarwardle);
+btnComprobarStarwardle.addEventListener("click", comprobarStarwardle);
+
+async function iniciarStarwardle() {
+  const response = await fetch("/starwardle/iniciar");
+  const data = await response.json();
+
+  resultadoStarwardle.innerHTML = `<p>${data.message}</p>`;
+}
+
+async function buscarSugerenciasStarwardle() {
+  const texto = inputStarwardle.value.trim();
+
+  if (texto === "") {
+    sugerenciasStarwardle.innerHTML = "";
+    return;
+  }
+
+  const response = await fetch(
+    `/starwardle/sugerencias?texto=${encodeURIComponent(texto)}`
+  );
+
+  const data = await response.json();
+
+  sugerenciasStarwardle.innerHTML = "";
+
+  data.forEach(personaje => {
+    const div = document.createElement("div");
+    div.classList.add("sugerencia");
+    div.textContent = personaje.name;
+
+    div.addEventListener("click", () => {
+      inputStarwardle.value = personaje.name;
+      sugerenciasStarwardle.innerHTML = "";
+    });
+
+    sugerenciasStarwardle.appendChild(div);
+  });
+}
+
+async function comprobarStarwardle() {
+  const nombre = inputStarwardle.value.trim();
+
+  if (nombre === "") {
+    alert("Escribe un personaje");
+    return;
+  }
+
+  const response = await fetch(
+    `/starwardle/comprobar?nombre=${encodeURIComponent(nombre)}`
+  );
+
+  const data = await response.json();
+
+  if (data.status === "error") {
+    resultadoStarwardle.innerHTML = `<p>${data.message}</p>`;
+    return;
+  }
+
+  if (data.correcto) {
+    resultadoStarwardle.innerHTML = `
+      <h3>¡Has acertado!</h3>
+      <p>El personaje era ${data.intento.name}</p>
+      ${data.intento.image ? `<img src="${data.intento.image}" alt="${data.intento.name}">` : ""}
+    `;
+    return;
+  }
+
+  pintarComparacionStarwardle(data.intento, data.comparacion);
+}
+
+function pintarComparacionStarwardle(intento, comparacion) {
+  resultadoStarwardle.innerHTML = `
+    <h3>Resultado</h3>
+
+    <p class="${comparacion.name ? "acierto" : "fallo"}">
+      Nombre: ${intento.name}
+    </p>
+
+    <p class="${comparacion.height ? "acierto" : "fallo"}">
+      Altura: ${intento.height}
+    </p>
+
+    <p class="${comparacion.hair_color ? "acierto" : "fallo"}">
+      Cabello: ${intento.hair_color}
+    </p>
+
+    <p class="${comparacion.skin_color ? "acierto" : "fallo"}">
+      Piel: ${intento.skin_color}
+    </p>
+
+    <p class="${comparacion.eye_color ? "acierto" : "fallo"}">
+      Ojos: ${intento.eye_color}
+    </p>
+
+    <p class="${comparacion.birth_year ? "acierto" : "fallo"}">
+      Nacimiento: ${intento.birth_year}
+    </p>
+
+    <p class="${comparacion.gender ? "acierto" : "fallo"}">
+      Género: ${intento.gender}
+    </p>
+  `;
+}

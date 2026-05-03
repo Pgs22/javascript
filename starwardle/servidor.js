@@ -6,6 +6,7 @@ const url = require("url");
 
 const PORT = 8089;
 const PERSONAJES_FILE = path.join(__dirname, "personajes.json");
+const SECRETO_FILE = path.join(__dirname, "secreto.json");
 const UPLOADS_DIR = path.join(__dirname, "uploads");
 const PUBLIC_DIR = path.join(__dirname, "public");
 
@@ -195,6 +196,96 @@ const server = http.createServer(async (req, res) => {
     }
 
     enviarJson(res, 200, personajeEncontrado);
+    return;
+  }
+  
+  if (req.method === "GET" && urlParseada.pathname === "/starwardle/iniciar") {
+    const personajes = leerPersonajes();
+
+    if (personajes.length === 0) {
+      enviarJson(res, 400, {
+        status: "error",
+        message: "No hay personajes guardados"
+      });
+      return;
+    }
+
+    const indice = Math.floor(Math.random() * personajes.length);
+    const secreto = personajes[indice];
+
+    fs.writeFileSync(SECRETO_FILE, JSON.stringify(secreto, null, 2), "utf8");
+
+    enviarJson(res, 200, {
+      status: "ok",
+      message: "Starwardle iniciado. Intenta adivinar el personaje."
+    });
+
+    return;
+  }
+
+  if (req.method === "GET" && urlParseada.pathname === "/starwardle/sugerencias") {
+    const texto = (urlParseada.query.texto || "").toLowerCase();
+    const personajes = leerPersonajes();
+
+    const resultados = personajes
+      .filter(personaje => personaje.name.toLowerCase().startsWith(texto))
+      .map(personaje => ({
+        name: personaje.name
+      }));
+
+    enviarJson(res, 200, resultados);
+    return;
+  }
+
+  if (req.method === "GET" && urlParseada.pathname === "/starwardle/comprobar") {
+    const nombre = (urlParseada.query.nombre || "").toLowerCase();
+
+    if (!fs.existsSync(SECRETO_FILE)) {
+      fs.writeFileSync(SECRETO_FILE, "{}", "utf8");
+    }
+
+    const secreto = JSON.parse(fs.readFileSync(SECRETO_FILE, "utf8"));
+    const personajes = leerPersonajes();
+
+    if (!secreto.name) {
+      enviarJson(res, 400, {
+        status: "error",
+        message: "Primero inicia Starwardle"
+      });
+      return;
+    }
+
+    const intento = personajes.find(
+      personaje => personaje.name.toLowerCase() === nombre
+    );
+
+    if (!intento) {
+      enviarJson(res, 404, {
+        status: "error",
+        message: "Personaje no encontrado"
+      });
+      return;
+    }
+
+    const correcto = secreto.name.toLowerCase() === intento.name.toLowerCase();
+
+    const comparacion = {
+      name: secreto.name === intento.name,
+      height: secreto.height === intento.height,
+      hair_color: secreto.hair_color === intento.hair_color,
+      skin_color: secreto.skin_color === intento.skin_color,
+      eye_color: secreto.eye_color === intento.eye_color,
+      birth_year: secreto.birth_year === intento.birth_year,
+      gender: secreto.gender === intento.gender
+    };
+
+    enviarJson(res, 200, {
+      status: "ok",
+      correcto,
+      intento,
+      comparacion
+    });
+
     return;
   }
 

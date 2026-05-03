@@ -7,18 +7,48 @@
 </head>
 <body>
 
+<body>
+
   <h1>Starwardle</h1>
-  <button id="btnCargar">Cargar personajes</button>
-  <div id="personajes"></div>
 
-  <div id="paginacion"></div>
+  <main class="layout">
 
-  <h2>Personajes guardados</h2>
-  <button id="btnVerGuardados">Ver personajes guardados</button>
-  <div id="guardados"></div>
-  <h2>Detalle del personaje</h2>
-  <div id="detallePersonaje"></div>
+    <section class="panel swapi">
+      <h2>Personajes SWAPI</h2>
+      <button id="btnCargar">Cargar personajes</button>
+      <div id="personajes"></div>
+      <div id="paginacion"></div>
+    </section>
+
+    <section class="panel guardados">
+      <h2>Personajes guardados</h2>
+      <button id="btnVerGuardados">Ver personajes guardados</button>
+      <div id="guardados"></div>
+    </section>
+
+    <section class="panel detalle">
+      <h2>Detalle del personaje</h2>
+      <div id="detallePersonaje"></div>
+    </section>
+
+    <section class="panel juego">
+      <h2>Starwardle</h2>
+
+      <button id="btnIniciarStarwardle">Iniciar Starwardle</button>
+
+      <input type="text" id="inputStarwardle" placeholder="Escribe un personaje">
+
+      <div id="sugerenciasStarwardle"></div>
+
+      <button id="btnComprobarStarwardle">Comprobar</button>
+
+      <div id="resultadoStarwardle"></div>
+    </section>
+
+  </main>
 
   <script src="/js/app.js"></script>
+
+</body>
 </body>
 </html>
