@@ -35,18 +35,119 @@ function enviarArchivo(res, filePath) {
   });
 }
 
-const server = http.createServer((req, res) => {
-  const urlParseada = url.parse(req.url, true);
+const PERSONAJES_FILE = path.join(__dirname, "personajes.json");
 
-  let pathname = urlParseada.pathname;
+function enviarJson(res, statusCode, data) {
+  res.writeHead(statusCode, {
+    "Content-Type": "application/json; charset=utf-8",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type"
+  });
 
-  if (pathname === "/") {
-    pathname = "/index.html";
+  res.end(JSON.stringify(data, null, 2));
+}
+
+function leerBody(req) {
+  return new Promise((resolve, reject) => {
+    let body = "";
+
+    req.on("data", chunk => {
+      body += chunk.toString();
+    });
+
+    req.on("end", () => {
+      resolve(body);
+    });
+
+    req.on("error", reject);
+  });
+}
+
+function leerPersonajes() {
+  if (!fs.existsSync(PERSONAJES_FILE)) {
+    fs.writeFileSync(PERSONAJES_FILE, "[]", "utf8");
   }
 
-  const filePath = path.join(PUBLIC_DIR, pathname);
+  return JSON.parse(fs.readFileSync(PERSONAJES_FILE, "utf8"));
+}
 
-  enviarArchivo(res, filePath);
+function guardarPersonajes(personajes) {
+  fs.writeFileSync(
+    PERSONAJES_FILE,
+    JSON.stringify(personajes, null, 2),
+    "utf8"
+  );
+}
+
+const server = http.createServer(async (req, res) => {
+  const urlParseada = url.parse(req.url, true);
+
+  if (req.method === "OPTIONS") {
+    enviarJson(res, 200, { status: "ok" });
+    return;
+  }
+
+  if (req.method === "GET" && urlParseada.pathname === "/") {
+    enviarArchivo(res, path.join(PUBLIC_DIR, "index.html"));
+    return;
+  }
+
+  if (req.method === "GET" && urlParseada.pathname === "/css/style.css") {
+    enviarArchivo(res, path.join(PUBLIC_DIR, "css", "style.css"));
+    return;
+  }
+
+  if (req.method === "GET" && urlParseada.pathname === "/js/app.js") {
+    enviarArchivo(res, path.join(PUBLIC_DIR, "js", "app.js"));
+    return;
+  }
+
+  // POST /persona
+  if (req.method === "POST" && urlParseada.pathname === "/persona") {
+    try {
+      const body = await leerBody(req);
+      const personaje = JSON.parse(body);
+
+      const personajes = leerPersonajes();
+
+      personajes.push({
+        name: personaje.name,
+        height: personaje.height,
+        hair_color: personaje.hair_color,
+        skin_color: personaje.skin_color,
+        eye_color: personaje.eye_color,
+        birth_year: personaje.birth_year,
+        gender: personaje.gender
+      });
+
+      guardarPersonajes(personajes);
+
+      enviarJson(res, 200, {
+        status: "ok",
+        message: "Personaje guardado correctamente",
+        personaje: personaje
+      });
+
+    } catch (error) {
+      enviarJson(res, 500, {
+        status: "error",
+        message: "Error al guardar personaje",
+        error: error.message
+      });
+    }
+
+    return;
+  }
+
+  // GET /personajes
+  if (req.method === "GET" && urlParseada.pathname === "/personajes") {
+    const personajes = leerPersonajes();
+    enviarJson(res, 200, personajes);
+    return;
+  }
+
+  enviarJson(res, 404, { error: "Ruta no encontrada" });
 });
 
 server.listen(PORT, () => {
