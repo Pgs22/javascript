@@ -22,7 +22,7 @@ h1 {
   letter-spacing: 1px;
 }
 
-/* BOTÓN */
+/* BOTÓN GENERAL */
 button {
   display: block;
   margin: 0 auto 30px auto;
@@ -50,6 +50,14 @@ button:hover {
   gap: 20px;
 }
 
+/* CONTENEDOR GUARDADOS (para siguientes pasos) */
+#guardados {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
 /* TARJETAS */
 .card {
   background: #1e293b;
@@ -75,4 +83,64 @@ button:hover {
 .card p {
   font-size: 14px;
   margin: 3px 0;
+}
+
+/* INPUT FILE */
+.card input[type="file"] {
+  margin-top: 10px;
+  color: #f1f5f9;
+}
+
+/* BOTÓN DENTRO DE TARJETA */
+.card button {
+  margin-top: 10px;
+  width: 100%;
+}
+
+/* IMÁGENES (para paso 3) */
+.card img {
+  margin-top: 10px;
+  border-radius: 6px;
+  width: 100%;
+  max-height: 150px;
+  object-fit: cover;
+}
+
+/* STARWARDLE (para paso 4) */
+#inputIntento {
+  display: block;
+  width: 100%;
+  max-width: 400px;
+  margin: 10px auto;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  font-size: 16px;
+}
+
+#sugerencias {
+  max-width: 400px;
+  margin: 0 auto 20px auto;
+}
+
+.sugerencia {
+  background: #1e293b;
+  border: 1px solid #334155;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.sugerencia:hover {
+  background: #334155;
+}
+
+/* RESULTADO STARWARDLE */
+.acierto {
+  color: #22c55e;
+  font-weight: bold;
+}
+
+.fallo {
+  color: #ef4444;
+  font-weight: bold;
 }
