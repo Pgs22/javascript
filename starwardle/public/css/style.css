@@ -144,3 +144,22 @@ button:hover {
   color: #ef4444;
   font-weight: bold;
 }
+
+#paginacion {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 30px 0;
+  flex-wrap: wrap;
+}
+
+#paginacion button {
+  margin: 0;
+  padding: 8px 12px;
+}
+
+#paginacion button:disabled {
+  background: #64748b;
+  cursor: not-allowed;
+  transform: none;
+}

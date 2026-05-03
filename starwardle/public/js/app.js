@@ -1,21 +1,25 @@
 const btn = document.getElementById("btnCargar");
 
 btn.addEventListener("click", () => {
-  cargarPersonajes();
+  cargarPersonajes(1);
 });
 
-function cargarPersonajes() {
+function cargarPersonajes(pagina = 1) {
 
   const xhr = new XMLHttpRequest();
 
-  xhr.open("GET", "https://swapi.py4e.com/api/people/?page=1");
+  xhr.open("GET", `https://swapi.py4e.com/api/people/?page=${pagina}`);
+
   xhr.responseType = "json";
+
   xhr.onload = function () {
 
     if (xhr.status === 200) {
+
       const data = xhr.response;
-      console.log(data);
+
       mostrarPersonajes(data.results);
+      crearPaginacion(data.count, pagina);
 
     } else {
       console.error("Error en la petición");
@@ -62,6 +66,30 @@ function mostrarPersonajes(lista) {
     contenedor.appendChild(card);
 
   });
+}
+
+function crearPaginacion(totalPersonajes, paginaActual) {
+
+  const contenedor = document.getElementById("paginacion");
+  contenedor.innerHTML = "";
+
+  const totalPaginas = Math.ceil(totalPersonajes / 10);
+
+  for (let i = 1; i <= totalPaginas; i++) {
+
+    const boton = document.createElement("button");
+    boton.textContent = i;
+
+    if (i === paginaActual) {
+      boton.disabled = true;
+    }
+
+    boton.addEventListener("click", () => {
+      cargarPersonajes(i);
+    });
+
+    contenedor.appendChild(boton);
+  }
 }
 
 async function guardarPersonaje(personaje) {
