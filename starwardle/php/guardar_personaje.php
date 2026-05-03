@@ -3,21 +3,48 @@
 header('Content-Type: application/json');
 
 $jsonFile = "../data/personajes.json";
+$uploadsDir = "../uploads/";
 
-// leer contenido actual
+if (!file_exists($jsonFile)) {
+    file_put_contents($jsonFile, json_encode([]));
+}
+
+if (!is_dir($uploadsDir)) {
+    mkdir($uploadsDir, 0777, true);
+}
+
 $personajes = json_decode(file_get_contents($jsonFile), true);
 
-// leer JSON recibido
-$input = json_decode(file_get_contents("php://input"), true);
+$rutaImagen = "";
 
-// añadir personaje
-$personajes[] = $input;
+if (isset($_FILES["arxiu"]) && $_FILES["arxiu"]["error"] === 0) {
 
-// guardar
+    $nombreOriginal = basename($_FILES["arxiu"]["name"]);
+    $nombreSeguro = time() . "_" . str_replace(" ", "_", $nombreOriginal);
+
+    $rutaServidor = $uploadsDir . $nombreSeguro;
+
+    if (move_uploaded_file($_FILES["arxiu"]["tmp_name"], $rutaServidor)) {
+        $rutaImagen = "uploads/" . $nombreSeguro;
+    }
+}
+
+$personaje = [
+    "name" => $_POST["name"] ?? "",
+    "height" => $_POST["height"] ?? "",
+    "hair_color" => $_POST["hair_color"] ?? "",
+    "skin_color" => $_POST["skin_color"] ?? "",
+    "eye_color" => $_POST["eye_color"] ?? "",
+    "birth_year" => $_POST["birth_year"] ?? "",
+    "gender" => $_POST["gender"] ?? "",
+    "image" => $rutaImagen
+];
+
+$personajes[] = $personaje;
+
 file_put_contents($jsonFile, json_encode($personajes, JSON_PRETTY_PRINT));
 
-// respuesta
 echo json_encode([
     "status" => "ok",
-    "personaje" => $input
+    "personaje" => $personaje
 ]);
