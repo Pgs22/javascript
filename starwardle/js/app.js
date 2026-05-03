@@ -24,10 +24,12 @@ function mostrarPersonajes(lista) {
 
   const contenedor = document.getElementById("personajes");
   contenedor.innerHTML = "";
+
   lista.forEach(personaje => {
 
     const card = document.createElement("div");
     card.classList.add("card");
+
     card.innerHTML = `
       <h3>${personaje.name}</h3>
       <p>Altura: ${personaje.height}</p>
@@ -38,7 +40,36 @@ function mostrarPersonajes(lista) {
       <p>Género: ${personaje.gender}</p>
     `;
 
+    const btn = document.createElement("button");
+    btn.textContent = "Guardar personaje";
+
+    btn.addEventListener("click", () => {
+      guardarPersonaje(personaje);
+    });
+
+    card.appendChild(btn);
     contenedor.appendChild(card);
 
   });
+}
+
+async function guardarPersonaje(personaje) {
+
+  try {
+    const response = await fetch("php/guardar_personaje.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(personaje)
+    });
+
+    const data = await response.json();
+
+    alert("Guardado correctamente");
+
+  } catch (error) {
+    console.error("Error:", error);
+  }
+
 }
