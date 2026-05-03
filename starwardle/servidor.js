@@ -3,8 +3,10 @@ const fs = require("fs");
 const path = require("path");
 const url = require("url");
 
-const PORT = 8089;
 
+const PORT = 8089;
+const PERSONAJES_FILE = path.join(__dirname, "personajes.json");
+const UPLOADS_DIR = path.join(__dirname, "uploads");
 const PUBLIC_DIR = path.join(__dirname, "public");
 
 function enviarArchivo(res, filePath) {
@@ -34,8 +36,6 @@ function enviarArchivo(res, filePath) {
     res.end(contenido);
   });
 }
-
-const PERSONAJES_FILE = path.join(__dirname, "personajes.json");
 
 function enviarJson(res, statusCode, data) {
   res.writeHead(statusCode, {
@@ -73,11 +73,7 @@ function leerPersonajes() {
 }
 
 function guardarPersonajes(personajes) {
-  fs.writeFileSync(
-    PERSONAJES_FILE,
-    JSON.stringify(personajes, null, 2),
-    "utf8"
-  );
+  fs.writeFileSync(PERSONAJES_FILE, JSON.stringify(personajes, null, 2), "utf8");
 }
 
 const server = http.createServer(async (req, res) => {
@@ -104,29 +100,56 @@ const server = http.createServer(async (req, res) => {
   }
 
   // POST /persona
-  if (req.method === "POST" && urlParseada.pathname === "/persona") {
+  if (req.method === "POST" && urlParseada.pathname === "/persona/") {
     try {
       const body = await leerBody(req);
       const personaje = JSON.parse(body);
 
+      if (!fs.existsSync(UPLOADS_DIR)) {
+        fs.mkdirSync(UPLOADS_DIR);
+      }
+
+      let rutaImagen = "";
+
+      if (personaje.imageBase64 && personaje.imageName) {
+        const partes = personaje.imageBase64.split(",");
+
+        const infoBase64 = partes[0];
+        const datosBase64 = partes[1];
+
+        const extension = infoBase64.includes("png") ? "png" : "jpg";
+
+        const nombreSeguro = personaje.name.replace(/\s+/g, "_").toLowerCase();
+        const nombreArchivo = `${Date.now()}_${nombreSeguro}.${extension}`;
+
+        const rutaServidor = path.join(UPLOADS_DIR, nombreArchivo);
+
+        fs.writeFileSync(rutaServidor, Buffer.from(datosBase64, "base64"));
+
+        rutaImagen = `/uploads/${nombreArchivo}`;
+      }
+
       const personajes = leerPersonajes();
 
-      personajes.push({
+      const personajeGuardar = {
         name: personaje.name,
         height: personaje.height,
         hair_color: personaje.hair_color,
         skin_color: personaje.skin_color,
         eye_color: personaje.eye_color,
         birth_year: personaje.birth_year,
-        gender: personaje.gender
-      });
+        gender: personaje.gender,
+        image: rutaImagen
+      };
+
+      personajes.push(personajeGuardar);
 
       guardarPersonajes(personajes);
 
       enviarJson(res, 200, {
         status: "ok",
         message: "Personaje guardado correctamente",
-        personaje: personaje
+        personaje: personajeGuardar
       });
 
     } catch (error) {
@@ -144,6 +167,11 @@ const server = http.createServer(async (req, res) => {
   if (req.method === "GET" && urlParseada.pathname === "/personajes") {
     const personajes = leerPersonajes();
     enviarJson(res, 200, personajes);
+    return;
+  }
+
+  if (req.method === "GET" && urlParseada.pathname.startsWith("/uploads/")) {
+    enviarArchivo(res, path.join(__dirname, urlParseada.pathname));
     return;
   }
 

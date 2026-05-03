@@ -54,17 +54,42 @@ function mostrarPersonajes(lista) {
       <p>Género: ${personaje.gender}</p>
     `;
 
+    const inputImagen = document.createElement("input");
+    inputImagen.type = "file";
+    inputImagen.accept = "image/*";
+
     const btnGuardar = document.createElement("button");
-    btnGuardar.textContent = "Guardar personaje";   
+    btnGuardar.textContent = "Guardar personaje con imagen";
 
     btnGuardar.addEventListener("click", () => {
-        guardarPersonaje(personaje);
+      guardarPersonaje(personaje, inputImagen.files[0]);
     });
 
+    card.appendChild(inputImagen);
     card.appendChild(btnGuardar);
 
     contenedor.appendChild(card);
+  });
+}
 
+function convertirImagenBase64(imagen) {
+  return new Promise((resolve, reject) => {
+    if (!imagen) {
+      resolve("");
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      resolve(reader.result);
+    };
+
+    reader.onerror = () => {
+      reject("Error al leer la imagen");
+    };
+
+    reader.readAsDataURL(imagen);
   });
 }
 
@@ -92,14 +117,28 @@ function crearPaginacion(totalPersonajes, paginaActual) {
   }
 }
 
-async function guardarPersonaje(personaje) {
+async function guardarPersonaje(personaje, imagen) {
   try {
-    const response = await fetch("/persona", {
+    const imagenBase64 = await convertirImagenBase64(imagen);
+
+    const personajeEnviar = {
+      name: personaje.name,
+      height: personaje.height,
+      hair_color: personaje.hair_color,
+      skin_color: personaje.skin_color,
+      eye_color: personaje.eye_color,
+      birth_year: personaje.birth_year,
+      gender: personaje.gender,
+      imageName: imagen ? imagen.name : "",
+      imageBase64: imagenBase64
+    };
+
+    const response = await fetch("/persona/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(personaje)
+      body: JSON.stringify(personajeEnviar)
     });
 
     const data = await response.json();
@@ -131,6 +170,7 @@ async function cargarGuardados() {
 
     card.innerHTML = `
       <h3>${personaje.name}</h3>
+      ${personaje.image ? `<img src="${personaje.image}" alt="${personaje.name}">` : ""}
       <p>Altura: ${personaje.height}</p>
       <p>Cabello: ${personaje.hair_color}</p>
       <p>Piel: ${personaje.skin_color}</p>
