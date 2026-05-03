@@ -175,6 +175,29 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // GET /persona/Nom Persona
+  if (req.method === "GET" && urlParseada.pathname.startsWith("/persona/")) {
+    const nombreUrl = urlParseada.pathname.replace("/persona/", "");
+    const nombreBuscado = decodeURIComponent(nombreUrl).toLowerCase();
+
+    const personajes = leerPersonajes();
+
+    const personajeEncontrado = personajes.find(personaje =>
+      personaje.name.toLowerCase() === nombreBuscado
+    );
+
+    if (!personajeEncontrado) {
+      enviarJson(res, 404, {
+        status: "error",
+        message: "Personaje no encontrado"
+      });
+      return;
+    }
+
+    enviarJson(res, 200, personajeEncontrado);
+    return;
+  }
+
   enviarJson(res, 404, { error: "Ruta no encontrada" });
 });
 

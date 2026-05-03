@@ -170,15 +170,42 @@ async function cargarGuardados() {
 
     card.innerHTML = `
       <h3>${personaje.name}</h3>
-      ${personaje.image ? `<img src="${personaje.image}" alt="${personaje.name}">` : ""}
-      <p>Altura: ${personaje.height}</p>
-      <p>Cabello: ${personaje.hair_color}</p>
-      <p>Piel: ${personaje.skin_color}</p>
-      <p>Ojos: ${personaje.eye_color}</p>
-      <p>Nacimiento: ${personaje.birth_year}</p>
-      <p>Género: ${personaje.gender}</p>
     `;
+
+    card.addEventListener("click", () => {
+      mostrarDetallePersonaje(personaje.name);
+    });
 
     contenedor.appendChild(card);
   });
+}
+
+async function mostrarDetallePersonaje(nombre) {
+  try {
+    const response = await fetch(`/persona/${encodeURIComponent(nombre)}`);
+    const personaje = await response.json();
+
+    const detalle = document.getElementById("detallePersonaje");
+
+    if (personaje.status === "error") {
+      detalle.innerHTML = `<p>${personaje.message}</p>`;
+      return;
+    }
+
+    detalle.innerHTML = `
+      <div class="card">
+        <h3>${personaje.name}</h3>
+        ${personaje.image ? `<img src="${personaje.image}" alt="${personaje.name}">` : ""}
+        <p>Altura: ${personaje.height}</p>
+        <p>Cabello: ${personaje.hair_color}</p>
+        <p>Piel: ${personaje.skin_color}</p>
+        <p>Ojos: ${personaje.eye_color}</p>
+        <p>Nacimiento: ${personaje.birth_year}</p>
+        <p>Género: ${personaje.gender}</p>
+      </div>
+    `;
+
+  } catch (error) {
+    console.error("Error al cargar detalle:", error);
+  }
 }
