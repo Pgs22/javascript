@@ -1,4 +1,5 @@
 const http = require("http");
+const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const url = require("url");
@@ -9,6 +10,11 @@ const PERSONAJES_FILE = path.join(__dirname, "personajes.json");
 const SECRETO_FILE = path.join(__dirname, "secreto.json");
 const UPLOADS_DIR = path.join(__dirname, "uploads");
 const PUBLIC_DIR = path.join(__dirname, "public");
+const SWAPI_BASE = "https://swapi.py4e.com/api/people/";
+const SWAPI_CACHE_TTL_MS = 10 * 60 * 1000;
+
+let swapiCache = null;
+let swapiCacheAt = 0;
 
 function enviarArchivo(res, filePath) {
   const ext = path.extname(filePath);
@@ -75,6 +81,77 @@ function leerPersonajes() {
 
 function guardarPersonajes(personajes) {
   fs.writeFileSync(PERSONAJES_FILE, JSON.stringify(personajes, null, 2), "utf8");
+}
+
+function fetchJson(urlDestino) {
+  return new Promise((resolve, reject) => {
+    https
+      .get(urlDestino, res => {
+        if (res.statusCode !== 200) {
+          reject(new Error(`SWAPI status ${res.statusCode}`));
+          res.resume();
+          return;
+        }
+
+        let data = "";
+
+        res.on("data", chunk => {
+          data += chunk;
+        });
+
+        res.on("end", () => {
+          try {
+            resolve(JSON.parse(data));
+          } catch (error) {
+            reject(error);
+          }
+        });
+      })
+      .on("error", reject);
+  });
+}
+
+async function cargarPersonajesSwapi() {
+  const ahora = Date.now();
+
+  if (swapiCache && ahora - swapiCacheAt < SWAPI_CACHE_TTL_MS) {
+    return swapiCache;
+  }
+
+  let pagina = 1;
+  let todos = [];
+
+  while (true) {
+    const data = await fetchJson(`${SWAPI_BASE}?page=${pagina}`);
+
+    if (!data || !Array.isArray(data.results)) {
+      break;
+    }
+
+    const normalizados = data.results.map(personaje => ({
+      name: personaje.name,
+      height: personaje.height,
+      hair_color: personaje.hair_color,
+      skin_color: personaje.skin_color,
+      eye_color: personaje.eye_color,
+      birth_year: personaje.birth_year,
+      gender: personaje.gender,
+      image: ""
+    }));
+
+    todos = todos.concat(normalizados);
+
+    if (!data.next) {
+      break;
+    }
+
+    pagina += 1;
+  }
+
+  swapiCache = todos;
+  swapiCacheAt = Date.now();
+
+  return swapiCache;
 }
 
 const server = http.createServer(async (req, res) => {
@@ -200,91 +277,115 @@ const server = http.createServer(async (req, res) => {
   }
   
   if (req.method === "GET" && urlParseada.pathname === "/starwardle/iniciar") {
-    const personajes = leerPersonajes();
+    try {
+      const personajes = await cargarPersonajesSwapi();
 
-    if (personajes.length === 0) {
-      enviarJson(res, 400, {
-        status: "error",
-        message: "No hay personajes guardados"
+      if (personajes.length === 0) {
+        enviarJson(res, 400, {
+          status: "error",
+          message: "No hay personajes disponibles en SWAPI"
+        });
+        return;
+      }
+
+      const indice = Math.floor(Math.random() * personajes.length);
+      const secreto = personajes[indice];
+
+      fs.writeFileSync(SECRETO_FILE, JSON.stringify(secreto, null, 2), "utf8");
+
+      enviarJson(res, 200, {
+        status: "ok",
+        message: "Starwardle iniciado. Intenta adivinar el personaje."
       });
-      return;
+    } catch (error) {
+      enviarJson(res, 500, {
+        status: "error",
+        message: "Error al cargar personajes de SWAPI",
+        error: error.message
+      });
     }
-
-    const indice = Math.floor(Math.random() * personajes.length);
-    const secreto = personajes[indice];
-
-    fs.writeFileSync(SECRETO_FILE, JSON.stringify(secreto, null, 2), "utf8");
-
-    enviarJson(res, 200, {
-      status: "ok",
-      message: "Starwardle iniciado. Intenta adivinar el personaje."
-    });
 
     return;
   }
 
   if (req.method === "GET" && urlParseada.pathname === "/starwardle/sugerencias") {
-    const texto = (urlParseada.query.texto || "").toLowerCase();
-    const personajes = leerPersonajes();
+    try {
+      const texto = (urlParseada.query.texto || "").toLowerCase();
+      const personajes = await cargarPersonajesSwapi();
 
-    const resultados = personajes
-      .filter(personaje => personaje.name.toLowerCase().startsWith(texto))
-      .map(personaje => ({
-        name: personaje.name
-      }));
+      const resultados = personajes
+        .filter(personaje => personaje.name.toLowerCase().startsWith(texto))
+        .map(personaje => ({
+          name: personaje.name
+        }));
 
-    enviarJson(res, 200, resultados);
+      enviarJson(res, 200, resultados);
+    } catch (error) {
+      enviarJson(res, 500, {
+        status: "error",
+        message: "Error al cargar sugerencias desde SWAPI",
+        error: error.message
+      });
+    }
     return;
   }
 
   if (req.method === "GET" && urlParseada.pathname === "/starwardle/comprobar") {
-    const nombre = (urlParseada.query.nombre || "").toLowerCase();
+    try {
+      const nombre = (urlParseada.query.nombre || "").toLowerCase();
 
-    if (!fs.existsSync(SECRETO_FILE)) {
-      fs.writeFileSync(SECRETO_FILE, "{}", "utf8");
-    }
+      if (!fs.existsSync(SECRETO_FILE)) {
+        fs.writeFileSync(SECRETO_FILE, "{}", "utf8");
+      }
 
-    const secreto = JSON.parse(fs.readFileSync(SECRETO_FILE, "utf8"));
-    const personajes = leerPersonajes();
+      const secreto = JSON.parse(fs.readFileSync(SECRETO_FILE, "utf8"));
+      const personajes = await cargarPersonajesSwapi();
 
-    if (!secreto.name) {
-      enviarJson(res, 400, {
-        status: "error",
-        message: "Primero inicia Starwardle"
+      if (!secreto.name) {
+        enviarJson(res, 400, {
+          status: "error",
+          message: "Primero inicia Starwardle"
+        });
+        return;
+      }
+
+      const intento = personajes.find(
+        personaje => personaje.name.toLowerCase() === nombre
+      );
+
+      if (!intento) {
+        enviarJson(res, 404, {
+          status: "error",
+          message: "Personaje no encontrado"
+        });
+        return;
+      }
+
+      const correcto = secreto.name.toLowerCase() === intento.name.toLowerCase();
+
+      const comparacion = {
+        name: secreto.name === intento.name,
+        height: secreto.height === intento.height,
+        hair_color: secreto.hair_color === intento.hair_color,
+        skin_color: secreto.skin_color === intento.skin_color,
+        eye_color: secreto.eye_color === intento.eye_color,
+        birth_year: secreto.birth_year === intento.birth_year,
+        gender: secreto.gender === intento.gender
+      };
+
+      enviarJson(res, 200, {
+        status: "ok",
+        correcto,
+        intento,
+        comparacion
       });
-      return;
-    }
-
-    const intento = personajes.find(
-      personaje => personaje.name.toLowerCase() === nombre
-    );
-
-    if (!intento) {
-      enviarJson(res, 404, {
+    } catch (error) {
+      enviarJson(res, 500, {
         status: "error",
-        message: "Personaje no encontrado"
+        message: "Error al comprobar personaje en SWAPI",
+        error: error.message
       });
-      return;
     }
-
-    const correcto = secreto.name.toLowerCase() === intento.name.toLowerCase();
-
-    const comparacion = {
-      name: secreto.name === intento.name,
-      height: secreto.height === intento.height,
-      hair_color: secreto.hair_color === intento.hair_color,
-      skin_color: secreto.skin_color === intento.skin_color,
-      eye_color: secreto.eye_color === intento.eye_color,
-      birth_year: secreto.birth_year === intento.birth_year,
-      gender: secreto.gender === intento.gender
-    };
-
-    enviarJson(res, 200, {
-      status: "ok",
-      correcto,
-      intento,
-      comparacion
-    });
 
     return;
   }
