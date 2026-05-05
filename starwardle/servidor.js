@@ -1,5 +1,4 @@
 const http = require("http");
-const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const url = require("url");
@@ -10,11 +9,6 @@ const PERSONAJES_FILE = path.join(__dirname, "personajes.json");
 const SECRETO_FILE = path.join(__dirname, "secreto.json");
 const UPLOADS_DIR = path.join(__dirname, "uploads");
 const PUBLIC_DIR = path.join(__dirname, "public");
-const SWAPI_BASE_URL = "https://swapi.py4e.com/api/people/?page=1";
-const SWAPI_CACHE_MS = 10 * 60 * 1000;
-
-let swapiCache = null;
-let swapiCacheTime = 0;
 
 function enviarArchivo(res, filePath) {
   const ext = path.extname(filePath);
@@ -81,56 +75,6 @@ function leerPersonajes() {
 
 function guardarPersonajes(personajes) {
   fs.writeFileSync(PERSONAJES_FILE, JSON.stringify(personajes, null, 2), "utf8");
-}
-
-function fetchJson(urlPeticion) {
-  return new Promise((resolve, reject) => {
-    https
-      .get(urlPeticion, res => {
-        let data = "";
-
-        res.on("data", chunk => {
-          data += chunk.toString();
-        });
-
-        res.on("end", () => {
-          if (res.statusCode < 200 || res.statusCode >= 300) {
-            reject(new Error(`HTTP ${res.statusCode}`));
-            return;
-          }
-
-          try {
-            resolve(JSON.parse(data));
-          } catch (error) {
-            reject(error);
-          }
-        });
-      })
-      .on("error", reject);
-  });
-}
-
-async function obtenerPersonajesSwapi() {
-  const ahora = Date.now();
-
-  if (swapiCache && ahora - swapiCacheTime < SWAPI_CACHE_MS) {
-    return swapiCache;
-  }
-
-  let urlActual = SWAPI_BASE_URL;
-  let personajes = [];
-
-  while (urlActual) {
-    const data = await fetchJson(urlActual);
-
-    personajes = personajes.concat(data.results || []);
-    urlActual = data.next;
-  }
-
-  swapiCache = personajes;
-  swapiCacheTime = ahora;
-
-  return personajes;
 }
 
 const server = http.createServer(async (req, res) => {
@@ -256,22 +200,12 @@ const server = http.createServer(async (req, res) => {
   }
   
   if (req.method === "GET" && urlParseada.pathname === "/starwardle/iniciar") {
-    let personajes = [];
-
-    try {
-      personajes = await obtenerPersonajesSwapi();
-    } catch (error) {
-      enviarJson(res, 500, {
-        status: "error",
-        message: "No se pudieron cargar personajes de la API"
-      });
-      return;
-    }
+    const personajes = leerPersonajes();
 
     if (personajes.length === 0) {
       enviarJson(res, 400, {
         status: "error",
-        message: "No hay personajes disponibles"
+        message: "No hay personajes guardados"
       });
       return;
     }
@@ -291,17 +225,7 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === "GET" && urlParseada.pathname === "/starwardle/sugerencias") {
     const texto = (urlParseada.query.texto || "").toLowerCase();
-    let personajes = [];
-
-    try {
-      personajes = await obtenerPersonajesSwapi();
-    } catch (error) {
-      enviarJson(res, 500, {
-        status: "error",
-        message: "No se pudieron cargar personajes de la API"
-      });
-      return;
-    }
+    const personajes = leerPersonajes();
 
     const resultados = personajes
       .filter(personaje => personaje.name.toLowerCase().startsWith(texto))
@@ -321,17 +245,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     const secreto = JSON.parse(fs.readFileSync(SECRETO_FILE, "utf8"));
-    let personajes = [];
-
-    try {
-      personajes = await obtenerPersonajesSwapi();
-    } catch (error) {
-      enviarJson(res, 500, {
-        status: "error",
-        message: "No se pudieron cargar personajes de la API"
-      });
-      return;
-    }
+    const personajes = leerPersonajes();
 
     if (!secreto.name) {
       enviarJson(res, 400, {
