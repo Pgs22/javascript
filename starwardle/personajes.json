@@ -1,5 +1,25 @@
 [
   {
+    "name": "C-3PO",
+    "height": "167",
+    "hair_color": "n/a",
+    "skin_color": "gold",
+    "eye_color": "yellow",
+    "birth_year": "112BBY",
+    "gender": "n/a",
+    "image": ""
+  },
+  {
+    "name": "Darth Vader",
+    "height": "202",
+    "hair_color": "none",
+    "skin_color": "white",
+    "eye_color": "yellow",
+    "birth_year": "41.9BBY",
+    "gender": "male",
+    "image": "/uploads/1777991960043_darth_vader.jpg"
+  },
+  {
     "name": "Luke Skywalker",
     "height": "172",
     "hair_color": "blond",
@@ -7,6 +27,6 @@
     "eye_color": "blue",
     "birth_year": "19BBY",
     "gender": "male",
-    "image": ""
+    "image": "/uploads/1777993100869_luke_skywalker.jpg"
   }
 ]
