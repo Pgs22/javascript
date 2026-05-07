@@ -22,36 +22,26 @@
 // send(parametros)
 
 //GET sense parametres
+const urlBase = "http://localhost/javascript/examen/servidor.php";
 document.getElementById("btn_llista_naus").addEventListener("click", function () {
-
-    let xhr = new XMLHttpRequest();
-
-    xhr.open("GET", urlBase + "?action=ship_list", true);
-    xhr.onreadystatechange = function () {
-
-      if (xhr.readyState === 4 && xhr.status === 200) {
-
-        try {
-
-          const response = JSON.parse(xhr.responseText);
-
-          let html = "";
-
-          response.data.forEach(function(nau) {
-            html += "<p>" + nau.id + " - " + nau.name + "</p>";
-          });
-
-          document.getElementById("div_output").innerHTML = html;
-
-        } catch (e) {
-
-          console.error("Error JSON:", e);
-        }
+  let xhr = new XMLHttpRequest();
+  xhr.open("GET", urlBase + "?action=ship_list", true);
+  xhr.onreadystatechange = function () {
+    if(xhr.readyState === 4 && xhr.status === 200){
+      try{
+        const response = JSON.parse(xhr.responseText);
+        let html="";
+        response.data.forEach(function (nau){
+          html += "<p>" + nau.id + " - " + nau.name + "</p>"
+        });
+        document.getElementById("div_output").innerHTML = html;
+      } catch (e) {
+        console.log("Error paseando a JSON", e);
       }
-    };
-
-    xhr.send(null);
-
+    }
+  };
+  console.log("Enviando peticion..");
+  xhr.send();
 });
 
 
@@ -62,42 +52,29 @@ document.getElementById("btn_llista_naus").addEventListener("click", function ()
 //  Mostrar nave
 // </button>
 
-document.getElementById("btn_info_nau")
-  .addEventListener("click", function () {
+document.getElementById("btn_info_nau").addEventListener("click", function () {
 
     let xhr = new XMLHttpRequest();
 
-    // PARÁMETRO DEL USUARIO
-    let id = document.getElementById("inp_id").value;
-
-    xhr.open( "GET", urlBase + "?action=ship_info&id=" + encodeURIComponent(id), true);
+    xhr.open("GET", urlBase + "?action=ship_read&id=3", true);
 
     xhr.onreadystatechange = function () {
 
-      if (xhr.readyState === 4 && xhr.status === 200) {
+        if (xhr.readyState === 4 && xhr.status === 200) {
 
-        try {
+            const response = JSON.parse(xhr.responseText);
 
-          const response = JSON.parse(xhr.responseText);
+            let html = "";
+            html += "<h3>" + response.data.name + "</h3>";
+            html += "<p>ID: " + response.data.id + "</p>";
+            html += "<p>Univers: " + response.data.universe + "</p>";
+            html += "<p>Armament: " + response.data.armament + "</p>";
 
-          let html = "";
-
-          html += "<h3>" + response.data.name + "</h3>";
-          html += "<p>ID: " + response.data.id + "</p>";
-          html += "<p>Univers: " + response.data.universe + "</p>";
-          html += "<p>Armament: " + response.data.armament + "</p>";
-
-          document.getElementById("div_output").innerHTML = html;
-
-        } catch (e) {
-
-          console.error("Error JSON:", e);
+            document.getElementById("div_output").innerHTML = html;
         }
-      }
     };
 
-    xhr.send(null);
-
+    xhr.send();
 });
 
 
@@ -109,57 +86,38 @@ document.getElementById("btn_info_nau")
 //  Crear tripulante
 //</button>
 
-document.getElementById("btn_crea_crew")
-  .addEventListener("click", function () {
+document.getElementById("btn_crea_crew").addEventListener("click", function () {
 
     let xhr = new XMLHttpRequest();
 
-    // DATOS USUARIO
     let name = document.getElementById("inp_name").value;
-
     let age = document.getElementById("inp_age").value;
 
-    // CONFIGURAR POST
     xhr.open("POST", urlBase, true);
 
-    // CABECERA
-    xhr.setRequestHeader(
-      "Content-Type",
-      "application/x-www-form-urlencoded"
-    );
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-    // RESPUESTA
     xhr.onreadystatechange = function () {
 
-      if (xhr.readyState === 4 && xhr.status === 200) {
+        if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 201)) {
 
-        try {
+            const response = JSON.parse(xhr.responseText);
 
-          const response = JSON.parse(xhr.responseText);
+            let html = "";
+            html += "<h3>Tripulante creado</h3>";
+            html += "<p>ID: " + response.data.id + "</p>";
+            html += "<p>Nom: " + response.data.name + "</p>";
+            html += "<p>Edat: " + response.data.age + "</p>";
 
-          let html = "";
-
-          html += "<h3>Tripulante creado</h3>";
-          html += "<p>ID: " + response.data.id + "</p>";
-          html += "<p>Nom: " + response.data.name + "</p>";
-          html += "<p>Edat: " + response.data.age + "</p>";
-
-          document.getElementById("div_output").innerHTML = html;
-
-        } catch (e) {
-
-          console.error("Error JSON:", e);
+            document.getElementById("div_output").innerHTML = html;
         }
-      }
     };
 
-    // PARÁMETROS POST
     let parametros =
-      "action=crew_create" +
-      "&name=" + encodeURIComponent(name) +
-      "&age=" + encodeURIComponent(age);
+        "action=crew_create" +
+        "&name=" + name +
+        "&age=" + age;
 
-    // ENVIAR POST
     xhr.send(parametros);
 
 });
@@ -191,4 +149,46 @@ document.getElementById("btn_llista_naus").addEventListener("click", function() 
     }
     console.log("Enviando petición AJAX");
     xhr.send();
+});
+
+
+
+// POST de crear nave:
+document.getElementById("btn_crear_nau").addEventListener("click", function () {
+
+  let xhr = new XMLHttpRequest();
+
+  let name = document.getElementById("inp_name_ship").value;
+  let universe = document.getElementById("inp_universe").value;
+  let armament = document.getElementById("inp_armament").value;
+
+  xhr.open("POST", urlBase, true);
+
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+  xhr.onreadystatechange = function () {
+
+    if (xhr.readyState === 4 && (xhr.status === 200 || xhr.status === 201)) {
+      console.log("Respuesta del servidor:", xhr.responseText);
+      const response = JSON.parse(xhr.responseText);
+
+      let html = "";
+      html += "<h3>Nau creada</h3>";
+      html += "<p>ID: " + response.data.id + "</p>";
+      html += "<p>Nom: " + response.data.name + "</p>";
+      html += "<p>Univers: " + response.data.universe + "</p>";
+      html += "<p>Armament: " + response.data.armament + "</p>";
+
+      document.getElementById("div_output").innerHTML = html;
+    }
+  };
+
+  let parametros =
+      "action=ship_create" +
+      "&name=" + name +
+      "&universe=" + universe +
+      "&armament=" + armament;
+
+  xhr.send(parametros);
+
 });
